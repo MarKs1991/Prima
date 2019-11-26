@@ -21,8 +21,8 @@ namespace L08_FudgeCraft_Collision {
         game = new ƒ.Node("FudgeCraft");
 
         game.appendChild(new Fragment(0));
-        // game.appendChild(new Fragment(1, ƒ.Vector3.X(3)));
-        // game.appendChild(new Fragment(2, ƒ.Vector3.X(-3)));
+        game.appendChild(new Fragment(1, ƒ.Vector3.X(3)));
+        game.appendChild(new Fragment(2, ƒ.Vector3.X(-3)));
 
         let cmpLight: ƒ.ComponentLight = new ƒ.ComponentLight(new ƒ.LightDirectional(ƒ.Color.WHITE));
         cmpLight.pivot.lookAt(new ƒ.Vector3(0.5, 1, 0.8));
