@@ -1181,15 +1181,14 @@ declare namespace FudgeCore {
      */
     class ComponentCamera extends Component {
         pivot: Matrix4x4;
+        backgroundColor: Color;
         private projection;
         private transform;
         private fieldOfView;
         private aspectRatio;
         private direction;
-        private backgroundColor;
         private backgroundEnabled;
         getProjection(): PROJECTION;
-        getBackgoundColor(): Color;
         getBackgroundEnabled(): boolean;
         getAspect(): number;
         getFieldOfView(): number;
@@ -1226,6 +1225,7 @@ declare namespace FudgeCore {
     }
 }
 declare namespace FudgeCore {
+    type TypeOfLight = new () => Light;
     /**
      * Baseclass for different kinds of lights.
      * @authors Jirka Dell'Oro-Friedl, HFU, 2019
@@ -1233,6 +1233,7 @@ declare namespace FudgeCore {
     abstract class Light extends Mutable {
         color: Color;
         constructor(_color?: Color);
+        getType(): TypeOfLight;
         protected reduceMutator(): void;
     }
     /**
@@ -1456,6 +1457,30 @@ declare namespace FudgeCore {
     }
 }
 declare namespace FudgeCore {
+    enum COLOR {
+        BLACK = 0,
+        WHITE = 1,
+        RED = 2,
+        GREEN = 3,
+        BLUE = 4,
+        YELLOW = 5,
+        CYAN = 6,
+        MAGENTA = 7,
+        LIGHT_GREY = 8,
+        LIGHT_RED = 9,
+        LIGHT_GREEN = 10,
+        LIGHT_BLUE = 11,
+        LIGHT_YELLOW = 12,
+        LIGHT_CYAN = 13,
+        LIGHT_MAGENTA = 14,
+        DARK_GREY = 15,
+        DARK_RED = 16,
+        DARK_GREEN = 17,
+        DARK_BLUE = 18,
+        DARK_YELLOW = 19,
+        DARK_CYAN = 20,
+        DARK_MAGENTA = 21
+    }
     /**
      * Defines a color as values in the range of 0 to 1 for the four channels red, green, blue and alpha (for opacity)
      */
@@ -1473,6 +1498,7 @@ declare namespace FudgeCore {
         static readonly YELLOW: Color;
         static readonly CYAN: Color;
         static readonly MAGENTA: Color;
+        static readonly GREY: Color;
         static readonly LIGHT_GREY: Color;
         static readonly LIGHT_RED: Color;
         static readonly LIGHT_GREEN: Color;
@@ -1487,11 +1513,13 @@ declare namespace FudgeCore {
         static readonly DARK_YELLOW: Color;
         static readonly DARK_CYAN: Color;
         static readonly DARK_MAGENTA: Color;
+        static PRESET(_color: COLOR): Color;
         setNormRGBA(_r: number, _g: number, _b: number, _a: number): void;
         setBytesRGBA(_r: number, _g: number, _b: number, _a: number): void;
         getArray(): Float32Array;
         setArrayNormRGBA(_color: Float32Array): void;
         setArrayBytesRGBA(_color: Uint8ClampedArray): void;
+        add(_color: Color): void;
         protected reduceMutator(_mutator: Mutator): void;
     }
 }
@@ -1619,7 +1647,7 @@ declare namespace FudgeCore {
     }
 }
 declare namespace FudgeCore {
-    type MapLightTypeToLightList = Map<string, ComponentLight[]>;
+    type MapLightTypeToLightList = Map<TypeOfLight, ComponentLight[]>;
     /**
      * Controls the rendering of a branch of a scenetree, using the given [[ComponentCamera]],
      * and the propagation of the rendered image from the offscreen renderbuffer to the target canvas
@@ -3051,6 +3079,9 @@ declare namespace FudgeCore {
     }
 }
 declare namespace FudgeCore {
+    interface Timers extends Object {
+        [id: number]: Timer;
+    }
     /**
      * Instances of this class generate a timestamp that correlates with the time elapsed since the start of the program but allows for resetting and scaling.
      * Supports interval- and timeout-callbacks identical with standard Javascript but with respect to the scaled time
@@ -3097,30 +3128,6 @@ declare namespace FudgeCore {
          */
         getElapsedSincePreviousCall(): number;
         /**
-         * See Javascript documentation. Creates an internal [[Timer]] object
-         * @param _callback
-         * @param _timeout
-         * @param _arguments
-         */
-        setTimeout(_callback: Function, _timeout: number, ..._arguments: Object[]): number;
-        /**
-         * See Javascript documentation. Creates an internal [[Timer]] object
-         * @param _callback
-         * @param _timeout
-         * @param _arguments
-         */
-        setInterval(_callback: Function, _timeout: number, ..._arguments: Object[]): number;
-        /**
-         * See Javascript documentation
-         * @param _id
-         */
-        clearTimeout(_id: number): void;
-        /**
-         * See Javascript documentation
-         * @param _id
-         */
-        clearInterval(_id: number): void;
-        /**
          * Stops and deletes all [[Timer]]s attached. Should be called before this Time-object leaves scope
          */
         clearAllTimers(): void;
@@ -3129,12 +3136,26 @@ declare namespace FudgeCore {
          */
         rescaleAllTimers(): void;
         /**
-         * Deletes [[Timer]] found using the id of the connected interval/timeout-object
+         * Deletes [[Timer]] found using the internal id of the connected interval-object
          * @param _id
          */
-        deleteTimerByInternalId(_id: number): void;
-        private setTimer;
-        private deleteTimer;
+        deleteTimerByItsInternalId(_id: number): void;
+        /**
+         * Installs a timer at this time object
+         * @param _lapse The object-time to elapse between the calls to _callback
+         * @param _count The number of calls desired, 0 = Infinite
+         * @param _callback The function to call each the given lapse has elapsed
+         * @param _arguments Additional parameters to pass to callback function
+         */
+        setTimer(_lapse: number, _count: number, _callback: Function, ..._arguments: Object[]): number;
+        /**
+         * Deletes the timer with the id given by this time object
+         */
+        deleteTimer(_id: number): void;
+        /**
+         * Returns a copy of the list of timers currently installed on this time object
+         */
+        getTimers(): Timers;
     }
 }
 declare namespace FudgeCore {
@@ -3186,6 +3207,22 @@ declare namespace FudgeCore {
         private static loop;
         private static loopFrame;
         private static loopTime;
+    }
+}
+declare namespace FudgeCore {
+    class Timer {
+        active: boolean;
+        count: number;
+        private callback;
+        private time;
+        private elapse;
+        private arguments;
+        private timeoutReal;
+        private idWindow;
+        constructor(_time: Time, _elapse: number, _count: number, _callback: Function, ..._arguments: Object[]);
+        static getRescaled(_timer: Timer): Timer;
+        readonly id: number;
+        clear(): void;
     }
 }
 declare namespace FudgeCore {

@@ -3,61 +3,72 @@ var L08_FudgeCraft_Collision;
 (function (L08_FudgeCraft_Collision) {
     L08_FudgeCraft_Collision.ƒ = FudgeCore;
     window.addEventListener("load", hndLoad);
+    L08_FudgeCraft_Collision.game = new L08_FudgeCraft_Collision.ƒ.Node("FudgeCraft");
     L08_FudgeCraft_Collision.grid = new L08_FudgeCraft_Collision.Grid();
+    let control = new L08_FudgeCraft_Collision.Control();
     let viewport;
-    let rotate = L08_FudgeCraft_Collision.ƒ.Vector3.ZERO();
     function hndLoad(_event) {
         const canvas = document.querySelector("canvas");
         L08_FudgeCraft_Collision.ƒ.RenderManager.initialize(true);
         L08_FudgeCraft_Collision.ƒ.Debug.log("Canvas", canvas);
         let cmpCamera = new L08_FudgeCraft_Collision.ƒ.ComponentCamera();
-        cmpCamera.pivot.translate(new L08_FudgeCraft_Collision.ƒ.Vector3(2, 3, 10));
+        cmpCamera.pivot.translate(new L08_FudgeCraft_Collision.ƒ.Vector3(4, 6, 20));
         cmpCamera.pivot.lookAt(L08_FudgeCraft_Collision.ƒ.Vector3.ZERO());
-        L08_FudgeCraft_Collision.game = new L08_FudgeCraft_Collision.ƒ.Node("FudgeCraft");
-        L08_FudgeCraft_Collision.game.appendChild(new L08_FudgeCraft_Collision.Fragment(0));
-        L08_FudgeCraft_Collision.game.appendChild(new L08_FudgeCraft_Collision.Fragment(1, L08_FudgeCraft_Collision.ƒ.Vector3.X(3)));
-        L08_FudgeCraft_Collision.game.appendChild(new L08_FudgeCraft_Collision.Fragment(2, L08_FudgeCraft_Collision.ƒ.Vector3.X(-3)));
+        cmpCamera.backgroundColor = L08_FudgeCraft_Collision.ƒ.Color.WHITE;
         let cmpLight = new L08_FudgeCraft_Collision.ƒ.ComponentLight(new L08_FudgeCraft_Collision.ƒ.LightDirectional(L08_FudgeCraft_Collision.ƒ.Color.WHITE));
         cmpLight.pivot.lookAt(new L08_FudgeCraft_Collision.ƒ.Vector3(0.5, 1, 0.8));
         L08_FudgeCraft_Collision.game.addComponent(cmpLight);
+        let cmpLightAmbient = new L08_FudgeCraft_Collision.ƒ.ComponentLight(new L08_FudgeCraft_Collision.ƒ.LightAmbient(L08_FudgeCraft_Collision.ƒ.Color.DARK_GREY));
+        L08_FudgeCraft_Collision.game.addComponent(cmpLightAmbient);
         viewport = new L08_FudgeCraft_Collision.ƒ.Viewport();
         viewport.initialize("Viewport", L08_FudgeCraft_Collision.game, cmpCamera, canvas);
         L08_FudgeCraft_Collision.ƒ.Debug.log("Viewport", viewport);
         viewport.draw();
+        startRandomFragment();
+        L08_FudgeCraft_Collision.game.appendChild(control);
+        viewport.draw();
         L08_FudgeCraft_Collision.ƒ.Debug.log("Game", L08_FudgeCraft_Collision.game);
         window.addEventListener("keydown", hndKeyDown);
-        L08_FudgeCraft_Collision.test();
+        //test();
     }
     function hndKeyDown(_event) {
-        let angle = 10;
-        let rotate = new L08_FudgeCraft_Collision.ƒ.Vector3();
-        switch (_event.code) {
-            case L08_FudgeCraft_Collision.ƒ.KEYBOARD_CODE.ARROW_UP:
-                rotate.add(L08_FudgeCraft_Collision.ƒ.Vector3.X(-angle));
-                break;
-            case L08_FudgeCraft_Collision.ƒ.KEYBOARD_CODE.ARROW_DOWN:
-                rotate.add(L08_FudgeCraft_Collision.ƒ.Vector3.X(angle));
-                break;
-            case L08_FudgeCraft_Collision.ƒ.KEYBOARD_CODE.ARROW_LEFT:
-                rotate.add(L08_FudgeCraft_Collision.ƒ.Vector3.Y(-angle));
-                break;
-            case L08_FudgeCraft_Collision.ƒ.KEYBOARD_CODE.ARROW_RIGHT:
-                rotate.add(L08_FudgeCraft_Collision.ƒ.Vector3.Y(angle));
-                break;
+        if (_event.code == L08_FudgeCraft_Collision.ƒ.KEYBOARD_CODE.SPACE) {
+            control.freeze();
+            startRandomFragment();
         }
-        let count = 9;
-        let interval = window.setInterval(function () {
-            for (let fragment of L08_FudgeCraft_Collision.game.getChildren()) {
-                // fragment.cmpTransform.local.rotation = rotate;   
-                // fragment.cmpTransform.local.rotateX(rotate.x, true);
-                // fragment.cmpTransform.local.rotateY(rotate.y, true);
-                fragment.cmpTransform.local.rotate(rotate, true);
-            }
-            L08_FudgeCraft_Collision.ƒ.RenderManager.update();
-            viewport.draw();
-            if (--count <= 0)
-                window.clearInterval(interval);
-        }, 10);
+        let transformation = L08_FudgeCraft_Collision.Control.transformations[_event.code];
+        if (transformation)
+            move(transformation);
+        // ƒ.RenderManager.update();
+        viewport.draw();
     }
+    function move(_transformation) {
+        let animationSteps = 10;
+        let fullRotation = 90;
+        let fullTranslation = 1;
+        let move = {
+            rotation: _transformation.rotation ? L08_FudgeCraft_Collision.ƒ.Vector3.SCALE(_transformation.rotation, fullRotation) : new L08_FudgeCraft_Collision.ƒ.Vector3(),
+            translation: _transformation.translation ? L08_FudgeCraft_Collision.ƒ.Vector3.SCALE(_transformation.translation, fullTranslation) : new L08_FudgeCraft_Collision.ƒ.Vector3()
+        };
+        let timers = L08_FudgeCraft_Collision.ƒ.Time.game.getTimers();
+        if (Object.keys(timers).length > 0)
+            return;
+        let collisions = control.checkCollisions(move);
+        if (collisions.length > 0)
+            return;
+        move.translation.scale(1 / animationSteps);
+        move.rotation.scale(1 / animationSteps);
+        L08_FudgeCraft_Collision.ƒ.Time.game.setTimer(10, animationSteps, function () {
+            control.move(move);
+            // ƒ.RenderManager.update();
+            viewport.draw();
+        });
+    }
+    function startRandomFragment() {
+        let fragment = L08_FudgeCraft_Collision.Fragment.getRandom();
+        control.cmpTransform.local = L08_FudgeCraft_Collision.ƒ.Matrix4x4.IDENTITY;
+        control.setFragment(fragment);
+    }
+    L08_FudgeCraft_Collision.startRandomFragment = startRandomFragment;
 })(L08_FudgeCraft_Collision || (L08_FudgeCraft_Collision = {}));
 //# sourceMappingURL=Main.js.map
