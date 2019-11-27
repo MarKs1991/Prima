@@ -289,11 +289,7 @@ namespace PongMaster {
     playArea[10][10][10] = 1;
 }
 
-    function initializePlayAreaMap(): void{
-        
-
-    }
-
+    
 
     // custom BlockGenerator
     function createBlock(blockPosArray: f.Vector3[], blockRoot: f.Node): f.Node {

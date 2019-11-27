@@ -225,8 +225,6 @@ var PongMaster;
         }
         playArea[10][10][10] = 1;
     }
-    function initializePlayAreaMap() {
-    }
     // custom BlockGenerator
     function createBlock(blockPosArray, blockRoot) {
         blockRoot.addComponent(new f.ComponentTransform());
