@@ -8,8 +8,8 @@ namespace L09_FudgeCraft_CameraControl {
     let control: Control = new Control();
     let viewport: ƒ.Viewport;
     let camera: CameraOrbit;
-    let speedCameraRotation: number = 0.2;
-    let speedCameraTranslation: number = 0.02;
+   // let speedCameraRotation: number = 0.2;
+   // let speedCameraTranslation: number = 0.02;
 
     function hndLoad(_event: Event): void {
         const canvas: HTMLCanvasElement = document.querySelector("canvas");
@@ -40,8 +40,8 @@ namespace L09_FudgeCraft_CameraControl {
         // setup event handling
         viewport.activatePointerEvent(ƒ.EVENT_POINTER.MOVE, true);
         viewport.activateWheelEvent(ƒ.EVENT_WHEEL.WHEEL, true);
-        viewport.addEventListener(ƒ.EVENT_POINTER.MOVE, hndPointerMove);
-        viewport.addEventListener(ƒ.EVENT_WHEEL.WHEEL, hndWheelMove);
+        viewport.addEventListener(ƒ.EVENT_POINTER.MOVE, hndMouseMove);
+        viewport.addEventListener(ƒ.EVENT_WHEEL.WHEEL, hndWheel);
         window.addEventListener("keydown", hndKeyDown);
 
         // start game
@@ -59,19 +59,8 @@ namespace L09_FudgeCraft_CameraControl {
 
     }
 
-    function hndPointerMove(_event: ƒ.PointerEventƒ): void {
-        // console.log(_event.movementX, _event.movementY);
-        camera.rotateY(_event.movementX * speedCameraRotation);
-        camera.rotateX(_event.movementY * speedCameraRotation);
-        updateDisplay();
-    }
-
-    function hndWheelMove(_event: WheelEvent): void {
-        camera.translate(_event.deltaY * speedCameraTranslation);
-        updateDisplay();
-    }
-
     function hndKeyDown(_event: KeyboardEvent): void {
+
         if (_event.code == ƒ.KEYBOARD_CODE.SPACE) {
             control.freeze();
             startRandomFragment();
@@ -81,7 +70,26 @@ namespace L09_FudgeCraft_CameraControl {
         if (transformation)
             move(transformation);
 
-        updateDisplay();
+        viewport.draw();
+    }
+
+    function hndMouseMove(_event: MouseEvent): void {
+
+        if (_event.movementX)  
+            camera.rotateY(-(_event.movementX * 0.5));
+
+        if (_event.movementY)
+            camera.rotateX(-(_event.movementY * 0.5));
+
+        viewport.draw();
+    }
+
+    function hndWheel(_event: WheelEvent): void {
+
+        if (_event.deltaY)
+            camera.moveDistance(-(_event.deltaY * 0.1));
+        
+        viewport.draw();
     }
 
     function move(_transformation: Transformation): void {

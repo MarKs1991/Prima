@@ -1,55 +1,47 @@
 "use strict";
 var L09_FudgeCraft_CameraControl;
 (function (L09_FudgeCraft_CameraControl) {
-    var ƒ = FudgeCore;
-    class CameraOrbit extends ƒ.Node {
+    var fudge = FudgeCore;
+    class CameraOrbit extends fudge.Node {
         constructor(_maxRotX) {
             super("CameraOrbit");
-            //rotatorX: ƒ.Node;
             this.maxRotX = 75;
-            this.minDistance = 10;
+            this.minDistance = 5;
             this.maxRotX = Math.min(_maxRotX, 89);
-            let cmpTransform = new ƒ.ComponentTransform();
+            let cmpTransform = new fudge.ComponentTransform();
             this.addComponent(cmpTransform);
-            let rotatorX = new ƒ.Node("CameraRotX");
-            rotatorX.addComponent(new ƒ.ComponentTransform());
+            let rotatorX = new fudge.Node("CameraRotX");
+            rotatorX.addComponent(new fudge.ComponentTransform());
             this.appendChild(rotatorX);
-            let cmpCamera = new ƒ.ComponentCamera();
-            cmpCamera.backgroundColor = ƒ.Color.WHITE;
+            let cmpCamera = new fudge.ComponentCamera();
+            cmpCamera.backgroundColor = fudge.Color.WHITE;
             rotatorX.addComponent(cmpCamera);
             this.setDistance(20);
         }
         get cmpCamera() {
-            return this.rotatorX.getComponent(ƒ.ComponentCamera);
+            return this.rotatorX.getComponent(fudge.ComponentCamera);
         }
         get rotatorX() {
             return this.getChildrenByName("CameraRotX")[0];
         }
         setDistance(_distance) {
             let newDistance = Math.max(this.minDistance, _distance);
-            this.cmpCamera.pivot.translation = ƒ.Vector3.Z(newDistance);
+            this.cmpCamera.pivot.translation = fudge.Vector3.Z(newDistance);
         }
         moveDistance(_delta) {
             this.setDistance(this.cmpCamera.pivot.translation.z + _delta);
         }
-        setRotationY(_angle) {
-            this.cmpTransform.local.rotation = ƒ.Vector3.Y(_angle);
-        }
-        setRotationX(_angle) {
-            // @Jonas: rotation.z = ... verändert nur die Koordinate einer Kopie
-            _angle = Math.min(Math.max(-this.maxRotX, _angle), this.maxRotX);
-            this.rotatorX.cmpTransform.local.rotation = ƒ.Vector3.X(_angle);
-        }
         rotateY(_delta) {
-            this.cmpTransform.local.rotateY(_delta);
+            this.setRotationY(this.cmpTransform.local.rotation.y + _delta);
+        }
+        setRotationY(_angle) {
+            this.cmpTransform.local.rotation = fudge.Vector3.Y(_angle);
         }
         rotateX(_delta) {
-            let angle = this.rotatorX.cmpTransform.local.rotation.x + _delta;
-            this.setRotationX(angle);
+            this.setRotationX(this.rotatorX.cmpTransform.local.rotation.x + _delta);
         }
-        translate(_delta) {
-            let distance = this.cmpCamera.pivot.translation.z + _delta;
-            this.setDistance(distance);
+        setRotationX(_angle) {
+            this.rotatorX.cmpTransform.local.rotation = fudge.Vector3.X(_angle);
         }
     }
     L09_FudgeCraft_CameraControl.CameraOrbit = CameraOrbit;
