@@ -63,7 +63,24 @@ namespace FudgeCraft {
     function hndKeyDown(_event: KeyboardEvent): void {
         if (_event.code == ƒ.KEYBOARD_CODE.SPACE) {
             control.freeze();
+            
+           
             startRandomFragment();
+        }
+
+        if (_event.code == ƒ.KEYBOARD_CODE.NUMPAD7) {
+            CamZoom.cmpTransform.local.translateX(1);
+            cam.pivot.translateZ(-5);
+        cam.pivot.lookAt(ƒ.Vector3.ZERO());
+            
+        }
+
+        if (_event.code == ƒ.KEYBOARD_CODE.NUMPAD9) {
+            grid.DestroyLayer();
+        }
+
+        if (_event.code == ƒ.KEYBOARD_CODE.NUMPAD1) {
+            grid.checkLayer();
         }
       
         let transformation: Transformation = Control.transformations[_event.code];
@@ -75,10 +92,10 @@ namespace FudgeCraft {
         let camtransformation: CamTransformation = Camera.camtransformations[_event.code];
       
         if (camtransformation) {
-
             cammove(camtransformation);
-            
         }
+        
+        
 
 
         // ƒ.RenderManager.update();

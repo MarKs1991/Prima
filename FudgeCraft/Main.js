@@ -44,6 +44,17 @@ var FudgeCraft;
             control.freeze();
             startRandomFragment();
         }
+        if (_event.code == FudgeCraft.ƒ.KEYBOARD_CODE.NUMPAD7) {
+            CamZoom.cmpTransform.local.translateX(1);
+            cam.pivot.translateZ(-5);
+            cam.pivot.lookAt(FudgeCraft.ƒ.Vector3.ZERO());
+        }
+        if (_event.code == FudgeCraft.ƒ.KEYBOARD_CODE.NUMPAD9) {
+            FudgeCraft.grid.DestroyLayer();
+        }
+        if (_event.code == FudgeCraft.ƒ.KEYBOARD_CODE.NUMPAD1) {
+            FudgeCraft.grid.checkLayer();
+        }
         let transformation = FudgeCraft.Control.transformations[_event.code];
         if (transformation) {
             move(transformation);

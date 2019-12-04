@@ -26,6 +26,7 @@ var FudgeCraft;
                 this.removeChild(child);
             this.appendChild(_fragment);
             this.fragment = _fragment;
+            //this.fragment.cmpTransform.local.translation = (new ƒ.Vector3(5,0,0));
         }
         move(_transformation) {
             let mtxContainer = this.cmpTransform.local;
@@ -54,6 +55,7 @@ var FudgeCraft;
             for (let cube of this.fragment.getChildren()) {
                 let position = cube.mtxWorld.translation;
                 cube.cmpTransform.local.translation = position;
+                ƒ.Debug.log(cube.cmpTransform.local.translation);
                 FudgeCraft.grid.push(position, new FudgeCraft.GridElement(cube));
             }
         }
