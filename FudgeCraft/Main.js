@@ -50,7 +50,6 @@ var FudgeCraft;
             cam.pivot.lookAt(FudgeCraft.ƒ.Vector3.ZERO());
         }
         if (_event.code == FudgeCraft.ƒ.KEYBOARD_CODE.NUMPAD9) {
-            FudgeCraft.grid.DestroyLayer();
         }
         if (_event.code == FudgeCraft.ƒ.KEYBOARD_CODE.NUMPAD1) {
             FudgeCraft.grid.checkLayer();
@@ -105,6 +104,7 @@ var FudgeCraft;
     function startRandomFragment() {
         let fragment = FudgeCraft.Fragment.getRandom();
         control.cmpTransform.local = FudgeCraft.ƒ.Matrix4x4.IDENTITY;
+        control.cmpTransform.local.translateX(4);
         control.setFragment(fragment);
     }
     FudgeCraft.startRandomFragment = startRandomFragment;

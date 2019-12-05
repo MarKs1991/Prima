@@ -82,7 +82,9 @@ namespace FudgeCraft {
                 cube.cmpTransform.local.translation = position;
                 ƒ.Debug.log(cube.cmpTransform.local.translation);
                 grid.push(position, new GridElement(cube));
+                grid.checkLayerForCompletion(position);
             }
+            
         }
     }
 }

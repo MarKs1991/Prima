@@ -57,6 +57,7 @@ var FudgeCraft;
                 cube.cmpTransform.local.translation = position;
                 ƒ.Debug.log(cube.cmpTransform.local.translation);
                 FudgeCraft.grid.push(position, new FudgeCraft.GridElement(cube));
+                FudgeCraft.grid.checkLayerForCompletion(position);
             }
         }
     }

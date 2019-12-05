@@ -63,8 +63,7 @@ namespace FudgeCraft {
     function hndKeyDown(_event: KeyboardEvent): void {
         if (_event.code == ƒ.KEYBOARD_CODE.SPACE) {
             control.freeze();
-            
-           
+
             startRandomFragment();
         }
 
@@ -76,7 +75,7 @@ namespace FudgeCraft {
         }
 
         if (_event.code == ƒ.KEYBOARD_CODE.NUMPAD9) {
-            grid.DestroyLayer();
+            
         }
 
         if (_event.code == ƒ.KEYBOARD_CODE.NUMPAD1) {
@@ -155,7 +154,9 @@ namespace FudgeCraft {
 
     export function startRandomFragment(): void {
         let fragment: Fragment = Fragment.getRandom();
+        
         control.cmpTransform.local = ƒ.Matrix4x4.IDENTITY;
+        control.cmpTransform.local.translateX(4);
         control.setFragment(fragment);
     }
 }
