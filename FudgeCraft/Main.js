@@ -9,6 +9,7 @@ var FudgeCraft;
     let CamZoom = new FudgeCraft.ƒ.Node("CamZoom");
     let cam = new FudgeCraft.ƒ.ComponentCamera;
     let control = new FudgeCraft.Control();
+    let RotNode = new FudgeCraft.ƒ.Node("RotNode");
     let viewport;
     function hndLoad(_event) {
         const canvas = document.querySelector("canvas");
@@ -17,7 +18,10 @@ var FudgeCraft;
         CamZoom.addComponent(cam);
         CamZoom.addComponent(new FudgeCraft.ƒ.ComponentTransform);
         FudgeCraft.cameraRot.appendChild(CamZoom);
+        control.cmpTransform.local.translateY(5);
         FudgeCraft.game.appendChild(FudgeCraft.cameraRot);
+        RotNode.addComponent(new FudgeCraft.ƒ.ComponentTransform);
+        RotNode.appendChild(control);
         //cam.pivot.translate(new ƒ.Vector3(0, 0, -10));
         //cam.pivot.lookAt(ƒ.Vector3.ZERO());
         cam.pivot.translate(new FudgeCraft.ƒ.Vector3(4, 6, 20));
@@ -87,9 +91,12 @@ var FudgeCraft;
         let fullRotation = 90;
         // let fullTranslation: number = 1;
         let move = {
-            rotation: _transformation.rotation ? FudgeCraft.ƒ.Vector3.SCALE(_transformation.rotation, fullRotation) : new FudgeCraft.ƒ.Vector3(),
+            rotation: _transformation.rotation ? FudgeCraft.ƒ.Vector3.SCALE(_transformation.rotation, fullRotation) : new FudgeCraft.ƒ.Vector3()
+            //translation: _transformation.translation ? ƒ.Vector3.SCALE(_transformation.translation, fullTranslation) : new ƒ.Vector3()
         };
+        control.cmpTransform.local.rotateX(move.rotation.x);
         control.cmpTransform.local.rotateY(move.rotation.y);
+        control.cmpTransform.local.rotateZ(move.rotation.z);
         //control.cmpTransform.local.translation = move.translation;
         move.rotation.scale(1 / animationSteps);
         FudgeCraft.ƒ.Time.game.setTimer(10, animationSteps, function () {
@@ -101,7 +108,7 @@ var FudgeCraft;
     function startRandomFragment() {
         let fragment = FudgeCraft.Fragment.getRandom();
         control.cmpTransform.local = FudgeCraft.ƒ.Matrix4x4.IDENTITY;
-        control.cmpTransform.local.translateX(4);
+        control.cmpTransform.local.translateX(5);
         control.setFragment(fragment);
     }
     FudgeCraft.startRandomFragment = startRandomFragment;

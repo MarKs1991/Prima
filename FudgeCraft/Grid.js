@@ -10,11 +10,17 @@ var FudgeCraft;
     class Grid extends Map {
         constructor() {
             super();
-            this.push(FudgeCraft.ƒ.Vector3.ZERO(), new GridElement(new FudgeCraft.Cube(FudgeCraft.CUBE_TYPE.GREY, FudgeCraft.ƒ.Vector3.ZERO())));
+            this.push(FudgeCraft.ƒ.Vector3.ZERO(), new GridElement(new FudgeCraft.Cube(FudgeCraft.CUBE_TYPE.RED, FudgeCraft.ƒ.Vector3.ZERO())));
+            //this.push(ƒ.Vector3.ZERO(), new GridElement(new Cube(CUBE_TYPE.RED, new ƒ.Vector3(0,0,1))));
         }
         push(_position, _element = null) {
             let key = this.toKey(_position);
             this.set(key, _element);
+            FudgeCraft.ƒ.Debug.log(_element);
+            let type;
+            type = FudgeCraft.Fragment.getRandomEnum(FudgeCraft.CUBE_TYPE);
+            FudgeCraft.ƒ.Debug.log(type);
+            //_element.cube.name = "Green";
             if (_element) {
                 FudgeCraft.game.appendChild(_element.cube);
                 // ƒ.Debug.log(_element.cube.cmpTransform.local.translation);
@@ -59,21 +65,25 @@ var FudgeCraft;
         }
         findExecutingFragmentPiece(_position) {
             let positionArray = new Array();
+            // ƒ.Debug.log("Block");
             positionArray = [_position.x, _position.y, _position.z];
-            for (let i = 0; i <= positionArray.length; i++) {
-                if (positionArray[i] > 0.5)
+            for (let i = 0; i <= positionArray.length - 1; i++) {
+                // ƒ.Debug.log( i +"    "+ positionArray[i]);
+                if (positionArray[i] > 0.5 || positionArray[i] < -0.5) {
                     this.checkLayerForCompletion(positionArray[i]);
+                }
             }
         }
         checkLayerForCompletion(layerDepth) {
             layerDepth = Math.round(layerDepth);
-            FudgeCraft.ƒ.Debug.log(layerDepth);
+            FudgeCraft.ƒ.Debug.log("layerdepth: " + layerDepth);
             let isOccupied = new Array();
             for (let x = -layerDepth; x <= layerDepth; x++) {
                 for (let y = -layerDepth; y <= layerDepth; y++) {
                     for (let z = -layerDepth; z <= layerDepth; z++) {
                         if (x == layerDepth || x == -layerDepth || y == layerDepth || y == -layerDepth || z == layerDepth || z == -layerDepth) {
                             isOccupied[x + y + z] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(x, y, z));
+                            //  ƒ.Debug.log(isOccupied);
                             if (isOccupied[x + y + z] == false) {
                                 return;
                             }

@@ -39,7 +39,7 @@ namespace FudgeCraft {
             ];
         }
 
-        private static getRandomEnum<T>(_enum: { [key: string]: T }): T {
+        public static getRandomEnum<T>(_enum: { [key: string]: T }): T {
             let randomKey: string = Object.keys(_enum)[Math.floor(Math.random() * Object.keys(_enum).length)];
             return _enum[randomKey];
         }

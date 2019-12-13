@@ -9,7 +9,11 @@ namespace FudgeCraft {
     let CamZoom: ƒ.Node = new ƒ.Node("CamZoom");
     let cam: ƒ.ComponentCamera = new ƒ.ComponentCamera;
 
+    
     let control: Control = new Control();
+
+    let RotNode: ƒ.Node = new ƒ.Node("RotNode"); 
+
     let viewport: ƒ.Viewport;
 
     function hndLoad(_event: Event): void {
@@ -22,9 +26,13 @@ namespace FudgeCraft {
         CamZoom.addComponent(new ƒ.ComponentTransform);
         cameraRot.appendChild(CamZoom);
         
-        game.appendChild(cameraRot);
-       
 
+        control.cmpTransform.local.translateY(5);
+
+        game.appendChild(cameraRot);
+        
+        RotNode.addComponent(new ƒ.ComponentTransform);
+        RotNode.appendChild(control);
         //cam.pivot.translate(new ƒ.Vector3(0, 0, -10));
         //cam.pivot.lookAt(ƒ.Vector3.ZERO());
 
@@ -132,14 +140,17 @@ namespace FudgeCraft {
         let fullRotation: number = 90;
        // let fullTranslation: number = 1;
         let move: Transformation = {
-            rotation: _transformation.rotation ? ƒ.Vector3.SCALE(_transformation.rotation, fullRotation) : new ƒ.Vector3(),
+            rotation: _transformation.rotation ? ƒ.Vector3.SCALE(_transformation.rotation, fullRotation) : new ƒ.Vector3()
             //translation: _transformation.translation ? ƒ.Vector3.SCALE(_transformation.translation, fullTranslation) : new ƒ.Vector3()
         };
     
-        
+        control.cmpTransform.local.rotateX(move.rotation.x);
         control.cmpTransform.local.rotateY(move.rotation.y);
+        control.cmpTransform.local.rotateZ(move.rotation.z);
         //control.cmpTransform.local.translation = move.translation;
-                move.rotation.scale(1 / animationSteps);
+                
+        move.rotation.scale(1 / animationSteps);
+        
         ƒ.Time.game.setTimer(10, animationSteps, function (): void {
             cameraRot.move(move);
             // ƒ.RenderManager.update();
@@ -152,7 +163,7 @@ namespace FudgeCraft {
         let fragment: Fragment = Fragment.getRandom();
         
         control.cmpTransform.local = ƒ.Matrix4x4.IDENTITY;
-        control.cmpTransform.local.translateX(4);
+        control.cmpTransform.local.translateX(5);
         control.setFragment(fragment);
         
         
