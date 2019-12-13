@@ -50,7 +50,13 @@ namespace L09_FudgeCraft_CameraControl {
 
         rotateY(_delta: number): void {
 
+<<<<<<< HEAD
             this.setRotationY(this.cmpTransform.local.rotation.y + _delta);
+=======
+        setRotationX(_angle: number): void {
+            _angle = Math.min(Math.max(-this.maxRotX, _angle), this.maxRotX);
+            this.rotatorX.cmpTransform.local.rotation = ƒ.Vector3.X(_angle);
+>>>>>>> master
         }
 
         setRotationY(_angle: number): void {
