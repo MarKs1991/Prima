@@ -46,78 +46,7 @@ var FudgeCraft;
             let key = position.toString();
             return key;
         }
-        checkLayer() {
-            let layerDepth = 1;
-            let a = new Array(52);
-            for (let i = 0; i < 1; i++) { // +X
-                a[0] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(layerDepth + i, 0 + i, 0 + i));
-                a[1] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(layerDepth + i, 1 + i, 0 + i));
-                a[2] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(layerDepth + i, 0 + i, 1 + i));
-                a[3] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(layerDepth + i, 0 + i, -1 + i));
-                a[4] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(layerDepth + i, -1 + i, 0 + i));
-                a[5] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(layerDepth + i, 1 - i, 1 - i));
-                a[6] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(layerDepth + i, -1 - i, -1 - i));
-                a[7] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(layerDepth + i, 1 - i, -1 - i));
-                a[8] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(layerDepth + i, -1 - i, 1 - i));
-                // -X
-                a[9] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-layerDepth + i, 0 + i, 0 + i));
-                a[8] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-layerDepth + i, 1 + i, 0 + i));
-                a[10] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-layerDepth + i, 0 + i, 1 + i));
-                a[11] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-layerDepth + i, 0 + i, -1 + i));
-                a[12] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-layerDepth + i, -1 + i, 0 + i));
-                a[13] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-layerDepth + i, 1 - i, 1 - i));
-                a[14] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-layerDepth + i, -1 - i, -1 - i));
-                a[15] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-layerDepth + i, 1 - i, -1 - i));
-                a[16] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-layerDepth + i, -1 - i, 1 - i));
-                // +Y
-                a[17] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(0 + i, layerDepth + i, 0 + i));
-                a[18] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(1 + i, layerDepth + i, 0 + i));
-                a[19] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(0 + i, layerDepth + i, 1 + i));
-                a[20] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(0 + i, layerDepth + i, -1 + i));
-                a[21] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-1 + i, layerDepth + i, 0 + i));
-                a[22] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(1 + i, layerDepth - i, 1 - i));
-                a[23] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-1 + i, layerDepth - i, -1 - i));
-                a[24] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(1 + i, layerDepth - i, -1 - i));
-                a[25] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-1 + i, layerDepth - i, 1 - i));
-                // -Y
-                a[26] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(0 + i, -layerDepth + i, 0 + i));
-                a[27] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(1 + i, -layerDepth + i, 0 + i));
-                a[28] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(0 + i, -layerDepth + i, 1 + i));
-                a[29] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(0 + i, -layerDepth + i, -1 + i));
-                a[30] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-1 + i, -layerDepth + i, 0 + i));
-                a[31] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(1 + i, -layerDepth - i, 1 - i));
-                a[32] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-1 + i, -layerDepth - i, -1 - i));
-                a[33] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(1 + i, -layerDepth - i, -1 - i));
-                a[34] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-1 + i, -layerDepth - i, 1 - i));
-                // +Z
-                a[35] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(0 + i, 0 + i, layerDepth + i));
-                a[36] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(1 + i, 0 + i, layerDepth + i));
-                a[37] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(0 + i, 1 + i, layerDepth + i));
-                a[38] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(0 + i, -1 + i, layerDepth + i));
-                a[39] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-1 + i, 0 + i, layerDepth + i));
-                a[40] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(1 + i, 1 - i, layerDepth - i));
-                a[41] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-1 + i, -1 - i, layerDepth - i));
-                a[42] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(1 + i, -1 - i, layerDepth - i));
-                a[43] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-1 + i, 1 - i, layerDepth - i));
-                // -Z
-                a[44] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(0 + i, -0 + i, -layerDepth + i));
-                a[45] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(1 + i, -0 + i, -layerDepth + i));
-                a[46] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(0 + i, -1 + i, -layerDepth + i));
-                a[47] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(0 + i, -1 + i, -layerDepth + i));
-                a[48] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-1 + i, 0 + i, -layerDepth + i));
-                a[49] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(1 + i, 1 - i, -layerDepth - i));
-                a[50] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-1 + i, -1 - i, -layerDepth - i));
-                a[51] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(1 + i, -1 - i, -layerDepth - i));
-                a[52] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(-1 + i, 1 - i, -layerDepth - i));
-            }
-            for (let i = 0; i <= a.length; i++) {
-                if (a[i] == false) {
-                    FudgeCraft.ƒ.Debug.log("false");
-                }
-            }
-        }
-        clearLayer() {
-            let layerDepth = 1;
+        clearLayer(layerDepth) {
             for (let x = -layerDepth; x <= layerDepth; x++) {
                 for (let y = -layerDepth; y <= layerDepth; y++) {
                     for (let z = -layerDepth; z <= layerDepth; z++) {
@@ -128,9 +57,17 @@ var FudgeCraft;
                 }
             }
         }
-        checkLayerForCompletion() {
-            FudgeCraft.ƒ.Debug.log("ff");
-            let layerDepth = 1;
+        findExecutingFragmentPiece(_position) {
+            let positionArray = new Array();
+            positionArray = [_position.x, _position.y, _position.z];
+            for (let i = 0; i <= positionArray.length; i++) {
+                if (positionArray[i] > 0.5)
+                    this.checkLayerForCompletion(positionArray[i]);
+            }
+        }
+        checkLayerForCompletion(layerDepth) {
+            layerDepth = Math.round(layerDepth);
+            FudgeCraft.ƒ.Debug.log(layerDepth);
             let isOccupied = new Array();
             for (let x = -layerDepth; x <= layerDepth; x++) {
                 for (let y = -layerDepth; y <= layerDepth; y++) {
@@ -144,7 +81,7 @@ var FudgeCraft;
                     }
                 }
             }
-            this.clearLayer();
+            this.clearLayer(layerDepth);
         }
     }
     FudgeCraft.Grid = Grid;

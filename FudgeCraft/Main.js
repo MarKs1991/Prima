@@ -49,11 +49,6 @@ var FudgeCraft;
             cam.pivot.translateZ(-5);
             cam.pivot.lookAt(FudgeCraft.ƒ.Vector3.ZERO());
         }
-        if (_event.code == FudgeCraft.ƒ.KEYBOARD_CODE.NUMPAD9) {
-        }
-        if (_event.code == FudgeCraft.ƒ.KEYBOARD_CODE.NUMPAD1) {
-            FudgeCraft.grid.checkLayer();
-        }
         let transformation = FudgeCraft.Control.transformations[_event.code];
         if (transformation) {
             move(transformation);
@@ -94,6 +89,8 @@ var FudgeCraft;
         let move = {
             rotation: _transformation.rotation ? FudgeCraft.ƒ.Vector3.SCALE(_transformation.rotation, fullRotation) : new FudgeCraft.ƒ.Vector3(),
         };
+        control.cmpTransform.local.rotateY(move.rotation.y);
+        //control.cmpTransform.local.translation = move.translation;
         move.rotation.scale(1 / animationSteps);
         FudgeCraft.ƒ.Time.game.setTimer(10, animationSteps, function () {
             FudgeCraft.cameraRot.move(move);

@@ -74,13 +74,6 @@ namespace FudgeCraft {
             
         }
 
-        if (_event.code == ƒ.KEYBOARD_CODE.NUMPAD9) {
-            
-        }
-
-        if (_event.code == ƒ.KEYBOARD_CODE.NUMPAD1) {
-            grid.checkLayer();
-        }
       
         let transformation: Transformation = Control.transformations[_event.code];
         if (transformation) {
@@ -143,7 +136,10 @@ namespace FudgeCraft {
             //translation: _transformation.translation ? ƒ.Vector3.SCALE(_transformation.translation, fullTranslation) : new ƒ.Vector3()
         };
     
-        move.rotation.scale(1 / animationSteps);
+        
+        control.cmpTransform.local.rotateY(move.rotation.y);
+        //control.cmpTransform.local.translation = move.translation;
+                move.rotation.scale(1 / animationSteps);
         ƒ.Time.game.setTimer(10, animationSteps, function (): void {
             cameraRot.move(move);
             // ƒ.RenderManager.update();
@@ -158,5 +154,7 @@ namespace FudgeCraft {
         control.cmpTransform.local = ƒ.Matrix4x4.IDENTITY;
         control.cmpTransform.local.translateX(4);
         control.setFragment(fragment);
+        
+        
     }
 }

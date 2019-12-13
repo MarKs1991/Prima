@@ -44,7 +44,6 @@ namespace FudgeCraft {
                 this.removeChild(child);
             this.appendChild(_fragment);
             this.fragment = _fragment;
-            //this.fragment.cmpTransform.local.translation = (new ƒ.Vector3(5,0,0));
         }
 
         public move(_transformation: Transformation): void {
@@ -80,11 +79,9 @@ namespace FudgeCraft {
             for (let cube of this.fragment.getChildren()) {
                 let position: ƒ.Vector3 = cube.mtxWorld.translation;
                 cube.cmpTransform.local.translation = position;
-                ƒ.Debug.log(cube.cmpTransform.local.translation);
                 grid.push(position, new GridElement(cube));
-                grid.checkLayerForCompletion(position);
+                grid.findExecutingFragmentPiece(position);
             }
-            
         }
     }
 }
