@@ -14,6 +14,8 @@ var L10_FudgeCraft_DetectCombos;
         }
         push(_position, _element = null) {
             let key = this.toKey(_position);
+            if (this.pop(_position))
+                L10_FudgeCraft_DetectCombos.ƒ.Debug.warn("Grid push to occupied position, popped: ", key);
             this.set(key, _element);
             if (_element)
                 L10_FudgeCraft_DetectCombos.game.appendChild(_element.cube);
@@ -31,7 +33,7 @@ var L10_FudgeCraft_DetectCombos;
                 L10_FudgeCraft_DetectCombos.game.removeChild(element.cube);
             return element;
         }
-        findNeigbors(_of) {
+        findNeighbors(_of) {
             let found = [];
             let offsets = [[0, 0, 1], [0, 0, -1], [0, 1, 0], [0, -1, 0], [1, 0, 0], [-1, 0, 0]];
             for (let offset of offsets) {

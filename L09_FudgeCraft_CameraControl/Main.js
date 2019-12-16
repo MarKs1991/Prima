@@ -47,6 +47,19 @@ var L09_FudgeCraft_CameraControl;
     function updateDisplay() {
         viewport.draw();
     }
+<<<<<<< HEAD
+=======
+    function hndPointerMove(_event) {
+        // ƒ.Debug.log(_event.movementX, _event.movementY);
+        camera.rotateY(_event.movementX * speedCameraRotation);
+        camera.rotateX(_event.movementY * speedCameraRotation);
+        updateDisplay();
+    }
+    function hndWheelMove(_event) {
+        camera.translate(_event.deltaY * speedCameraTranslation);
+        updateDisplay();
+    }
+>>>>>>> master
     function hndKeyDown(_event) {
         if (_event.code == L09_FudgeCraft_CameraControl.ƒ.KEYBOARD_CODE.SPACE) {
             control.freeze();

@@ -1,4 +1,4 @@
-namespace L10_FudgeCraft_DetectCombos {
+namespace L11_FudgeCraft_Compress {
     export class Combos {
         found: GridElement[][] = [];
 
@@ -41,7 +41,7 @@ namespace L10_FudgeCraft_DetectCombos {
         }
 
         private findNeigborsOfSameColor(_element: GridElement): GridElement[] {
-            let allNeighbors: GridElement[] = grid.findNeighbors(_element.cube.cmpTransform.local.translation);
+            let allNeighbors: GridElement[] = <GridElement[]>grid.findNeighbors(_element.position);
             let found: GridElement[] = allNeighbors.filter(
                 _neighbor => (_neighbor.cube.name == _element.cube.name)
             );

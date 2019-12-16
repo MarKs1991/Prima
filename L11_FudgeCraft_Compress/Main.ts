@@ -1,4 +1,4 @@
-namespace L10_FudgeCraft_DetectCombos {
+namespace L11_FudgeCraft_Compress {
     export import ƒ = FudgeCore;
 
     window.addEventListener("load", hndLoad);
@@ -47,7 +47,7 @@ namespace L10_FudgeCraft_DetectCombos {
 
         game.appendChild(control);
 
-        //startGame();
+        // startGame();
         startTests();
 
         updateDisplay();
@@ -56,7 +56,7 @@ namespace L10_FudgeCraft_DetectCombos {
     }
 
     function startGame(): void {
-        grid.push(ƒ.Vector3.ZERO(), new GridElement(new Cube(CUBE_TYPE.GREY, ƒ.Vector3.ZERO())));
+        grid.push(ƒ.Vector3.ZERO(), new GridElement(new Cube(CUBE_TYPE.BLACK, ƒ.Vector3.ZERO())));
         startRandomFragment();
     }
 
@@ -78,7 +78,7 @@ namespace L10_FudgeCraft_DetectCombos {
 
     function hndKeyDown(_event: KeyboardEvent): void {
         if (_event.code == ƒ.KEYBOARD_CODE.SPACE) {
-            let frozen: GridElement[] = control.freeze();
+            let frozen: GridElement[] = control.freeze(); 
             let combos: Combos = new Combos(frozen);
             handleCombos(combos);
             startRandomFragment();
@@ -117,8 +117,7 @@ namespace L10_FudgeCraft_DetectCombos {
         if (Object.keys(timers).length > 0)
             return;
 
-        let collisions: GridElement[] = control.checkCollisions(move);
-        if (collisions.length > 0)
+        if ( control.checkCollisions(move).length > 0)
             return;
 
         move.translation.scale(1 / animationSteps);

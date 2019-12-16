@@ -59,6 +59,21 @@ namespace L09_FudgeCraft_CameraControl {
 
     }
 
+<<<<<<< HEAD
+=======
+    function hndPointerMove(_event: ƒ.PointerEventƒ): void {
+        // ƒ.Debug.log(_event.movementX, _event.movementY);
+        camera.rotateY(_event.movementX * speedCameraRotation);
+        camera.rotateX(_event.movementY * speedCameraRotation);
+        updateDisplay();
+    }
+
+    function hndWheelMove(_event: WheelEvent): void {
+        camera.translate(_event.deltaY * speedCameraTranslation);
+        updateDisplay();
+    }
+
+>>>>>>> master
     function hndKeyDown(_event: KeyboardEvent): void {
 
         if (_event.code == ƒ.KEYBOARD_CODE.SPACE) {
