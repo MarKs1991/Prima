@@ -19,7 +19,12 @@ namespace FudgeCraft {
         push(_position: ƒ.Vector3, _element: GridElement = null): void {
             let key: string = this.toKey(_position);
             this.set(key, _element);
-            ƒ.Debug.log(_element);
+            //ƒ.Debug.log(_element);
+
+            ƒ.Debug.log(_element.cube.getComponent(ƒ.ComponentMaterial));
+            let mat: ƒ.ComponentMaterial = _element.cube.getComponent(ƒ.ComponentMaterial);
+            mat.material.setCoat(new ƒ.CoatColored(ƒ.Color.GREEN));
+
 
             let type: CUBE_TYPE;
             type = Fragment.getRandomEnum(CUBE_TYPE);

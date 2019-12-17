@@ -64,9 +64,8 @@ namespace FudgeCraft {
         ƒ.Debug.log("Game", game);
 
         window.addEventListener("keydown", hndKeyDown);
-
-       
     }
+
 
     function hndKeyDown(_event: KeyboardEvent): void {
         if (_event.code == ƒ.KEYBOARD_CODE.SPACE) {
@@ -94,13 +93,11 @@ namespace FudgeCraft {
         if (camtransformation) {
             cammove(camtransformation);
         }
-        
-        
-
 
         // ƒ.RenderManager.update();
         viewport.draw();
     }
+
 
     function move(_transformation: Transformation): void {
         let animationSteps: number = 10;
@@ -120,7 +117,6 @@ namespace FudgeCraft {
         if (collisions.length > 0) 
             return;
         
-
         move.translation.scale(1 / animationSteps);
         move.rotation.scale(1 / animationSteps);
 

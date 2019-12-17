@@ -16,7 +16,10 @@ var FudgeCraft;
         push(_position, _element = null) {
             let key = this.toKey(_position);
             this.set(key, _element);
-            FudgeCraft.ƒ.Debug.log(_element);
+            //ƒ.Debug.log(_element);
+            FudgeCraft.ƒ.Debug.log(_element.cube.getComponent(FudgeCraft.ƒ.ComponentMaterial));
+            let mat = _element.cube.getComponent(FudgeCraft.ƒ.ComponentMaterial);
+            mat.material.setCoat(new FudgeCraft.ƒ.CoatColored(FudgeCraft.ƒ.Color.GREEN));
             let type;
             type = FudgeCraft.Fragment.getRandomEnum(FudgeCraft.CUBE_TYPE);
             FudgeCraft.ƒ.Debug.log(type);
