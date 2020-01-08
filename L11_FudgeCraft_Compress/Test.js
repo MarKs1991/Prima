@@ -2,37 +2,52 @@
 var L11_FudgeCraft_Compress;
 (function (L11_FudgeCraft_Compress) {
     function startTests() {
-        //    testGrid();
-        // testCombos();
-        testCompression();
+        switch (L11_FudgeCraft_Compress.args.get("test")) {
+            case "grid":
+                testGrid();
+                break;
+            case "combos":
+                testCombos();
+                break;
+            case "compression":
+                testCompression();
+                break;
+            case "camera":
+                testCamera();
+                break;
+        }
     }
     L11_FudgeCraft_Compress.startTests = startTests;
+    function testCamera() {
+        let setups = [
+            { type: L11_FudgeCraft_Compress.CUBE_TYPE.BLACK, positions: [[0, 0, 0]] }
+        ];
+        setupGrid(setups);
+        L11_FudgeCraft_Compress.startRandomFragment();
+        L11_FudgeCraft_Compress.ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, rotateY);
+        L11_FudgeCraft_Compress.ƒ.Loop.start();
+        // ƒ.Time.game.setTimer(4, 0, rotateY);
+        function rotateY(_event) {
+            L11_FudgeCraft_Compress.camera.rotateY(1 * L11_FudgeCraft_Compress.ƒ.Loop.timeFrameReal);
+            // camera.rotateX(5 * Math.sin(ƒ.Time.game.get() / 100));
+            L11_FudgeCraft_Compress.updateDisplay();
+        }
+    }
     async function testCompression() {
         let setups = [
             { type: L11_FudgeCraft_Compress.CUBE_TYPE.BLACK, positions: [[0, 0, 0]] },
-            { type: L11_FudgeCraft_Compress.CUBE_TYPE.RED, positions: [[-2, -2, 0], [-2, -2, 1], [-2, -2, -1]] },
-            { type: L11_FudgeCraft_Compress.CUBE_TYPE.GREEN, positions: [[0, -2, 0], [1, -2, 0], [-1, -2, 0]] },
-            { type: L11_FudgeCraft_Compress.CUBE_TYPE.BLUE, positions: [[0, 0, 2], [0, -1, 2], [0, 1, 2]] },
-            { type: L11_FudgeCraft_Compress.CUBE_TYPE.YELLOW, positions: [[0, -2, -2], [1, -2, -2], [-1, -2, -2]] }
+            // { type: CUBE_TYPE.RED, positions: [[-2, -2, 0], [-2, -2, 1], [-2, -2, -1]] },
+            // { type: CUBE_TYPE.GREEN, positions: [[0, -2 , 0], [1, -2, 0], [-1, -2, 0]] },
+            // { type: CUBE_TYPE.BLUE, positions: [[1, 0, 0] /*, [0, 0, 2], [0, -1, 2], [0, 1, 2]*/] },
+            { type: L11_FudgeCraft_Compress.CUBE_TYPE.YELLOW, positions: [[3, 1, 0], [2, 0, 1], [2, 1, 1]] }
+            // { type: CUBE_TYPE.YELLOW, positions: [[0, -2, -2], [1, -2, -2], [-1, -2, -2]] }
         ];
         setupGrid(setups);
         L11_FudgeCraft_Compress.updateDisplay();
         // debugger;
-        // ƒ.Time.game.setTimer(3000, 1, compress);
-        L11_FudgeCraft_Compress.ƒ.Time.game.setScale(1);
-        await L11_FudgeCraft_Compress.ƒ.Time.game.delay(3000);
-        compress();
-        function compress() {
-            let moves = L11_FudgeCraft_Compress.grid.compress();
-            for (let move of moves) {
-                L11_FudgeCraft_Compress.grid.pop(move.element.position);
-                move.element.position = move.target;
-                L11_FudgeCraft_Compress.grid.push(move.target, move.element);
-            }
-            L11_FudgeCraft_Compress.updateDisplay();
-            if (moves.length > 0)
-                L11_FudgeCraft_Compress.ƒ.Time.game.setTimer(100, 1, compress);
-        }
+        // ƒ.Time.game.setScale(0.2);
+        await L11_FudgeCraft_Compress.ƒ.Time.game.delay(2000);
+        L11_FudgeCraft_Compress.compressAndHandleCombos();
     }
     function testCombos() {
         let setups = [

@@ -20,10 +20,10 @@ namespace L10_FudgeCraft_DetectCombos {
         canvas.addEventListener("click", canvas.requestPointerLock);
 
         // set lights
-        let cmpLight: ƒ.ComponentLight = new ƒ.ComponentLight(new ƒ.LightDirectional(ƒ.Color.WHITE));
+        let cmpLight: ƒ.ComponentLight = new ƒ.ComponentLight(new ƒ.LightDirectional(ƒ.Color.CSS("WHITE")));
         cmpLight.pivot.lookAt(new ƒ.Vector3(0.5, 1, 0.8));
         // game.addComponent(cmpLight);
-        let cmpLightAmbient: ƒ.ComponentLight = new ƒ.ComponentLight(new ƒ.LightAmbient(ƒ.Color.DARK_GREY));
+        let cmpLightAmbient: ƒ.ComponentLight = new ƒ.ComponentLight(new ƒ.LightAmbient(new ƒ.Color(0.25, 0.25, 0.25, 1)));
         game.addComponent(cmpLightAmbient);
 
         // setup orbiting camera
@@ -47,8 +47,8 @@ namespace L10_FudgeCraft_DetectCombos {
 
         game.appendChild(control);
 
-        //startGame();
-        startTests();
+        if (true) startGame();
+        if (true) startTests();
 
         updateDisplay();
         ƒ.Debug.log("Game", game);
@@ -64,7 +64,7 @@ namespace L10_FudgeCraft_DetectCombos {
         viewport.draw();
     }
 
-    function hndPointerMove(_event: ƒ.PointerEventƒ): void {
+    function hndPointerMove(_event: ƒ.EventPointer): void {
         // ƒ.Debug.log(_event.movementX, _event.movementY);
         camera.rotateY(_event.movementX * speedCameraRotation);
         camera.rotateX(_event.movementY * speedCameraRotation);
