@@ -16,19 +16,19 @@ namespace L14_ScrollerHare {
     txtImage.image = img;
 
     sprite = new Sprite("Hare");
-    sprite.generateByGrid(txtImage, ƒ.Rectangle.GET(2, 104, 68, 64), 6, ƒ.Vector2.ZERO(), 64, ƒ.ORIGIN2D.BOTTOMCENTER);
-
+    sprite.generateByGrid(txtImage, ƒ.Rectangle.GET(0, 1527, 20, 19), 12,   ƒ.Vector2.ZERO(), 30, ƒ.ORIGIN2D.BOTTOMCENTER);
+    //sprite.generateByGrid(txtImage, ƒ.Rectangle.GET(0, 2137, 16, 22), 43,   ƒ.Vector2.ZERO(), 30, ƒ.ORIGIN2D.BOTTOMCENTER);
     ƒ.RenderManager.initialize(true, false);
     root = new ƒ.Node("Root");
     let mtxHare: ƒ.Matrix4x4;
     let hare: NodeSprite;
 
     hare = new NodeSprite("Hare0", sprite);
-    hare.setFrameDirection(-1);
+    hare.setFrameDirection(1);
     root.appendChild(hare);
 
     hare = new NodeSprite("Hare1", sprite);
-    mtxHare = ƒ.Matrix4x4.TRANSLATION(ƒ.Vector3.X(1));
+    mtxHare = ƒ.Matrix4x4.TRANSLATION(ƒ.Vector3.X(0));
     mtxHare.scaleX(-1);
     hare.addComponent(new ƒ.ComponentTransform(mtxHare));
     root.appendChild(hare);

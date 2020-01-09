@@ -18,8 +18,6 @@ var FudgeCraft;
             this.set(key, _element);
             //ƒ.Debug.log(_element);
             FudgeCraft.ƒ.Debug.log(_element.cube.getComponent(FudgeCraft.ƒ.ComponentMaterial));
-            let mat = _element.cube.getComponent(FudgeCraft.ƒ.ComponentMaterial);
-            mat.material.setCoat(new FudgeCraft.ƒ.CoatColored(FudgeCraft.ƒ.Color.GREEN));
             let type;
             type = FudgeCraft.Fragment.getRandomEnum(FudgeCraft.CUBE_TYPE);
             FudgeCraft.ƒ.Debug.log(type);
@@ -87,6 +85,10 @@ var FudgeCraft;
                         if (x == layerDepth || x == -layerDepth || y == layerDepth || y == -layerDepth || z == layerDepth || z == -layerDepth) {
                             isOccupied[x + y + z] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(x, y, z));
                             //  ƒ.Debug.log(isOccupied);
+                            if (layerDepth == 1) {
+                                let mat = _element.cube.getComponent(FudgeCraft.ƒ.ComponentMaterial);
+                                mat.material.setCoat(new FudgeCraft.ƒ.CoatColored(FudgeCraft.ƒ.Color.GREEN));
+                            }
                             if (isOccupied[x + y + z] == false) {
                                 return;
                             }

@@ -22,9 +22,7 @@ namespace FudgeCraft {
             //ƒ.Debug.log(_element);
 
             ƒ.Debug.log(_element.cube.getComponent(ƒ.ComponentMaterial));
-            let mat: ƒ.ComponentMaterial = _element.cube.getComponent(ƒ.ComponentMaterial);
-            mat.material.setCoat(new ƒ.CoatColored(ƒ.Color.GREEN));
-
+           
 
             let type: CUBE_TYPE;
             type = Fragment.getRandomEnum(CUBE_TYPE);
@@ -124,6 +122,10 @@ namespace FudgeCraft {
                         if (x == layerDepth || x == -layerDepth || y == layerDepth || y == -layerDepth || z == layerDepth || z == -layerDepth) {
                             isOccupied[x + y + z] = this.checkForFragment(new ƒ.Vector3(x, y, z));
                           //  ƒ.Debug.log(isOccupied);
+                          if(layerDepth== 1){
+                                let mat: ƒ.ComponentMaterial = _element.cube.getComponent(ƒ.ComponentMaterial);
+                                mat.material.setCoat(new ƒ.CoatColored(ƒ.Color.GREEN));
+                          }
                             
                             if (isOccupied[x + y + z] == false) {                               
                                 return;

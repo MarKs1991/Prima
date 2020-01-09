@@ -13,14 +13,13 @@ var L14_ScrollerFoundation;
         txtImage.image = img;
         sprite = new L14_ScrollerFoundation.Sprite("Test");
         let rects = [
-            new ƒ.Rectangle(0, 241, 16, 19),
-            new ƒ.Rectangle(17, 241, 16, 19),
-            new ƒ.Rectangle(34, 241, 16, 19),
-            new ƒ.Rectangle(51, 241, 16, 19),
-            new ƒ.Rectangle(68, 241, 16, 19),
-            new ƒ.Rectangle(85, 241, 16, 19)
+            new ƒ.Rectangle(0, 0, 360, 416),
+            new ƒ.Rectangle(0, 0, 180, 208),
+            new ƒ.Rectangle(180, 0, 180, 208),
+            new ƒ.Rectangle(0, 208, 180, 208),
+            new ƒ.Rectangle(180, 208, 180, 208)
         ];
-        sprite.generate(txtImage, rects, 16, ƒ.ORIGIN2D.BOTTOMCENTER);
+        sprite.generate(txtImage, rects, 300, ƒ.ORIGIN2D.BOTTOMCENTER);
         ƒ.RenderManager.initialize(true, false);
         root = new L14_ScrollerFoundation.NodeSprite("Root", sprite);
         let cmpCamera = new ƒ.ComponentCamera();
