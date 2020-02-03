@@ -7,7 +7,7 @@ namespace L15_ScrollerControl {
     WALK = "Walk"
   }
   export enum DIRECTION {
-    LEFT, RIGHT
+    LEFT, RIGHT, UP
   }
 
   export class Hare extends ƒ.Node {
@@ -16,6 +16,8 @@ namespace L15_ScrollerControl {
     // private action: ACTION;
     // private time: ƒ.Time = new ƒ.Time();
     public speed: number = 0;
+
+   
 
     constructor(_name: string = "Hare") {
       super(_name);
@@ -44,10 +46,13 @@ namespace L15_ScrollerControl {
       sprite.generateByGrid(_txtImage, ƒ.Rectangle.GET(2, 104, 68, 64), 6, ƒ.Vector2.ZERO(), 64, ƒ.ORIGIN2D.BOTTOMCENTER);
       Hare.sprites.push(sprite);
 
+    
+
       sprite = new Sprite(ACTION.IDLE);
       sprite.generateByGrid(_txtImage, ƒ.Rectangle.GET(8, 20, 45, 72), 4, ƒ.Vector2.ZERO(), 64, ƒ.ORIGIN2D.BOTTOMCENTER);
       Hare.sprites.push(sprite);
     }
+    
 
     public show(_action: ACTION): void {
       for (let child of this.getChildren())

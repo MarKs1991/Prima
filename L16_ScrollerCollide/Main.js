@@ -8,14 +8,24 @@ var L16_ScrollerCollide;
     L16_ScrollerCollide.NodeSprite = L14_ScrollerFoundation.NodeSprite;
     window.addEventListener("load", test);
     let keysPressed = {};
+    let viewport = new L16_ScrollerCollide.ƒ.Viewport();
+    let ParentCamNode = new L16_ScrollerCollide.ƒ.Node("ParentCamNode");
+    let CamNode = new L16_ScrollerCollide.ƒ.Node("CamNode");
     let hare;
+    let RotNode = new L16_ScrollerCollide.ƒ.Node("RotNode");
+    L16_ScrollerCollide.cameraRot = new L16_ScrollerCollide.Camera();
+    let CamZoom = new L16_ScrollerCollide.ƒ.Node("CamZoom");
+    let cam = new L16_ScrollerCollide.ƒ.ComponentCamera;
     function test() {
+        let control = new Control();
         let canvas = document.querySelector("canvas");
         let crc2 = canvas.getContext("2d");
         let img = document.querySelector("img");
         let txtHare = new L16_ScrollerCollide.ƒ.TextureImage();
         txtHare.image = img;
         L16_ScrollerCollide.Hare.generateSprites(txtHare);
+        control.cmpTransform.local.translateY(5);
+        RotNode.appendChild(control);
         L16_ScrollerCollide.ƒ.RenderManager.initialize(true, false);
         L16_ScrollerCollide.game = new L16_ScrollerCollide.ƒ.Node("Game");
         hare = new L16_ScrollerCollide.Hare("Hare");
@@ -23,10 +33,16 @@ var L16_ScrollerCollide;
         L16_ScrollerCollide.game.appendChild(L16_ScrollerCollide.level);
         L16_ScrollerCollide.game.appendChild(hare);
         let cmpCamera = new L16_ScrollerCollide.ƒ.ComponentCamera();
-        cmpCamera.pivot.translateZ(5);
+        cmpCamera.pivot.translateZ(20);
+        CamNode.addComponent(cmpCamera);
+        CamNode.addComponent(new L16_ScrollerCollide.ƒ.ComponentTransform());
         cmpCamera.pivot.lookAt(L16_ScrollerCollide.ƒ.Vector3.ZERO());
         cmpCamera.backgroundColor = L16_ScrollerCollide.ƒ.Color.CSS("aliceblue");
-        let viewport = new L16_ScrollerCollide.ƒ.Viewport();
+        cmpCamera.pivot.rotateY(0);
+        CamNode.addComponent(cmpCamera);
+        ParentCamNode.addComponent(new L16_ScrollerCollide.ƒ.ComponentTransform());
+        CamNode.cmpTransform.local.rotateX(90);
+        ParentCamNode.appendChild(CamNode);
         viewport.initialize("Viewport", L16_ScrollerCollide.game, cmpCamera, canvas);
         viewport.draw();
         document.addEventListener("keydown", handleKeyboard);
@@ -42,8 +58,13 @@ var L16_ScrollerCollide;
     }
     function handleKeyboard(_event) {
         keysPressed[_event.code] = (_event.type == "keydown");
-        if (_event.code == L16_ScrollerCollide.ƒ.KEYBOARD_CODE.SPACE && _event.type == "keydown")
+        if (_event.code == L16_ScrollerCollide.ƒ.KEYBOARD_CODE.W && _event.type == "keydown")
             hare.act(L16_ScrollerCollide.ACTION.JUMP);
+        let camtransformation = L16_ScrollerCollide.Camera.camtransformations[_event.code];
+        if (camtransformation) {
+            cammove(camtransformation);
+        }
+        viewport.draw();
     }
     function processInput() {
         if (keysPressed[L16_ScrollerCollide.ƒ.KEYBOARD_CODE.A]) {
@@ -56,17 +77,51 @@ var L16_ScrollerCollide;
         }
         hare.act(L16_ScrollerCollide.ACTION.IDLE);
     }
+    function cammove(_transformation) {
+        let animationSteps = 10;
+        let fullRotation = 90;
+        // let fullTranslation: number = 1;
+        let move = {
+            rotation: _transformation.rotation ? L16_ScrollerCollide.ƒ.Vector3.SCALE(_transformation.rotation, fullRotation) : new L16_ScrollerCollide.ƒ.Vector3()
+            //translation: _transformation.translation ? ƒ.Vector3.SCALE(_transformation.translation, fullTranslation) : new ƒ.Vector3()
+        };
+        control.cmpTransform.local.rotateX(move.rotation.x);
+        control.cmpTransform.local.rotateY(move.rotation.y);
+        control.cmpTransform.local.rotateZ(move.rotation.z);
+        //control.cmpTransform.local.translation = move.translation;
+        move.rotation.scale(1 / animationSteps);
+        L16_ScrollerCollide.ƒ.Time.game.setTimer(10, animationSteps, function () {
+            L16_ScrollerCollide.cameraRot.move(move);
+            // ƒ.RenderManager.update();
+            viewport.draw();
+        });
+    }
     function createLevel() {
         let level = new L16_ScrollerCollide.ƒ.Node("Level");
         let floor = new L16_ScrollerCollide.Floor();
-        floor.cmpTransform.local.scaleY(0.2);
+        floor.cmpTransform.local.scaleY(0.3);
+        floor.cmpTransform.local.translateY(1.5);
+        floor.cmpTransform.local.translateZ(6);
         level.appendChild(floor);
         floor = new L16_ScrollerCollide.Floor();
-        floor.cmpTransform.local.scaleY(0.2);
-        floor.cmpTransform.local.scaleX(2);
+        floor.cmpTransform.local.scaleY(0.3);
+        floor.cmpTransform.local.scaleX(1);
         floor.cmpTransform.local.translateY(0.2);
         floor.cmpTransform.local.translateX(1.5);
+        floor.cmpTransform.local.translateZ(6);
         level.appendChild(floor);
+        floor = new L16_ScrollerCollide.Floor();
+        floor.cmpTransform.local.scaleY(1);
+        floor.cmpTransform.local.scaleX(1);
+        floor.cmpTransform.local.translateZ(6);
+        level.appendChild(floor);
+        hare.cmpTransform.local.translateZ(6);
+        let tower = new L16_ScrollerCollide.ƒ.Node("Tower");
+        tower.addComponent(new L16_ScrollerCollide.ƒ.ComponentTransform());
+        tower.addComponent(new L16_ScrollerCollide.ƒ.ComponentMaterial(new L16_ScrollerCollide.ƒ.Material("Tower", L16_ScrollerCollide.ƒ.ShaderUniColor, new L16_ScrollerCollide.ƒ.CoatColored(L16_ScrollerCollide.ƒ.Color.CSS("red", 0.5)))));
+        tower.addComponent(new L16_ScrollerCollide.ƒ.ComponentMesh(new L16_ScrollerCollide.ƒ.MeshCube()));
+        tower.cmpTransform.local.scale(new L16_ScrollerCollide.ƒ.Vector3(10, 10, 10));
+        level.appendChild(tower);
         return level;
     }
 })(L16_ScrollerCollide || (L16_ScrollerCollide = {}));

@@ -13,6 +13,7 @@ var L15_ScrollerControl;
     (function (DIRECTION) {
         DIRECTION[DIRECTION["LEFT"] = 0] = "LEFT";
         DIRECTION[DIRECTION["RIGHT"] = 1] = "RIGHT";
+        DIRECTION[DIRECTION["UP"] = 2] = "UP";
     })(DIRECTION = L15_ScrollerControl.DIRECTION || (L15_ScrollerControl.DIRECTION = {}));
     class Hare extends ƒ.Node {
         constructor(_name = "Hare") {

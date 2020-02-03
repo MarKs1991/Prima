@@ -86,8 +86,8 @@ var FudgeCraft;
                             isOccupied[x + y + z] = this.checkForFragment(new FudgeCraft.ƒ.Vector3(x, y, z));
                             //  ƒ.Debug.log(isOccupied);
                             if (layerDepth == 1) {
-                                let mat = _element.cube.getComponent(FudgeCraft.ƒ.ComponentMaterial);
-                                mat.material.setCoat(new FudgeCraft.ƒ.CoatColored(FudgeCraft.ƒ.Color.GREEN));
+                                //  let mat: ƒ.ComponentMaterial = _element.cube.getComponent(ƒ.ComponentMaterial);
+                                //  mat.material.setCoat(new ƒ.CoatColored(ƒ.Color.GREEN));
                             }
                             if (isOccupied[x + y + z] == false) {
                                 return;

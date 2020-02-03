@@ -26,7 +26,7 @@ namespace L16_ScrollerCollide {
       for (let sprite of Hare.sprites) {
         let nodeSprite: NodeSprite = new NodeSprite(sprite.name, sprite);
         nodeSprite.activate(false);
-
+        
         nodeSprite.addEventListener(
           "showNext",
           (_event: Event) => { (<NodeSprite>_event.currentTarget).showFrameNext(); },

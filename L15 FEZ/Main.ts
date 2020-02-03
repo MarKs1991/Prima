@@ -20,16 +20,16 @@ namespace L15_ScrollerControl {
     let canvas: HTMLCanvasElement = document.querySelector("canvas");
     let crc2: CanvasRenderingContext2D = canvas.getContext("2d");
     let img: HTMLImageElement = document.querySelector("img");
-    let txtHare: ƒ.TextureImage = new ƒ.TextureImage();
-    txtHare.image = img;
-    Hare.generateSprites(txtHare);
+    
 
     let rec = new ƒ.Rectangle;
     let rec1 = new ƒ.Rectangle;
     rec.position.x = 20;
     rec.position.y = 20;
-    rec1.position.x = 19;
-    rec1.position.y = 20;
+    collider.addComponent(rec);
+    
+    rec1.position.x = 0;
+    rec1.position.y = 0;
     ƒ.Debug.log(rec.collides(rec1));
 
     ƒ.RenderManager.initialize(true, false);

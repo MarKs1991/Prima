@@ -123,8 +123,8 @@ namespace FudgeCraft {
                             isOccupied[x + y + z] = this.checkForFragment(new ƒ.Vector3(x, y, z));
                           //  ƒ.Debug.log(isOccupied);
                           if(layerDepth== 1){
-                                let mat: ƒ.ComponentMaterial = _element.cube.getComponent(ƒ.ComponentMaterial);
-                                mat.material.setCoat(new ƒ.CoatColored(ƒ.Color.GREEN));
+                              //  let mat: ƒ.ComponentMaterial = _element.cube.getComponent(ƒ.ComponentMaterial);
+                              //  mat.material.setCoat(new ƒ.CoatColored(ƒ.Color.GREEN));
                           }
                             
                             if (isOccupied[x + y + z] == false) {                               
