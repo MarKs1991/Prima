@@ -6,9 +6,11 @@ namespace FudgeCraft {
     export let game: ƒ.Node = new ƒ.Node("FudgeCraft");
     export let grid: Grid = new Grid();
     export let cameraRot: Camera = new Camera();
+
+   
     let CamZoom: ƒ.Node = new ƒ.Node("CamZoom");
     let cam: ƒ.ComponentCamera = new ƒ.ComponentCamera;
-    let a : ƒ.Color = new ƒ.Color(0,0,0,0);
+
     
     let control: Control = new Control();
 
@@ -39,13 +41,14 @@ namespace FudgeCraft {
 
         cam.pivot.translate(new ƒ.Vector3(4, 6, 20));
         cam.pivot.lookAt(ƒ.Vector3.ZERO());
-        cam.backgroundColor = a;
+        cam.backgroundColor = ƒ.Color.WHITE;
 
+        //cam.pivot.rotation =  ƒ.Vector3.X(1);
 
-        let cmpLight: ƒ.ComponentLight = new ƒ.ComponentLight(new ƒ.LightDirectional(a));
+        let cmpLight: ƒ.ComponentLight = new ƒ.ComponentLight(new ƒ.LightDirectional(ƒ.Color.WHITE));
         cmpLight.pivot.lookAt(new ƒ.Vector3(0.5, 1, 0.8));
         game.addComponent(cmpLight);
-        let cmpLightAmbient: ƒ.ComponentLight = new ƒ.ComponentLight(new ƒ.LightAmbient(a));
+        let cmpLightAmbient: ƒ.ComponentLight = new ƒ.ComponentLight(new ƒ.LightAmbient(ƒ.Color.DARK_GREY));
         game.addComponent(cmpLightAmbient);
 
 

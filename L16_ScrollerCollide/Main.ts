@@ -13,24 +13,27 @@ namespace L16_ScrollerCollide {
   let viewport: ƒ.Viewport = new ƒ.Viewport();
   export let game: ƒ.Node;
   export let level: ƒ.Node;
+  export let cameraRot: Camera = new Camera();
+  
 
   
+ 
+  let hare: Hare;
 
   let ParentCamNode = new ƒ.Node("ParentCamNode");
   let CamNode = new ƒ.Node("CamNode");
- 
-  let hare: Hare;
- 
   let RotNode: ƒ.Node = new ƒ.Node("RotNode"); 
   
-  export let cameraRot: Camera = new Camera();
+  
+
   let CamZoom: ƒ.Node = new ƒ.Node("CamZoom");
   let cam: ƒ.ComponentCamera = new ƒ.ComponentCamera;
   
+  let control: Control = new Control();
 
   function test(): void {
 
-    let control: Control = new Control();
+   
 
     let canvas: HTMLCanvasElement = document.querySelector("canvas");
     let crc2: CanvasRenderingContext2D = canvas.getContext("2d");
@@ -52,12 +55,22 @@ namespace L16_ScrollerCollide {
     game.appendChild(hare);
 
     
+
+    CamZoom.addComponent(cam);
+    CamZoom.addComponent(new ƒ.ComponentTransform);
+  cameraRot.appendChild(CamZoom);
+        
+
+  control.cmpTransform.local.translateY(5);
+
+  game.appendChild(cameraRot);
+
     
 
 
     let cmpCamera: ƒ.ComponentCamera = new ƒ.ComponentCamera();
     
-    cmpCamera.pivot.translateZ(20);
+    cam.pivot.translateZ(20);
   
     CamNode.addComponent(cmpCamera);
     CamNode.addComponent(new ƒ.ComponentTransform());
@@ -76,7 +89,7 @@ namespace L16_ScrollerCollide {
 
     
    
-    viewport.initialize("Viewport", game, cmpCamera, canvas);
+    viewport.initialize("Viewport", game, cam, canvas);
     viewport.draw();
 
     document.addEventListener("keydown", handleKeyboard);
@@ -100,12 +113,17 @@ namespace L16_ScrollerCollide {
     if (_event.code == ƒ.KEYBOARD_CODE.W && _event.type == "keydown")
       hare.act(ACTION.JUMP);
 
-
+      let mtxHare: ƒ.Matrix4x4;
       let camtransformation: CamTransformation = Camera.camtransformations[_event.code];
       
         if (camtransformation) {
             cammove(camtransformation);
-        }
+                
+            
+            let mtxContainer: ƒ.Matrix4x4 = hare.cmpTransform.local;
+          
+         ƒ.Debug.log(mtxContainer)
+           }
 
         viewport.draw();
   }
@@ -134,6 +152,7 @@ namespace L16_ScrollerCollide {
         //translation: _transformation.translation ? ƒ.Vector3.SCALE(_transformation.translation, fullTranslation) : new ƒ.Vector3()
     };
 
+    
     control.cmpTransform.local.rotateX(move.rotation.x);
     control.cmpTransform.local.rotateY(move.rotation.y);
     control.cmpTransform.local.rotateZ(move.rotation.z);
@@ -161,11 +180,20 @@ namespace L16_ScrollerCollide {
 
     floor = new Floor();
     floor.cmpTransform.local.scaleY(0.3);
-    floor.cmpTransform.local.scaleX(1);
+    floor.cmpTransform.local.scaleX(7);
     floor.cmpTransform.local.translateY(0.2);
     floor.cmpTransform.local.translateX(1.5);
     floor.cmpTransform.local.translateZ(6);
     level.appendChild(floor);
+
+    floor = new Floor();
+    floor.cmpTransform.local.scaleY(0.3);
+    floor.cmpTransform.local.scaleX(20);
+    floor.cmpTransform.local.translateY(0.2);
+    floor.cmpTransform.local.translateX(6);
+    floor.cmpTransform.local.translateZ(1.2);
+    level.appendChild(floor);
+    
 
     floor = new Floor();
     floor.cmpTransform.local.scaleY(1);
@@ -175,6 +203,8 @@ namespace L16_ScrollerCollide {
     level.appendChild(floor);
 
     hare.cmpTransform.local.translateZ(6);
+    hare.cmpTransform.local.translateX(6);
+    hare.cmpTransform.local.rotateY(90);
 
     let tower: ƒ.Node = new ƒ.Node("Tower");
     tower.addComponent(new ƒ.ComponentTransform());

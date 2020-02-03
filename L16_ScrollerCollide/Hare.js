@@ -63,7 +63,7 @@ var L16_ScrollerCollide;
                 case ACTION.WALK:
                     let direction = (_direction == DIRECTION.RIGHT ? 1 : -1);
                     this.speed.x = Hare.speedMax.x; // * direction;
-                    this.cmpTransform.local.rotation = ƒ.Vector3.Y(90 - 90 * direction);
+                    //this.cmpTransform.local.rotation = ƒ.Vector3.Y(90 - 90 * direction);
                     // console.log(direction);
                     break;
                 case ACTION.JUMP:

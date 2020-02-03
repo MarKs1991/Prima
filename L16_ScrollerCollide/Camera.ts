@@ -25,12 +25,11 @@ namespace L16_ScrollerCollide {
       public static defineControls(): CamTransformations {
           let controls: CamTransformations = {};
 
-          controls[ƒ.KEYBOARD_CODE.NUMPAD2] = { rotation: ƒ.Vector3.Z(-1) };
-          controls[ƒ.KEYBOARD_CODE.NUMPAD8] = { rotation: ƒ.Vector3.Z(1) };
-          controls[ƒ.KEYBOARD_CODE.NUMPAD4] = { rotation: ƒ.Vector3.Y(-1) };
-          controls[ƒ.KEYBOARD_CODE.NUMPAD6] = { rotation: ƒ.Vector3.Y(1) };
-          controls[ƒ.KEYBOARD_CODE.NUMPAD1] = { translation: ƒ.Vector3.Y(1) };
-          controls[ƒ.KEYBOARD_CODE.NUMPAD7] = { translation: ƒ.Vector3.Y(-1) };
+          
+         
+          controls[ƒ.KEYBOARD_CODE.ARROW_LEFT] = { rotation: ƒ.Vector3.Y(-.5)};
+          controls[ƒ.KEYBOARD_CODE.ARROW_RIGHT] = { rotation: ƒ.Vector3.Y(.5) };
+      
           return controls;
       }
 
