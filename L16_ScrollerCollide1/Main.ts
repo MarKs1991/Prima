@@ -1,5 +1,5 @@
 /// <reference path="../L14_ScrollerFoundation/SpriteGenerator.ts"/>
-namespace L16_ScrollerCollide {
+namespace L16_ScrollerCollide1 {
   export import ƒ = FudgeCore;
   export import Sprite = L14_ScrollerFoundation.Sprite;
   export import NodeSprite = L14_ScrollerFoundation.NodeSprite;
@@ -139,35 +139,32 @@ namespace L16_ScrollerCollide {
         viewport.draw();
 }
 
-function processInput(): void {
-    if (keysPressed[ƒ.KEYBOARD_CODE.A]) {
-    hare.act(ACTION.WALK, DIRECTION.LEFT);
-    ƒ.Debug.log(hare.cmpTransform.local.translation.x);
-  ƒ.Debug.log(hare.cmpTransform.local.translation.y);
-  ƒ.Debug.log(hare.cmpTransform.local.translation.z);
-    return;
-  }
-  if (keysPressed[ƒ.KEYBOARD_CODE.D]) {
-    hare.act(ACTION.WALK, DIRECTION.RIGHT);
-    ƒ.Debug.log(hare.cmpTransform.local.translation.x);
-  ƒ.Debug.log(hare.cmpTransform.local.translation.y);
-  ƒ.Debug.log(hare.cmpTransform.local.translation.z);
-    return;
+  function processInput(): void {
+    if (keysPressed[ƒ.KEYBOARD_CODE.A]) {   
+      hare.cmpTransform.local.translateX(-.1);
+      return;
+    }
+    if (keysPressed[ƒ.KEYBOARD_CODE.D]) {
+      hare.cmpTransform.local.translateX(+.1);
+      return;
+    }
+
+    if (keysPressed[ƒ.KEYBOARD_CODE.W]) {   
+      hare.cmpTransform.local.translateZ(-.1);
+      return;
+    }
+    if (keysPressed[ƒ.KEYBOARD_CODE.S]) {
+      hare.cmpTransform.local.translateZ(+.1);
+      return;
+    }
+
+    hare.act(ACTION.IDLE);
   }
 
-  if (keysPressed[ƒ.KEYBOARD_CODE.SPACE]) {
-    hare.act(ACTION.WALK, DIRECTION.UP);
-    return;
-  }
-
-  hare.act(ACTION.IDLE);
-  }
-
-  
 
   function cammove(_transformation: Transformation): void {
 
-    let animationSteps: number = 5;
+    let animationSteps: number = 10;
     let fullRotation: number = 90;
    // let fullTranslation: number = 1;
     let move: Transformation = {
@@ -222,7 +219,7 @@ function processInput(): void {
     level.appendChild(floor);
 
     hareGlobal.cmpTransform.local.translateZ(6);
-    
+    hareGlobal.cmpTransform.local.translateX(6);
    
 
 

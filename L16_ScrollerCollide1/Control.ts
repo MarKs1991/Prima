@@ -1,4 +1,4 @@
-namespace L16_ScrollerCollide {
+namespace L16_ScrollerCollide1 {
   import ƒ = FudgeCore;
 
   export interface Transformation {
@@ -34,8 +34,8 @@ namespace L16_ScrollerCollide {
       return controls;
   }
  
-
-  }
+}
+     
 
     
 

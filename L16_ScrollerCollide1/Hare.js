@@ -1,20 +1,20 @@
 "use strict";
 // / <reference path="../L14_ScrollerFoundation/SpriteGenerator.ts"/>
-var L16_ScrollerCollide;
+var L16_ScrollerCollide1;
 // / <reference path="../L14_ScrollerFoundation/SpriteGenerator.ts"/>
-(function (L16_ScrollerCollide) {
+(function (L16_ScrollerCollide1) {
     var ƒ = FudgeCore;
     let ACTION;
     (function (ACTION) {
         ACTION["IDLE"] = "Idle";
         ACTION["WALK"] = "Walk";
         ACTION["JUMP"] = "Jump";
-    })(ACTION = L16_ScrollerCollide.ACTION || (L16_ScrollerCollide.ACTION = {}));
+    })(ACTION = L16_ScrollerCollide1.ACTION || (L16_ScrollerCollide1.ACTION = {}));
     let DIRECTION;
     (function (DIRECTION) {
         DIRECTION[DIRECTION["LEFT"] = 0] = "LEFT";
         DIRECTION[DIRECTION["RIGHT"] = 1] = "RIGHT";
-    })(DIRECTION = L16_ScrollerCollide.DIRECTION || (L16_ScrollerCollide.DIRECTION = {}));
+    })(DIRECTION = L16_ScrollerCollide1.DIRECTION || (L16_ScrollerCollide1.DIRECTION = {}));
     class Hare extends ƒ.Node {
         constructor(_name = "Hare") {
             super(_name);
@@ -31,7 +31,7 @@ var L16_ScrollerCollide;
             };
             this.addComponent(new ƒ.ComponentTransform());
             for (let sprite of Hare.sprites) {
-                let nodeSprite = new L16_ScrollerCollide.NodeSprite(sprite.name, sprite);
+                let nodeSprite = new L16_ScrollerCollide1.NodeSprite(sprite.name, sprite);
                 nodeSprite.activate(false);
                 nodeSprite.addEventListener("showNext", (_event) => { _event.currentTarget.showFrameNext(); }, true);
                 this.appendChild(nodeSprite);
@@ -41,10 +41,10 @@ var L16_ScrollerCollide;
         }
         static generateSprites(_txtImage) {
             Hare.sprites = [];
-            let sprite = new L16_ScrollerCollide.Sprite(ACTION.WALK);
+            let sprite = new L16_ScrollerCollide1.Sprite(ACTION.WALK);
             sprite.generateByGrid(_txtImage, ƒ.Rectangle.GET(2, 104, 68, 64), 6, ƒ.Vector2.ZERO(), 64, ƒ.ORIGIN2D.BOTTOMCENTER);
             Hare.sprites.push(sprite);
-            sprite = new L16_ScrollerCollide.Sprite(ACTION.IDLE);
+            sprite = new L16_ScrollerCollide1.Sprite(ACTION.IDLE);
             sprite.generateByGrid(_txtImage, ƒ.Rectangle.GET(8, 20, 45, 72), 4, ƒ.Vector2.ZERO(), 64, ƒ.ORIGIN2D.BOTTOMCENTER);
             Hare.sprites.push(sprite);
         }
@@ -62,15 +62,9 @@ var L16_ScrollerCollide;
                     break;
                 case ACTION.WALK:
                     let direction = (_direction == DIRECTION.RIGHT ? 1 : -1);
-                    if (_direction == DIRECTION.RIGHT) {
-                        this.speed.x = Hare.speedMax.x;
-                    }
-                    if (_direction == DIRECTION.LEFT) {
-                        this.speed.x = Hare.speedMax.x * -1;
-                    }
-                    //this.speed.x = Hare.speedMax.x; // * direction;
+                    this.speed.x = Hare.speedMax.x; // * direction;
                     //this.cmpTransform.local.rotation = ƒ.Vector3.Y(90 - 90 * direction);
-                    console.log(direction);
+                    // console.log(direction);
                     break;
                 case ACTION.JUMP:
                     this.speed.y = 2;
@@ -79,7 +73,7 @@ var L16_ScrollerCollide;
             this.show(_action);
         }
         checkCollision() {
-            for (let floor of L16_ScrollerCollide.level.getChildren()) {
+            for (let floor of L16_ScrollerCollide1.level.getChildren()) {
                 let rect = floor.getRectWorld();
                 //console.log(rect.toString());
                 let hit = rect.isInside(this.cmpTransform.local.translation.toVector2());
@@ -94,6 +88,6 @@ var L16_ScrollerCollide;
     }
     Hare.speedMax = new ƒ.Vector2(1.5, 5); // units per second
     Hare.gravity = ƒ.Vector2.Y(-3);
-    L16_ScrollerCollide.Hare = Hare;
-})(L16_ScrollerCollide || (L16_ScrollerCollide = {}));
+    L16_ScrollerCollide1.Hare = Hare;
+})(L16_ScrollerCollide1 || (L16_ScrollerCollide1 = {}));
 //# sourceMappingURL=Hare.js.map

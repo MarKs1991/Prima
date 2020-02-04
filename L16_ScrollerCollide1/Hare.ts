@@ -1,5 +1,5 @@
 // / <reference path="../L14_ScrollerFoundation/SpriteGenerator.ts"/>
-namespace L16_ScrollerCollide {
+namespace L16_ScrollerCollide1 {
   import ƒ = FudgeCore;
 
   export enum ACTION {
@@ -60,29 +60,15 @@ namespace L16_ScrollerCollide {
     }
 
     public act(_action: ACTION, _direction?: DIRECTION): void {
-
-      
       switch (_action) {
         case ACTION.IDLE:
           this.speed.x = 0;
           break;
         case ACTION.WALK:
           let direction: number = (_direction == DIRECTION.RIGHT ? 1 : -1);
-
-          if(_direction == DIRECTION.RIGHT)
-          {
-            this.speed.x = Hare.speedMax.x;
-          }
-
-          if(_direction == DIRECTION.LEFT)
-          {
-            this.speed.x = Hare.speedMax.x * -1;
-          }
-
-          //this.speed.x = Hare.speedMax.x; // * direction;
+          this.speed.x = Hare.speedMax.x; // * direction;
           //this.cmpTransform.local.rotation = ƒ.Vector3.Y(90 - 90 * direction);
-          console.log(direction);
-         
+          // console.log(direction);
           break;
         case ACTION.JUMP:
           this.speed.y = 2;

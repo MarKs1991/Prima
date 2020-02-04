@@ -73,10 +73,16 @@ namespace L15_ScrollerControl {
   function processInput(): void {
     if (keysPressed[ƒ.KEYBOARD_CODE.A]) {
       hare.act(ACTION.WALK, DIRECTION.LEFT);
+      ƒ.Debug.log(hare.cmpTransform.local.translation.x);
+  ƒ.Debug.log(hare.cmpTransform.local.translation.y);
+  ƒ.Debug.log(hare.cmpTransform.local.translation.z);
       return;
     }
     if (keysPressed[ƒ.KEYBOARD_CODE.D]) {
       hare.act(ACTION.WALK, DIRECTION.RIGHT);
+      ƒ.Debug.log(hare.cmpTransform.local.translation.x);
+  ƒ.Debug.log(hare.cmpTransform.local.translation.y);
+  ƒ.Debug.log(hare.cmpTransform.local.translation.z);
       return;
     }
 

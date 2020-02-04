@@ -54,10 +54,16 @@ var L15_ScrollerControl;
     function processInput() {
         if (keysPressed[L15_ScrollerControl.ƒ.KEYBOARD_CODE.A]) {
             hare.act(L15_ScrollerControl.ACTION.WALK, L15_ScrollerControl.DIRECTION.LEFT);
+            L15_ScrollerControl.ƒ.Debug.log(hare.cmpTransform.local.translation.x);
+            L15_ScrollerControl.ƒ.Debug.log(hare.cmpTransform.local.translation.y);
+            L15_ScrollerControl.ƒ.Debug.log(hare.cmpTransform.local.translation.z);
             return;
         }
         if (keysPressed[L15_ScrollerControl.ƒ.KEYBOARD_CODE.D]) {
             hare.act(L15_ScrollerControl.ACTION.WALK, L15_ScrollerControl.DIRECTION.RIGHT);
+            L15_ScrollerControl.ƒ.Debug.log(hare.cmpTransform.local.translation.x);
+            L15_ScrollerControl.ƒ.Debug.log(hare.cmpTransform.local.translation.y);
+            L15_ScrollerControl.ƒ.Debug.log(hare.cmpTransform.local.translation.z);
             return;
         }
         if (keysPressed[L15_ScrollerControl.ƒ.KEYBOARD_CODE.SPACE]) {
