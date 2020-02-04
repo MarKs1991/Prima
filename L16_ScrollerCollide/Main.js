@@ -76,8 +76,13 @@ var L16_ScrollerCollide;
         if (camtransformation) {
             cammove(camtransformation);
             let mtxContainer = hare.cmpTransform.local;
-            hare.cmpTransform.local.rotateY(45);
-            L16_ScrollerCollide.ƒ.Debug.log(L16_ScrollerCollide.cameraRot.cmpTransform.local.translation);
+            if (keysPressed[L16_ScrollerCollide.ƒ.KEYBOARD_CODE.ARROW_RIGHT]) {
+                hare.cmpTransform.local.rotateY(90);
+            }
+            if (keysPressed[L16_ScrollerCollide.ƒ.KEYBOARD_CODE.ARROW_LEFT]) {
+                hare.cmpTransform.local.rotateY(-90);
+                //ƒ.Debug.log(cameraRot.cmpTransform.local.translation);
+            }
         }
         viewport.draw();
     }
@@ -123,30 +128,38 @@ var L16_ScrollerCollide;
     }
     function createLevel() {
         let level = new L16_ScrollerCollide.ƒ.Node("Level");
-        let floor = new L16_ScrollerCollide.Floor();
-        floor.cmpTransform.local.scaleY(0.3);
-        floor.cmpTransform.local.translateY(1.5);
-        floor.cmpTransform.local.translateZ(6);
-        level.appendChild(floor);
-        floor = new L16_ScrollerCollide.Floor();
-        floor.cmpTransform.local.scaleY(0.3);
-        floor.cmpTransform.local.scaleX(7);
-        floor.cmpTransform.local.translateY(0.2);
-        floor.cmpTransform.local.translateX(1.5);
-        floor.cmpTransform.local.translateZ(6);
-        level.appendChild(floor);
-        floor = new L16_ScrollerCollide.Floor();
-        floor.cmpTransform.local.scaleY(0.3);
-        floor.cmpTransform.local.scaleX(20);
-        floor.cmpTransform.local.translateY(0.2);
-        floor.cmpTransform.local.translateX(6);
-        floor.cmpTransform.local.translateZ(1.2);
-        level.appendChild(floor);
-        floor = new L16_ScrollerCollide.Floor();
-        floor.cmpTransform.local.scaleY(1);
-        floor.cmpTransform.local.scaleX(1);
-        floor.cmpTransform.local.translateZ(1);
-        level.appendChild(floor);
+        /*
+        
+            let floor: Floor = new Floor();
+            floor.cmpTransform.local.scaleY(0.3);
+            floor.cmpTransform.local.translateY(1.5);
+            floor.cmpTransform.local.translateZ(6);
+            level.appendChild(floor);
+        
+            floor = new Floor();
+            floor.cmpTransform.local.scaleY(0.3);
+            floor.cmpTransform.local.scaleX(7);
+            floor.cmpTransform.local.translateY(0.2);
+            floor.cmpTransform.local.translateX(1.5);
+            floor.cmpTransform.local.translateZ(6);
+            level.appendChild(floor);
+        
+            floor = new Floor();
+            floor.cmpTransform.local.scaleY(0.3);
+            floor.cmpTransform.local.scaleX(20);
+            floor.cmpTransform.local.translateY(0.2);
+            floor.cmpTransform.local.translateX(6);
+            floor.cmpTransform.local.translateZ(1.2);
+            level.appendChild(floor);
+            
+        
+            floor = new Floor();
+            floor.cmpTransform.local.scaleY(1);
+            floor.cmpTransform.local.scaleX(1);
+            floor.cmpTransform.local.translateZ(1);
+            
+            level.appendChild(floor);
+        */
         hareGlobal.cmpTransform.local.translateZ(6);
         L16_ScrollerCollide.ƒ.Debug.log(hare);
         let tower = new L16_ScrollerCollide.ƒ.Node("Tower");

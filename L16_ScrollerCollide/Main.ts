@@ -130,10 +130,15 @@ namespace L16_ScrollerCollide {
             
             let mtxContainer: ƒ.Matrix4x4 = hare.cmpTransform.local;
             
-            hare.cmpTransform.local.rotateY(45);
-     
+            if(keysPressed[ƒ.KEYBOARD_CODE.ARROW_RIGHT]){
+            hare.cmpTransform.local.rotateY(90);
+            }
+            if(keysPressed[ƒ.KEYBOARD_CODE.ARROW_LEFT]){
+              hare.cmpTransform.local.rotateY(-90);
+              //ƒ.Debug.log(cameraRot.cmpTransform.local.translation);
+              }
         
-         ƒ.Debug.log(cameraRot.cmpTransform.local.translation);
+         
            }
 
         viewport.draw();
@@ -189,7 +194,7 @@ function processInput(): void {
 }
   function createLevel(): ƒ.Node {
     let level: ƒ.Node = new ƒ.Node("Level");
-
+/*
 
     let floor: Floor = new Floor();
     floor.cmpTransform.local.scaleY(0.3);
@@ -220,7 +225,7 @@ function processInput(): void {
     floor.cmpTransform.local.translateZ(1);
     
     level.appendChild(floor);
-
+*/
     hareGlobal.cmpTransform.local.translateZ(6);
     
    
