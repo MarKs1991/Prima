@@ -78,9 +78,24 @@ var L16_ScrollerCollide;
             let mtxContainer = hare.cmpTransform.local;
             if (keysPressed[L16_ScrollerCollide.ƒ.KEYBOARD_CODE.ARROW_RIGHT]) {
                 hare.cmpTransform.local.rotateY(90);
+                for (let floor of L16_ScrollerCollide.level.getChildren()) {
+                    floor.cmpTransform.local.rotateY(90);
+                    let LowerLeftx = floor.cmpTransform.local.translation.x - floor.cmpTransform.local.scaling.x;
+                    let LowerLefty = floor.cmpTransform.local.translation.y - floor.cmpTransform.local.scaling.y;
+                    let LowerLeftz = floor.cmpTransform.local.translation.z - floor.cmpTransform.local.scaling.z;
+                    let a = new L16_ScrollerCollide.ƒ.Vector3(floor.cmpTransform.local.translation.z, floor.cmpTransform.local.translation.y, floor.cmpTransform.local.translation.x);
+                    floor.cmpTransform.local.translation = a;
+                    L16_ScrollerCollide.ƒ.Debug.log(LowerLeftx);
+                    L16_ScrollerCollide.ƒ.Debug.log(LowerLefty);
+                    L16_ScrollerCollide.ƒ.Debug.log(LowerLeftz);
+                }
+                //level.cmpTransform.local.rotateY(90);
             }
             if (keysPressed[L16_ScrollerCollide.ƒ.KEYBOARD_CODE.ARROW_LEFT]) {
                 hare.cmpTransform.local.rotateY(-90);
+                for (let floor of L16_ScrollerCollide.level.getChildren()) {
+                    floor.cmpTransform.local.rotateY(-90);
+                }
                 //ƒ.Debug.log(cameraRot.cmpTransform.local.translation);
             }
         }
@@ -128,14 +143,18 @@ var L16_ScrollerCollide;
     }
     function createLevel() {
         let level = new L16_ScrollerCollide.ƒ.Node("Level");
+        level.addComponent(new L16_ScrollerCollide.ƒ.ComponentTransform());
+        let floor = new L16_ScrollerCollide.Floor();
+        floor.cmpTransform.local.scaleY(0.3);
+        floor.cmpTransform.local.translateY(0);
+        floor.cmpTransform.local.translateZ(6);
+        level.appendChild(floor);
+        floor = new L16_ScrollerCollide.Floor();
+        floor.cmpTransform.local.scaleY(0.3);
+        floor.cmpTransform.local.translateY(1);
+        floor.cmpTransform.local.translateZ(3);
+        level.appendChild(floor);
         /*
-        
-            let floor: Floor = new Floor();
-            floor.cmpTransform.local.scaleY(0.3);
-            floor.cmpTransform.local.translateY(1.5);
-            floor.cmpTransform.local.translateZ(6);
-            level.appendChild(floor);
-        
             floor = new Floor();
             floor.cmpTransform.local.scaleY(0.3);
             floor.cmpTransform.local.scaleX(7);
@@ -161,13 +180,16 @@ var L16_ScrollerCollide;
             level.appendChild(floor);
         */
         hareGlobal.cmpTransform.local.translateZ(6);
-        L16_ScrollerCollide.ƒ.Debug.log(hare);
-        let tower = new L16_ScrollerCollide.ƒ.Node("Tower");
-        tower.addComponent(new L16_ScrollerCollide.ƒ.ComponentTransform());
-        tower.addComponent(new L16_ScrollerCollide.ƒ.ComponentMaterial(new L16_ScrollerCollide.ƒ.Material("Tower", L16_ScrollerCollide.ƒ.ShaderUniColor, new L16_ScrollerCollide.ƒ.CoatColored(L16_ScrollerCollide.ƒ.Color.CSS("red", 0.5)))));
-        tower.addComponent(new L16_ScrollerCollide.ƒ.ComponentMesh(new L16_ScrollerCollide.ƒ.MeshCube()));
-        tower.cmpTransform.local.scale(new L16_ScrollerCollide.ƒ.Vector3(10, 10, 10));
-        level.appendChild(tower);
+        L16_ScrollerCollide.ƒ.Debug.log(level);
+        //ƒ.Debug.log(Floor);
+        /*
+            let tower: ƒ.Node = new ƒ.Node("Tower");
+            tower.addComponent(new ƒ.ComponentTransform());
+            tower.addComponent(new ƒ.ComponentMaterial(new ƒ.Material("Tower", ƒ.ShaderUniColor, new ƒ.CoatColored(ƒ.Color.CSS("red", 0.5)))));
+            tower.addComponent(new ƒ.ComponentMesh(new ƒ.MeshCube()));
+            tower.cmpTransform.local.scale(new ƒ.Vector3(10,10,10));
+            level.appendChild(tower);
+        */
         x = hareGlobal.cmpTransform.local.translation.x;
         y = hareGlobal.cmpTransform.local.translation.y;
         z = hareGlobal.cmpTransform.local.translation.z;

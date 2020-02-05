@@ -8,7 +8,7 @@ var L16_ScrollerCollide;
             this.addComponent(new ƒ.ComponentTransform());
             this.addComponent(new ƒ.ComponentMaterial(Floor.material));
             let cmpMesh = new ƒ.ComponentMesh(Floor.mesh);
-            cmpMesh.pivot.translateY(-0.5);
+            //cmpMesh.pivot.translateY(-0.5);
             cmpMesh.pivot = Floor.pivot;
             this.addComponent(cmpMesh);
         }
@@ -26,7 +26,7 @@ var L16_ScrollerCollide;
             return rect;
         }
     }
-    Floor.mesh = new ƒ.MeshCube();
+    Floor.mesh = new ƒ.MeshSprite();
     Floor.material = new ƒ.Material("Floor", ƒ.ShaderUniColor, new ƒ.CoatColored(ƒ.Color.CSS("blue", 0.5)));
     Floor.pivot = ƒ.Matrix4x4.TRANSLATION(ƒ.Vector3.Y(-0.5));
     L16_ScrollerCollide.Floor = Floor;

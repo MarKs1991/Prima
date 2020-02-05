@@ -101,10 +101,12 @@ namespace L16_ScrollerCollide {
 
       this.checkCollision();
     }
-
+  
     private checkCollision(): void {
       for (let floor of level.getChildren()) {
+        
         let rect: ƒ.Rectangle = (<Floor>floor).getRectWorld();
+        
         //console.log(rect.toString());
         let hit: boolean = rect.isInside(this.cmpTransform.local.translation.toVector2());
         if (hit) {
