@@ -275,6 +275,14 @@ namespace L16_ScrollerCollide {
     level.appendChild(floor);
     */
 
+    let canvas: HTMLCanvasElement = document.querySelector("canvas");
+    let crc2: CanvasRenderingContext2D = canvas.getContext("2d");
+    let img: HTMLImageElement = document.querySelector("img");
+    let txtHare: ƒ.TextureImage = new ƒ.TextureImage();
+    
+    txtHare.image = img;
+    Floor.generateSprites(txtHare);
+
   
 /*
     floor = new Floor();
