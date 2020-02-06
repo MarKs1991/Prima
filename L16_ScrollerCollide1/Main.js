@@ -76,7 +76,7 @@ var L16_ScrollerCollide1;
         if (camtransformation) {
             cammove(camtransformation);
             let mtxContainer = hare.cmpTransform.local;
-            hare.cmpTransform.local.rotateY(45);
+            hare.cmpTransform.local.rotateY(90);
             L16_ScrollerCollide1.ƒ.Debug.log(L16_ScrollerCollide1.cameraRot.cmpTransform.local.translation);
         }
         viewport.draw();

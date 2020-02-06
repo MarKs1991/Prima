@@ -130,7 +130,7 @@ namespace L16_ScrollerCollide1 {
             
             let mtxContainer: ƒ.Matrix4x4 = hare.cmpTransform.local;
             
-            hare.cmpTransform.local.rotateY(45);
+            hare.cmpTransform.local.rotateY(90);
      
         
          ƒ.Debug.log(cameraRot.cmpTransform.local.translation);

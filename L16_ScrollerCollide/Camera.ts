@@ -1,23 +1,23 @@
 namespace L16_ScrollerCollide {
-  import ƒ = FudgeCore;
+  import f = FudgeCore;
 
 
   export interface CamTransformation {
-      translation?: ƒ.Vector3;
-      rotation?: ƒ.Vector3;
+      translation?: f.Vector3;
+      rotation?: f.Vector3;
   }
 
   export interface CamTransformations {
       [keycode: string]: CamTransformation;
   }
 
-  export class Camera extends ƒ.Node {
+  export class Camera extends f.Node {
       public static camtransformations: CamTransformations = Camera.defineControls();
 
    
       constructor() {
           super("Camera");
-          this.addComponent(new ƒ.ComponentTransform());
+          this.addComponent(new f.ComponentTransform());
           
    
       }
@@ -27,16 +27,16 @@ namespace L16_ScrollerCollide {
 
           
          
-          controls[ƒ.KEYBOARD_CODE.ARROW_LEFT] = { rotation: ƒ.Vector3.Y(-.5)};
-          controls[ƒ.KEYBOARD_CODE.ARROW_RIGHT] = { rotation: ƒ.Vector3.Y(.5) };
+          controls[f.KEYBOARD_CODE.ARROW_LEFT] = { rotation: f.Vector3.Y(-.5)};
+          controls[f.KEYBOARD_CODE.ARROW_RIGHT] = { rotation: f.Vector3.Y(.5) };
       
           return controls;
       }
 
       public move(_transformation: CamTransformation): void {
-          let mtxContainer: ƒ.Matrix4x4 = this.cmpTransform.local;
-          //let camChild: ƒ.Node[] = this.getChildrenByName("CamZoom");
-         // let mtxFragment: ƒ.Matrix4x4 = camChild[0].cmpTransform.local;
+          let mtxContainer: f.Matrix4x4 = this.cmpTransform.local;
+          //let camChild: f.Node[] = this.getChildrenByName("CamZoom");
+         // let mtxFragment: f.Matrix4x4 = camChild[0].cmpTransform.local;
           mtxContainer.rotate(_transformation.rotation, true);
           //mtxFragment.translate(_transformation.translation);
           

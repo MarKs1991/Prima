@@ -22,9 +22,12 @@ namespace FudgeCraft {
             //ƒ.Debug.log(_element);
 
             ƒ.Debug.log(_element.cube.getComponent(ƒ.ComponentMaterial));
-           
+            let mat: ƒ.ComponentMaterial = _element.cube.getComponent(ƒ.ComponentMaterial);
+            mat.material.setCoat(new ƒ.CoatColored(ƒ.Color.GREEN));
+            
 
-            let type: CUBE_TYPE;
+            
+            let type: Materials;
             type = Fragment.getRandomEnum(CUBE_TYPE);
             ƒ.Debug.log(type);
             

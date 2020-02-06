@@ -1,6 +1,6 @@
 // / <reference path="../L14_ScrollerFoundation/SpriteGenerator.ts"/>
 namespace L16_ScrollerCollide {
-  import ƒ = FudgeCore;
+  import f = FudgeCore;
 
   export enum ACTION {
     IDLE = "Idle",
@@ -11,17 +11,19 @@ namespace L16_ScrollerCollide {
     LEFT, RIGHT
   }
 
-  export class Hare extends ƒ.Node {
+
+  export class Hare extends f.Node {
     private static sprites: Sprite[];
-    private static speedMax: ƒ.Vector2 = new ƒ.Vector2(1.5, 5); // units per second
-    private static gravity: ƒ.Vector2 = ƒ.Vector2.Y(-3);
+    private static speedMax: f.Vector2 = new f.Vector2(1.5, 5); // units per second
+    private static gravity: f.Vector2 = f.Vector2.Y(-1);
     // private action: ACTION;
-    // private time: ƒ.Time = new ƒ.Time();
-    public speed: ƒ.Vector3 = ƒ.Vector3.ZERO();
+    // private time: f.Time = new f.Time();
+    public speed: f.Vector3 = f.Vector3.ZERO();
+
 
     constructor(_name: string = "Hare") {
       super(_name);
-      this.addComponent(new ƒ.ComponentTransform());
+      this.addComponent(new f.ComponentTransform());
 
       for (let sprite of Hare.sprites) {
         let nodeSprite: NodeSprite = new NodeSprite(sprite.name, sprite);
@@ -37,17 +39,17 @@ namespace L16_ScrollerCollide {
       }
 
       this.show(ACTION.IDLE);
-      ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, this.update);
+      f.Loop.addEventListener(f.EVENT.LOOP_FRAME, this.update);
     }
 
-    public static generateSprites(_txtImage: ƒ.TextureImage): void {
+    public static generateSprites(_txtImage: f.TextureImage): void {
       Hare.sprites = [];
       let sprite: Sprite = new Sprite(ACTION.WALK);
-      sprite.generateByGrid(_txtImage, ƒ.Rectangle.GET(2, 104, 68, 64), 6, ƒ.Vector2.ZERO(), 64, ƒ.ORIGIN2D.BOTTOMCENTER);
+      sprite.generateByGrid(_txtImage, f.Rectangle.GET(2, 104, 68, 64), 6, f.Vector2.ZERO(), 64, f.ORIGIN2D.BOTTOMCENTER);
       Hare.sprites.push(sprite);
 
       sprite = new Sprite(ACTION.IDLE);
-      sprite.generateByGrid(_txtImage, ƒ.Rectangle.GET(8, 20, 45, 72), 4, ƒ.Vector2.ZERO(), 64, ƒ.ORIGIN2D.BOTTOMCENTER);
+      sprite.generateByGrid(_txtImage, f.Rectangle.GET(8, 20, 45, 72), 4, f.Vector2.ZERO(), 64, f.ORIGIN2D.BOTTOMCENTER);
       Hare.sprites.push(sprite);
     }
 
@@ -80,8 +82,8 @@ namespace L16_ScrollerCollide {
           }
 
           //this.speed.x = Hare.speedMax.x; // * direction;
-          //this.cmpTransform.local.rotation = ƒ.Vector3.Y(90 - 90 * direction);
-          console.log(direction);
+          //this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * direction);
+          
          
           break;
         case ACTION.JUMP:
@@ -91,30 +93,45 @@ namespace L16_ScrollerCollide {
       this.show(_action);
     }
 
-    private update = (_event: ƒ.Eventƒ): void => {
+    private update = (_event: f.Eventƒ): void => {
       this.broadcastEvent(new CustomEvent("showNext"));
 
-      let timeFrame: number = ƒ.Loop.timeFrameGame / 1000;
+      let timeFrame: number = f.Loop.timeFrameGame / 1000;
       this.speed.y += Hare.gravity.y * timeFrame;
-      let distance: ƒ.Vector3 = ƒ.Vector3.SCALE(this.speed, timeFrame);
+      let distance: f.Vector3 = f.Vector3.SCALE(this.speed, timeFrame);
       this.cmpTransform.local.translate(distance);
 
+      
       this.checkCollision();
     }
   
     private checkCollision(): void {
+      
+     
       for (let floor of level.getChildren()) {
-        
-        let rect: ƒ.Rectangle = (<Floor>floor).getRectWorld();
+        let rotation: number = (<Floor>floor).getFloorRotation();
+       
+        let rect: f.Rectangle = (<Floor>floor).getRectWorld0Degreas();
+        let CharacterCollider : f.Vector2 = this.cmpTransform.local.translation.toVector2();
+
+        if (rotation == 90 || rotation == -90)
+        {
+          let rect: f.Rectangle = (<Floor>floor).rotateCollider();
+          CharacterCollider = new f.Vector2(this.cmpTransform.local.translation.z, this.cmpTransform.local.translation.y);       
+        }
+       
         
         //console.log(rect.toString());
-        let hit: boolean = rect.isInside(this.cmpTransform.local.translation.toVector2());
+
+        let hit: boolean = rect.isInside(CharacterCollider);
         if (hit) {
-          let translation: ƒ.Vector3 = this.cmpTransform.local.translation;
-          translation.y = rect.y;
-          this.cmpTransform.local.translation = translation;
-          this.speed.y = 0;
-        }
+          f.Debug.log(CharacterCollider.x);
+        
+        let translation: f.Vector3 = this.cmpTransform.local.translation;
+        translation.y = rect.y;
+        this.cmpTransform.local.translation = translation;
+        this.speed.y = 0;
+        
       }
     }
   }

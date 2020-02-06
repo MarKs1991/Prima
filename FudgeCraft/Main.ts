@@ -76,12 +76,11 @@ namespace FudgeCraft {
 
             startRandomFragment();
         }
-
+        
         if (_event.code == ƒ.KEYBOARD_CODE.NUMPAD7) {
             CamZoom.cmpTransform.local.translateX(1);
             cam.pivot.translateZ(-5);
-        cam.pivot.lookAt(ƒ.Vector3.ZERO());
-            
+            cam.pivot.lookAt(ƒ.Vector3.ZERO());    
         }
 
       

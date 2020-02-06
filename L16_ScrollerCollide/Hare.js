@@ -3,7 +3,7 @@
 var L16_ScrollerCollide;
 // / <reference path="../L14_ScrollerFoundation/SpriteGenerator.ts"/>
 (function (L16_ScrollerCollide) {
-    var ƒ = FudgeCore;
+    var f = FudgeCore;
     let ACTION;
     (function (ACTION) {
         ACTION["IDLE"] = "Idle";
@@ -15,21 +15,21 @@ var L16_ScrollerCollide;
         DIRECTION[DIRECTION["LEFT"] = 0] = "LEFT";
         DIRECTION[DIRECTION["RIGHT"] = 1] = "RIGHT";
     })(DIRECTION = L16_ScrollerCollide.DIRECTION || (L16_ScrollerCollide.DIRECTION = {}));
-    class Hare extends ƒ.Node {
+    class Hare extends f.Node {
         constructor(_name = "Hare") {
             super(_name);
             // private action: ACTION;
-            // private time: ƒ.Time = new ƒ.Time();
-            this.speed = ƒ.Vector3.ZERO();
+            // private time: f.Time = new f.Time();
+            this.speed = f.Vector3.ZERO();
             this.update = (_event) => {
                 this.broadcastEvent(new CustomEvent("showNext"));
-                let timeFrame = ƒ.Loop.timeFrameGame / 1000;
+                let timeFrame = f.Loop.timeFrameGame / 1000;
                 this.speed.y += Hare.gravity.y * timeFrame;
-                let distance = ƒ.Vector3.SCALE(this.speed, timeFrame);
+                let distance = f.Vector3.SCALE(this.speed, timeFrame);
                 this.cmpTransform.local.translate(distance);
                 this.checkCollision();
             };
-            this.addComponent(new ƒ.ComponentTransform());
+            this.addComponent(new f.ComponentTransform());
             for (let sprite of Hare.sprites) {
                 let nodeSprite = new L16_ScrollerCollide.NodeSprite(sprite.name, sprite);
                 nodeSprite.activate(false);
@@ -37,15 +37,15 @@ var L16_ScrollerCollide;
                 this.appendChild(nodeSprite);
             }
             this.show(ACTION.IDLE);
-            ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
+            f.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
         }
         static generateSprites(_txtImage) {
             Hare.sprites = [];
             let sprite = new L16_ScrollerCollide.Sprite(ACTION.WALK);
-            sprite.generateByGrid(_txtImage, ƒ.Rectangle.GET(2, 104, 68, 64), 6, ƒ.Vector2.ZERO(), 64, ƒ.ORIGIN2D.BOTTOMCENTER);
+            sprite.generateByGrid(_txtImage, f.Rectangle.GET(2, 104, 68, 64), 6, f.Vector2.ZERO(), 64, f.ORIGIN2D.BOTTOMCENTER);
             Hare.sprites.push(sprite);
             sprite = new L16_ScrollerCollide.Sprite(ACTION.IDLE);
-            sprite.generateByGrid(_txtImage, ƒ.Rectangle.GET(8, 20, 45, 72), 4, ƒ.Vector2.ZERO(), 64, ƒ.ORIGIN2D.BOTTOMCENTER);
+            sprite.generateByGrid(_txtImage, f.Rectangle.GET(8, 20, 45, 72), 4, f.Vector2.ZERO(), 64, f.ORIGIN2D.BOTTOMCENTER);
             Hare.sprites.push(sprite);
         }
         show(_action) {
@@ -69,8 +69,7 @@ var L16_ScrollerCollide;
                         this.speed.x = Hare.speedMax.x * -1;
                     }
                     //this.speed.x = Hare.speedMax.x; // * direction;
-                    //this.cmpTransform.local.rotation = ƒ.Vector3.Y(90 - 90 * direction);
-                    console.log(direction);
+                    //this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * direction);
                     break;
                 case ACTION.JUMP:
                     this.speed.y = 2;
@@ -80,10 +79,17 @@ var L16_ScrollerCollide;
         }
         checkCollision() {
             for (let floor of L16_ScrollerCollide.level.getChildren()) {
-                let rect = floor.getRectWorld();
+                let rotation = floor.getFloorRotation();
+                let rect = floor.getRectWorld0Degreas();
+                let CharacterCollider = this.cmpTransform.local.translation.toVector2();
+                if (rotation == 90 || rotation == -90) {
+                    let rect = floor.rotateCollider();
+                    CharacterCollider = new f.Vector2(this.cmpTransform.local.translation.z, this.cmpTransform.local.translation.y);
+                }
                 //console.log(rect.toString());
-                let hit = rect.isInside(this.cmpTransform.local.translation.toVector2());
+                let hit = rect.isInside(CharacterCollider);
                 if (hit) {
+                    f.Debug.log(CharacterCollider.x);
                     let translation = this.cmpTransform.local.translation;
                     translation.y = rect.y;
                     this.cmpTransform.local.translation = translation;
@@ -92,8 +98,8 @@ var L16_ScrollerCollide;
             }
         }
     }
-    Hare.speedMax = new ƒ.Vector2(1.5, 5); // units per second
-    Hare.gravity = ƒ.Vector2.Y(-3);
+    Hare.speedMax = new f.Vector2(1.5, 5); // units per second
+    Hare.gravity = f.Vector2.Y(-1);
     L16_ScrollerCollide.Hare = Hare;
 })(L16_ScrollerCollide || (L16_ScrollerCollide = {}));
 //# sourceMappingURL=Hare.js.map
