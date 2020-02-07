@@ -82,7 +82,7 @@ var L16_ScrollerCollide;
                 let rotation = floor.getFloorRotation();
                 let rect = new f.Rectangle();
                 let CharacterCollider;
-                if (rotation > -40 && rotation < 40 || rotation == 180) {
+                if (rotation > -40 && rotation < 40 || rotation == 180 || rotation == -180) {
                     rect = floor.getRectWorld0Degreas();
                     CharacterCollider = this.cmpTransform.local.translation.toVector2();
                 }
@@ -103,7 +103,7 @@ var L16_ScrollerCollide;
         }
     }
     Hare.speedMax = new f.Vector2(1.5, 5); // units per second
-    Hare.gravity = f.Vector2.Y(-1);
+    Hare.gravity = f.Vector2.Y(-3);
     L16_ScrollerCollide.Hare = Hare;
 })(L16_ScrollerCollide || (L16_ScrollerCollide = {}));
 //# sourceMappingURL=Hare.js.map

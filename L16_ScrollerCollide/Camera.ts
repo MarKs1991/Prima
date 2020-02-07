@@ -6,11 +6,9 @@ namespace L16_ScrollerCollide {
       translation?: f.Vector3;
       rotation?: f.Vector3;
   }
-
   export interface CamTransformations {
       [keycode: string]: CamTransformation;
   }
-
   export class Camera extends f.Node {
       public static camtransformations: CamTransformations = Camera.defineControls();
 
@@ -41,8 +39,5 @@ namespace L16_ScrollerCollide {
           //mtxFragment.translate(_transformation.translation);
           
       }
-
-      
-
-}
+    }
 }

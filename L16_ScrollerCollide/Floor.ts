@@ -71,7 +71,9 @@ namespace L16_ScrollerCollide {
       bottomright.transform(mtxResult, true);
 
       let size: f.Vector2 = new f.Vector2(bottomright.z - topleft.z, bottomright.y - topleft.y);
-      rect.position = new f.Vector2(this.mtxWorld.translation.z, this.mtxWorld.translation.y);
+      rect.position = new f.Vector2(this.cmpTransform.local.translation.z -.5, this.cmpTransform.local.translation.y);
+      //this.cmpTransform.local.translateZ(rect.position.x);
+     // this.cmpTransform.local.translateY(rect.position.y);
       
       rect.size = size;
 

@@ -84,7 +84,7 @@ namespace L16_ScrollerCollide {
 
     let cmpCamera: f.ComponentCamera = new f.ComponentCamera();
     
-    cam.pivot.translateZ(25);
+    cam.pivot.translateZ(24);
   
     CamNode.addComponent(cmpCamera);
     CamNode.addComponent(new f.ComponentTransform());
@@ -158,17 +158,23 @@ namespace L16_ScrollerCollide {
            
             //level.cmpTransform.local.rotateY(90);
             }
+
+            let i = 0;
           if (keysPressed[f.KEYBOARD_CODE.ARROW_LEFT]){
               hare.cmpTransform.local.rotateY(-90);
               for (let floor of level.getChildren()) {
 
-                let i = 0;
+                
 
                 floor.cmpTransform.local.rotateY(-90);
-                floor.cmpTransform.local.translateX(-Vector2Array[i].x);                              
-               f.Debug.log("rot" + floor.cmpTransform.local.rotation.y);
+               floor.cmpTransform.local.translateX(-Vector2Array[i].x);                              
+               
+                f.Debug.log("rot" + floor.cmpTransform.local.rotation.y);
+               
                
                i++
+
+              // hare.mtxWorld.translateX(-hare.mtxWorld.translation.x);
               }
               
               
@@ -184,16 +190,16 @@ namespace L16_ScrollerCollide {
   function processInput(): void {
   if (keysPressed[f.KEYBOARD_CODE.A]) {
       hare.act(ACTION.WALK, DIRECTION.LEFT);
-      f.Debug.log("x" + hare.mtxWorld.translation.x);
-      f.Debug.log("y" + hare.mtxWorld.translation.y);
-      f.Debug.log("z" + hare.mtxWorld.translation.z);
+      //f.Debug.log("x" + hare.mtxWorld.translation.x);
+      //f.Debug.log("y" + hare.mtxWorld.translation.y);
+     // f.Debug.log("z" + hare.mtxWorld.translation.z);
       return;
   }
   if (keysPressed[f.KEYBOARD_CODE.D]) {
       hare.act(ACTION.WALK, DIRECTION.RIGHT);
-      f.Debug.log("x" + hare.mtxWorld.translation.x);
-      f.Debug.log("y" + hare.mtxWorld.translation.y);
-      f.Debug.log("z" + hare.mtxWorld.translation.z);
+      //f.Debug.log("x" + hare.mtxWorld.translation.x);
+    //  f.Debug.log("y" + hare.mtxWorld.translation.y);
+      //f.Debug.log("z" + hare.mtxWorld.translation.z);
       return;
   }
 
@@ -253,10 +259,10 @@ namespace L16_ScrollerCollide {
     
     let floor = new Floor();
     floor.cmpTransform.local.scaleY(0.3);
-    floor.cmpTransform.local.scaleX(2);
-    floor.cmpTransform.local.translateX(2);
+    floor.cmpTransform.local.scaleX(1);
+    floor.cmpTransform.local.translateX(0);
     floor.cmpTransform.local.translateY(0);
-    floor.cmpTransform.local.translateZ(5);
+    floor.cmpTransform.local.translateZ(0);
     FloorArray.push(floor);
 
     level.appendChild(floor);
@@ -265,10 +271,10 @@ namespace L16_ScrollerCollide {
  
     floor = new Floor();
     floor.cmpTransform.local.scaleY(0.3);
-    floor.cmpTransform.local.scaleX(2);
-    floor.cmpTransform.local.translateX(3);
-    floor.cmpTransform.local.translateY(0);
-    floor.cmpTransform.local.translateZ(0);
+    floor.cmpTransform.local.scaleX(1);
+    floor.cmpTransform.local.translateX(4);
+    floor.cmpTransform.local.translateY(4);
+    floor.cmpTransform.local.translateZ(2);
     FloorArray.push(floor);
 
     level.appendChild(floor);
@@ -276,10 +282,21 @@ namespace L16_ScrollerCollide {
 
     floor = new Floor();
     floor.cmpTransform.local.scaleY(0.3);
-    floor.cmpTransform.local.scaleX(2);
+    floor.cmpTransform.local.scaleX(1);
+    floor.cmpTransform.local.translateX(-2);
+    floor.cmpTransform.local.translateY(4);
+    floor.cmpTransform.local.translateZ(6);
+    FloorArray.push(floor);
+
+    level.appendChild(floor);
+
+
+    floor = new Floor();
+    floor.cmpTransform.local.scaleY(0.3);
+    floor.cmpTransform.local.scaleX(1);
     floor.cmpTransform.local.translateX(3);
-    floor.cmpTransform.local.translateY(0);
-    floor.cmpTransform.local.translateZ(0);
+    floor.cmpTransform.local.translateY(2);
+    floor.cmpTransform.local.translateZ(2);
     FloorArray.push(floor);
 
     level.appendChild(floor);
@@ -341,7 +358,7 @@ namespace L16_ScrollerCollide {
     
     level.appendChild(floor);
 */
-    hareGlobal.cmpTransform.local.translateZ(6);
+   // hareGlobal.cmpTransform.local.translateZ(6);
     //hareGlobal.cmpTransform.local.translateX(-.5);
     f.Debug.log(level);
 
