@@ -109,16 +109,21 @@ namespace L16_ScrollerCollide {
       
      
       for (let floor of level.getChildren()) {
-        let rotation: number = (<Floor>floor).getFloorRotation();
-       
-        let rect: f.Rectangle = (<Floor>floor).getRectWorld0Degreas();
-        let CharacterCollider : f.Vector2 = this.cmpTransform.local.translation.toVector2();
 
-        if (rotation == 90 || rotation == -90)
-        {
-          let rect: f.Rectangle = (<Floor>floor).rotateCollider();
-          CharacterCollider = new f.Vector2(this.cmpTransform.local.translation.z, this.cmpTransform.local.translation.y);       
-        }
+        let rotation: number = (<Floor>floor).getFloorRotation();
+        let rect: f.Rectangle = new f.Rectangle();
+        let CharacterCollider: f.Vector2;
+
+        if (rotation > -40 && rotation < 40 || rotation == 180)
+          {
+            rect = (<Floor>floor).getRectWorld0Degreas();
+            CharacterCollider = this.cmpTransform.local.translation.toVector2();
+          }
+        else if(rotation == 90 || rotation == -90)
+          {
+             rect = (<Floor>floor).getRectWorld90Degreas();
+            CharacterCollider = new f.Vector2(this.mtxWorld.translation.z, this.mtxWorld.translation.y);       
+          }
        
         
         //console.log(rect.toString());
@@ -135,4 +140,5 @@ namespace L16_ScrollerCollide {
       }
     }
   }
+}
 }

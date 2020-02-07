@@ -8,42 +8,50 @@ var L16_ScrollerCollide;
             this.addComponent(new f.ComponentTransform());
             this.addComponent(new f.ComponentMaterial(Floor.material));
             let cmpMesh = new f.ComponentMesh(Floor.mesh);
+            let nodeSprite = new L16_ScrollerCollide.NodeSprite("FloorSprite", Floor.sprites[0]);
+            nodeSprite.activate(false);
+            this.appendChild(nodeSprite);
+            //nodesprite
             //cmpMesh.pivot.translateY(-0.5);
             cmpMesh.pivot = Floor.pivot;
             this.addComponent(cmpMesh);
+            this.show();
+        }
+        static generateSprites(_txtImage) {
+            Floor.sprites = [];
+            let sprite = new L16_ScrollerCollide.Sprite("FloorSprite");
+            // sprite.generateByGrid(_txtImage, ƒ.Rectangle.GET(1, 20, 20, 150), 1, ƒ.Vector2.ZERO(), 30, ƒ.ORIGIN2D.BOTTOMCENTER);
+            sprite.generateByGrid(_txtImage, f.Rectangle.GET(19, 420, 129, 34), 1, f.Vector2.ZERO(), 30, f.ORIGIN2D.TOPCENTER);
+            Floor.sprites.push(sprite);
+        }
+        show() {
+            for (let child of this.getChildren())
+                child.activate(child.name == "FloorSprite");
         }
         getRectWorld0Degreas() {
             let rect = f.Rectangle.GET(0, 0, 100, 100);
             let topleft = new f.Vector3(-0.5, 0.5, 0);
             let bottomright = new f.Vector3(0.5, -0.5, 0);
-            f.Debug.log("x" + rect.x);
-            f.Debug.log("y" + rect.y);
-            //let pivot: f.Matrix4x4 = this.getComponent(f.ComponentMesh).pivot;
+            let pivot = this.getComponent(f.ComponentMesh).pivot;
             let mtxResult = f.Matrix4x4.MULTIPLICATION(this.mtxWorld, Floor.pivot);
             topleft.transform(mtxResult, true);
             bottomright.transform(mtxResult, true);
             let size = new f.Vector2(bottomright.x - topleft.x, bottomright.y - topleft.y);
             rect.position = topleft.toVector2();
-            //f.Debug.log("x" + rect.position.x);
-            //f.Debug.log("y" + rect.position.y);
             rect.size = size;
-            // f.Debug.log("x" + size.x);
-            //f.Debug.log("y" + size.y);
             return rect;
         }
         getRectWorld90Degreas() {
             let rect = f.Rectangle.GET(0, 0, 100, 100);
-            let topleft = new f.Vector3(0, 0.5, -0.5);
-            let bottomright = new f.Vector3(0, -0.5, 0.5);
+            let topleft = new f.Vector3(-0.5, 0.5, 0);
+            let bottomright = new f.Vector3(0.5, -0.5, 0);
             //let pivot: f.Matrix4x4 = this.getComponent(f.ComponentMesh).pivot;
             let mtxResult = f.Matrix4x4.MULTIPLICATION(this.mtxWorld, Floor.pivot);
             topleft.transform(mtxResult, true);
             bottomright.transform(mtxResult, true);
             let size = new f.Vector2(bottomright.z - topleft.z, bottomright.y - topleft.y);
-            rect.position = new f.Vector2(this.cmpTransform.local.translation.z, this.cmpTransform.local.translation.y);
+            rect.position = new f.Vector2(this.mtxWorld.translation.z, this.mtxWorld.translation.y);
             rect.size = size;
-            //f.Debug.log("x" + size.x);
-            // f.Debug.log("y" + size.y);
             return rect;
         }
         getFloorRotation() {

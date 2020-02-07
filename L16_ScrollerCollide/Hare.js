@@ -80,11 +80,15 @@ var L16_ScrollerCollide;
         checkCollision() {
             for (let floor of L16_ScrollerCollide.level.getChildren()) {
                 let rotation = floor.getFloorRotation();
-                let rect = floor.getRectWorld0Degreas();
-                let CharacterCollider = this.cmpTransform.local.translation.toVector2();
-                if (rotation == 90 || rotation == -90) {
-                    let rect = floor.rotateCollider();
-                    CharacterCollider = new f.Vector2(this.cmpTransform.local.translation.z, this.cmpTransform.local.translation.y);
+                let rect = new f.Rectangle();
+                let CharacterCollider;
+                if (rotation > -40 && rotation < 40 || rotation == 180) {
+                    rect = floor.getRectWorld0Degreas();
+                    CharacterCollider = this.cmpTransform.local.translation.toVector2();
+                }
+                else if (rotation == 90 || rotation == -90) {
+                    rect = floor.getRectWorld90Degreas();
+                    CharacterCollider = new f.Vector2(this.mtxWorld.translation.z, this.mtxWorld.translation.y);
                 }
                 //console.log(rect.toString());
                 let hit = rect.isInside(CharacterCollider);
