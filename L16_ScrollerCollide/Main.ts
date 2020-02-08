@@ -78,7 +78,8 @@ namespace L16_ScrollerCollide {
 
         let cmpCamera: f.ComponentCamera = new f.ComponentCamera();
 
-        cam.pivot.translateZ(24);
+        cam.pivot.translateZ(30);
+      
 
         CamNode.addComponent(cmpCamera);
         CamNode.addComponent(new f.ComponentTransform());
@@ -104,6 +105,7 @@ namespace L16_ScrollerCollide {
 
         function update(_event: f.Eventƒ): void {
             processInput();
+            cam.pivot.translateY(hare.speed.y/10);
 
             viewport.draw();
 
@@ -185,9 +187,9 @@ namespace L16_ScrollerCollide {
 
     function processInput(): void {
 
-        f.Debug.log("x" + hare.mtxWorld.translation.x);
-             f.Debug.log("y" + hare.mtxWorld.translation.y);
-             f.Debug.log("z" + hare.mtxWorld.translation.z);
+             //f.Debug.log("x" + hare.mtxWorld.translation.x);
+             //f.Debug.log("y" + hare.mtxWorld.translation.y);
+             //f.Debug.log("z" + hare.mtxWorld.translation.z);
 
         if (keysPressed[f.KEYBOARD_CODE.A]) {
             hare.act(ACTION.WALK, DIRECTION.LEFT);
@@ -202,11 +204,7 @@ namespace L16_ScrollerCollide {
             return;
         }
 
-        if (keysPressed[f.KEYBOARD_CODE.SPACE]) {
-            hare.act(ACTION.JUMP, DIRECTION.UP);
-
-            return;
-        }
+        
 
         hare.act(ACTION.IDLE);
     }
@@ -262,7 +260,7 @@ namespace L16_ScrollerCollide {
             if(i == 0)
             hare.cmpTransform.local.translateZ(Vector2Array[hare.lastHitIndex].y);
             
-            f.Debug.log("TRANSFORM" + Vector2Array[hare.lastHitIndex].y);
+            //f.Debug.log("TRANSFORM" + Vector2Array[hare.lastHitIndex].y);
           }
 
         if (rotation > -40 && rotation < 40 || rotation == 180 || rotation == -180)
@@ -280,7 +278,7 @@ namespace L16_ScrollerCollide {
              hare.cmpTransform.local.translateX(Vector2Array[hare.lastHitIndex].x);
           }
         
-        f.Debug.log("rot" + floor.cmpTransform.local.rotation.y); 
+        //f.Debug.log("rot" + floor.cmpTransform.local.rotation.y); 
         i++;
 
       // hare.mtxWorld.translateX(-hare.mtxWorld.translation.x);
@@ -320,7 +318,7 @@ namespace L16_ScrollerCollide {
 
         level.appendChild(floor);
 
-
+/*
         floor = new Floor();
         floor.cmpTransform.local.scaleY(0.3);
         floor.cmpTransform.local.scaleX(1);
@@ -352,6 +350,36 @@ namespace L16_ScrollerCollide {
         FloorArray.push(floor);
 
         level.appendChild(floor);
+*/
+        let lastPlatform: f.Vector3 = new f.Vector3();
+        for(let i = 1; i <= 20; i++)
+        {
+          floor = new Floor();
+          floor.cmpTransform.local.scaleY(0.3);
+          floor.cmpTransform.local.scaleX(1);
+
+          floor.cmpTransform.local.translateY(i);
+
+          let randomAxis = (Math.random() * 2);
+          
+          if(randomAxis >= 1){
+          floor.cmpTransform.local.translateX(lastPlatform.x + 3.5);         
+          floor.cmpTransform.local.translateZ(Math.random()*10);
+          }
+
+          if(randomAxis <= 1){
+            floor.cmpTransform.local.translateX(Math.random()*10);         
+            floor.cmpTransform.local.translateZ(lastPlatform.z + 3.5);
+            }
+
+          FloorArray.push(floor);
+  
+          level.appendChild(floor);
+
+          lastPlatform = new f.Vector3(floor.cmpTransform.local.translation.x, floor.cmpTransform.local.translation.y, floor.cmpTransform.local.translation.z);
+        }
+
+          
 
         /*
     floor = new Floor();

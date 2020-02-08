@@ -15,7 +15,7 @@ namespace L16_ScrollerCollide {
   export class Hare extends f.Node {
     private static sprites: Sprite[];
     private static speedMax: f.Vector2 = new f.Vector2(1.5, 5); // units per second
-    private static gravity: f.Vector2 = f.Vector2.Y(-3  );
+    private static gravity: f.Vector2 = f.Vector2.Y(-2  );
     // private action: ACTION;
     // private time: f.Time = new f.Time();
     public speed: f.Vector3 = f.Vector3.ZERO();
@@ -52,6 +52,10 @@ namespace L16_ScrollerCollide {
       sprite = new Sprite(ACTION.IDLE);
       sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 1352, 15, 19), 15, new f.Vector2(1,0), 30, f.ORIGIN2D.BOTTOMCENTER);
       Hare.sprites.push(sprite);
+
+      sprite = new Sprite(ACTION.JUMP);
+      sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 261, 23, 24), 7, new f.Vector2(1,0), 30, f.ORIGIN2D.BOTTOMCENTER);
+      Hare.sprites.push(sprite);
     }
 
     public show(_action: ACTION): void {
@@ -70,6 +74,7 @@ namespace L16_ScrollerCollide {
           this.speed.x = 0;
           break;
         case ACTION.WALK:
+
           let direction: number = (_direction == DIRECTION.RIGHT ? 1 : -1);
 
           if(_direction == DIRECTION.RIGHT)
@@ -88,7 +93,9 @@ namespace L16_ScrollerCollide {
          
           break;
         case ACTION.JUMP:
-          this.speed.y =4;
+            this.cmpTransform.local.translateY(.1);
+          this.speed.y = 4;
+          
           break;
       }
       this.show(_action);
@@ -133,9 +140,9 @@ namespace L16_ScrollerCollide {
         
         let hit: boolean = rect.isInside(CharacterCollider);
         if (hit) {
-          f.Debug.log("current posX" + this.cmpTransform.local.translation.x);
-          f.Debug.log("current posZ" + this.cmpTransform.local.translation.z);
-          //this.lastHit =  new f.Vector3((<Floor>floor).mtxWorld.translation.x, (<Floor>floor).mtxWorld.translation.y , (<Floor>floor).mtxWorld.translation.z);
+          //f.Debug.log("current posX" + this.cmpTransform.local.translation.x);
+          //f.Debug.log("current posZ" + this.cmpTransform.local.translation.z);
+          //this.lastHit =  new f.Vector3((<Floor>floor).mtxWorl  d.translation.x, (<Floor>floor).mtxWorld.translation.y , (<Floor>floor).mtxWorld.translation.z);
           this.lastHitIndex = i;
 
      

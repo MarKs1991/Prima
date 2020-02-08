@@ -47,6 +47,9 @@ var L16_ScrollerCollide;
             sprite = new L16_ScrollerCollide.Sprite(ACTION.IDLE);
             sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 1352, 15, 19), 15, new f.Vector2(1, 0), 30, f.ORIGIN2D.BOTTOMCENTER);
             Hare.sprites.push(sprite);
+            sprite = new L16_ScrollerCollide.Sprite(ACTION.JUMP);
+            sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 261, 23, 24), 7, new f.Vector2(1, 0), 30, f.ORIGIN2D.BOTTOMCENTER);
+            Hare.sprites.push(sprite);
         }
         show(_action) {
             if (_action == ACTION.JUMP)
@@ -72,6 +75,7 @@ var L16_ScrollerCollide;
                     //this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * direction);
                     break;
                 case ACTION.JUMP:
+                    this.cmpTransform.local.translateY(.1);
                     this.speed.y = 4;
                     break;
             }
@@ -94,9 +98,9 @@ var L16_ScrollerCollide;
                 //console.log(rect.toString());
                 let hit = rect.isInside(CharacterCollider);
                 if (hit) {
-                    f.Debug.log("current posX" + this.cmpTransform.local.translation.x);
-                    f.Debug.log("current posZ" + this.cmpTransform.local.translation.z);
-                    //this.lastHit =  new f.Vector3((<Floor>floor).mtxWorld.translation.x, (<Floor>floor).mtxWorld.translation.y , (<Floor>floor).mtxWorld.translation.z);
+                    //f.Debug.log("current posX" + this.cmpTransform.local.translation.x);
+                    //f.Debug.log("current posZ" + this.cmpTransform.local.translation.z);
+                    //this.lastHit =  new f.Vector3((<Floor>floor).mtxWorl  d.translation.x, (<Floor>floor).mtxWorld.translation.y , (<Floor>floor).mtxWorld.translation.z);
                     this.lastHitIndex = i;
                     let translation = this.cmpTransform.local.translation;
                     translation.y = rect.y;
@@ -108,7 +112,7 @@ var L16_ScrollerCollide;
         }
     }
     Hare.speedMax = new f.Vector2(1.5, 5); // units per second
-    Hare.gravity = f.Vector2.Y(-3);
+    Hare.gravity = f.Vector2.Y(-2);
     L16_ScrollerCollide.Hare = Hare;
 })(L16_ScrollerCollide || (L16_ScrollerCollide = {}));
 //# sourceMappingURL=Hare.js.map
