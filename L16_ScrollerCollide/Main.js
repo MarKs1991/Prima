@@ -127,11 +127,11 @@ var L16_ScrollerCollide;
         viewport.draw();
     }
     function processInput() {
+        L16_ScrollerCollide.f.Debug.log("x" + hare.mtxWorld.translation.x);
+        L16_ScrollerCollide.f.Debug.log("y" + hare.mtxWorld.translation.y);
+        L16_ScrollerCollide.f.Debug.log("z" + hare.mtxWorld.translation.z);
         if (keysPressed[L16_ScrollerCollide.f.KEYBOARD_CODE.A]) {
             hare.act(L16_ScrollerCollide.ACTION.WALK, L16_ScrollerCollide.DIRECTION.LEFT);
-            // f.Debug.log("x" + hare.mtxWorld.translation.x);
-            // f.Debug.log("y" + hare.mtxWorld.translation.y);
-            // f.Debug.log("z" + hare.mtxWorld.translation.z);
             return;
         }
         if (keysPressed[L16_ScrollerCollide.f.KEYBOARD_CODE.D]) {
@@ -174,15 +174,23 @@ var L16_ScrollerCollide;
             let rotation = floor.cmpTransform.local.rotation.y;
             if (rotation == 90 || rotation == -90) {
                 floor.cmpTransform.local.translateX(-Vector2Array[i].x);
-                lastPos = hare.cmpTransform.local.translation.x;
+                //lastPos = hare.cmpTransform.local.translation.x;
                 hare.cmpTransform.local.translateX(-hare.cmpTransform.local.translation.x);
+                //hare.cmpTransform.local.translation.x = 0;
                 floor.cmpTransform.local.translateZ(Vector2Array[i].y);
+                if (i == 0)
+                    hare.cmpTransform.local.translateZ(Vector2Array[hare.lastHitIndex].y);
+                L16_ScrollerCollide.f.Debug.log("TRANSFORM" + Vector2Array[hare.lastHitIndex].y);
             }
             if (rotation > -40 && rotation < 40 || rotation == 180 || rotation == -180) {
+                //hare.cmpTransform.local.translation.x = hare.lastHit.x;
                 floor.cmpTransform.local.translateZ(-Vector2Array[i].y);
                 hare.cmpTransform.local.translateZ(-hare.cmpTransform.local.translation.z);
+                //hare.cmpTransform.local.translation.z = 0;
                 //hare.cmpTransform.local.translateX(lastPos );
                 floor.cmpTransform.local.translateX(Vector2Array[i].x);
+                if (i == 0)
+                    hare.cmpTransform.local.translateX(Vector2Array[hare.lastHitIndex].x);
             }
             L16_ScrollerCollide.f.Debug.log("rot" + floor.cmpTransform.local.rotation.y);
             i++;

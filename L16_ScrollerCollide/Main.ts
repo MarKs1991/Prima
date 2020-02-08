@@ -184,11 +184,14 @@ namespace L16_ScrollerCollide {
     }
 
     function processInput(): void {
+
+        f.Debug.log("x" + hare.mtxWorld.translation.x);
+             f.Debug.log("y" + hare.mtxWorld.translation.y);
+             f.Debug.log("z" + hare.mtxWorld.translation.z);
+
         if (keysPressed[f.KEYBOARD_CODE.A]) {
             hare.act(ACTION.WALK, DIRECTION.LEFT);
-            // f.Debug.log("x" + hare.mtxWorld.translation.x);
-            // f.Debug.log("y" + hare.mtxWorld.translation.y);
-            // f.Debug.log("z" + hare.mtxWorld.translation.z);
+           
             return;
         }
         if (keysPressed[f.KEYBOARD_CODE.D]) {
@@ -246,19 +249,35 @@ namespace L16_ScrollerCollide {
 
         if (rotation == 90  || rotation == -90)
           {
+            
             floor.cmpTransform.local.translateX(-Vector2Array[i].x);
 
-            lastPos = hare.cmpTransform.local.translation.x;
+            //lastPos = hare.cmpTransform.local.translation.x;
+            
             hare.cmpTransform.local.translateX(-hare.cmpTransform.local.translation.x);
+            //hare.cmpTransform.local.translation.x = 0;
+            
             floor.cmpTransform.local.translateZ(Vector2Array[i].y);
+            
+            if(i == 0)
+            hare.cmpTransform.local.translateZ(Vector2Array[hare.lastHitIndex].y);
+            
+            f.Debug.log("TRANSFORM" + Vector2Array[hare.lastHitIndex].y);
           }
 
         if (rotation > -40 && rotation < 40 || rotation == 180 || rotation == -180)
           {
+              
+            //hare.cmpTransform.local.translation.x = hare.lastHit.x;
              floor.cmpTransform.local.translateZ(-Vector2Array[i].y);
+
              hare.cmpTransform.local.translateZ(-hare.cmpTransform.local.translation.z);
+             //hare.cmpTransform.local.translation.z = 0;
              //hare.cmpTransform.local.translateX(lastPos );
              floor.cmpTransform.local.translateX(Vector2Array[i].x);
+             
+             if(i == 0)
+             hare.cmpTransform.local.translateX(Vector2Array[hare.lastHitIndex].x);
           }
         
         f.Debug.log("rot" + floor.cmpTransform.local.rotation.y); 
@@ -266,6 +285,9 @@ namespace L16_ScrollerCollide {
 
       // hare.mtxWorld.translateX(-hare.mtxWorld.translation.x);
       }
+
+
+      
     }
 
 
@@ -359,7 +381,7 @@ namespace L16_ScrollerCollide {
         let i = 0;
 
         for(let floor of level.getChildren()) {
-            floor.cmpTransform.local.translateZ(- Vector2Array[i].y);
+            floor.cmpTransform.local.translateZ(-Vector2Array[i].y);
             i++;
         }
 
