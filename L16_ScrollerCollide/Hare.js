@@ -132,8 +132,7 @@ var L16_ScrollerCollide;
                 // console.log(rect.toString());
                 let hit = rect.isInside(CharacterCollider);
                 if (hit) {
-                    f.Debug.log("HIT");
-                    f.RenderManager.removeNode(coin);
+                    //f.Debug.log("HIT");
                 }
             }
         }

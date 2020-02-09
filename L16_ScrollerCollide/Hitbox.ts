@@ -45,7 +45,7 @@ namespace L16_ScrollerCollide {
 
           
           if (hitbox.name == "Hitbox") {
-            f.Debug.log("test2");
+           // f.Debug.log("test2");
             let hit: boolean = false;
             let rectOfThis: f.Rectangle = (<Hitbox>this).getRectWorld();
             let rectOfThat: f.Rectangle = (<Hitbox>hitbox).getRectWorld();
@@ -54,9 +54,9 @@ namespace L16_ScrollerCollide {
             let topRight: f.Vector2 = f.Vector2.SUM(rectOfThat.position, expansionRight);
             let bottomLeft: f.Vector2 = f.Vector2.SUM(rectOfThat.position, expansionDown);
             let bottomRight: f.Vector2 = f.Vector2.SUM(rectOfThat.position, expansionDown, expansionRight);
-            f.Debug.log(topRight);
-            f.Debug.log(bottomLeft);
-            f.Debug.log(bottomRight);
+            //f.Debug.log(topRight);
+            //f.Debug.log(bottomLeft);
+            //f.Debug.log(bottomRight);
             if (rectOfThis.isInside(rectOfThat.position)) {
               hit = true;
             } else if (rectOfThis.isInside(topRight)) {

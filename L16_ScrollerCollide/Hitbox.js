@@ -35,7 +35,7 @@ var L16_ScrollerCollide;
         checkCollision() {
             for (let hitbox of L16_ScrollerCollide.level.getChildren()) {
                 if (hitbox.name == "Hitbox") {
-                    f.Debug.log("test2");
+                    // f.Debug.log("test2");
                     let hit = false;
                     let rectOfThis = this.getRectWorld();
                     let rectOfThat = hitbox.getRectWorld();
@@ -44,9 +44,9 @@ var L16_ScrollerCollide;
                     let topRight = f.Vector2.SUM(rectOfThat.position, expansionRight);
                     let bottomLeft = f.Vector2.SUM(rectOfThat.position, expansionDown);
                     let bottomRight = f.Vector2.SUM(rectOfThat.position, expansionDown, expansionRight);
-                    f.Debug.log(topRight);
-                    f.Debug.log(bottomLeft);
-                    f.Debug.log(bottomRight);
+                    //f.Debug.log(topRight);
+                    //f.Debug.log(bottomLeft);
+                    //f.Debug.log(bottomRight);
                     if (rectOfThis.isInside(rectOfThat.position)) {
                         hit = true;
                     }

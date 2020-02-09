@@ -84,5 +84,5 @@ namespace L16_ScrollerCollide {
         let rotation: number = this.cmpTransform.local.rotation.y;
         return rotation;
     }
-
+  }
 }

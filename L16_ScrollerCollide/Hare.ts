@@ -179,8 +179,8 @@ namespace L16_ScrollerCollide {
 
               let hit: boolean = rect.isInside(CharacterCollider);
               if (hit) {
-                f.Debug.log("HIT");
-                f.RenderManager.removeNode(coin);
+                //f.Debug.log("HIT");
+               
               }
             }
           }
