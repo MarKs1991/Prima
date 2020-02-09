@@ -11,7 +11,12 @@ var L16_ScrollerCollide;
     let viewport = new L16_ScrollerCollide.f.Viewport();
     L16_ScrollerCollide.cameraRot = new L16_ScrollerCollide.Camera();
     L16_ScrollerCollide.hitbox = new L16_ScrollerCollide.Hitbox();
+    let coin;
     let hare;
+    let Level;
+    let FloorArray;
+    let Vector2Array = [];
+    let lastPos;
     let ParentCamNode = new L16_ScrollerCollide.f.Node("ParentCamNode");
     let CamNode = new L16_ScrollerCollide.f.Node("CamNode");
     let RotNode = new L16_ScrollerCollide.f.Node("RotNode");
@@ -19,9 +24,6 @@ var L16_ScrollerCollide;
     let CamZoom = new L16_ScrollerCollide.f.Node("CamZoom");
     let cam = new L16_ScrollerCollide.f.ComponentCamera;
     let control = new L16_ScrollerCollide.Control();
-    let FloorArray;
-    let Vector2Array;
-    let lastPos;
     function test() {
         let canvas = document.querySelector("canvas");
         let crc2 = canvas.getContext("2d");
@@ -30,6 +32,7 @@ var L16_ScrollerCollide;
         txtHare.image = img;
         L16_ScrollerCollide.Hare.generateSprites(txtHare);
         L16_ScrollerCollide.Floor.generateSprites(txtHare);
+        L16_ScrollerCollide.Coin.generateSprites(txtHare);
         hareGlobal.addComponent(new L16_ScrollerCollide.f.ComponentTransform());
         control.cmpTransform.local.translateY(5);
         RotNode.appendChild(control);
@@ -38,6 +41,8 @@ var L16_ScrollerCollide;
         hare = new L16_ScrollerCollide.Hare("Hare");
         L16_ScrollerCollide.level = createLevel();
         L16_ScrollerCollide.game.appendChild(L16_ScrollerCollide.level);
+        L16_ScrollerCollide.collectorAble = createCollectables();
+        L16_ScrollerCollide.game.appendChild(L16_ScrollerCollide.collectorAble);
         hareGlobal.appendChild(hare);
         L16_ScrollerCollide.game.appendChild(hareGlobal);
         hare.appendChild(L16_ScrollerCollide.hitbox);
@@ -128,9 +133,9 @@ var L16_ScrollerCollide;
         viewport.draw();
     }
     function processInput() {
-        //f.Debug.log("x" + hare.mtxWorld.translation.x);
-        //f.Debug.log("y" + hare.mtxWorld.translation.y);
-        //f.Debug.log("z" + hare.mtxWorld.translation.z);
+        // f.Debug.log("x" + hare.mtxWorld.translation.x);
+        // f.Debug.log("y" + hare.mtxWorld.translation.y);
+        // f.Debug.log("z" + hare.mtxWorld.translation.z);
         if (keysPressed[L16_ScrollerCollide.f.KEYBOARD_CODE.A]) {
             hare.act(L16_ScrollerCollide.ACTION.WALK, L16_ScrollerCollide.DIRECTION.LEFT);
             return;
@@ -159,7 +164,7 @@ var L16_ScrollerCollide;
         move.rotation.scale(1 / animationSteps);
         L16_ScrollerCollide.f.Time.game.setTimer(10, animationSteps, function () {
             L16_ScrollerCollide.cameraRot.move(move);
-            // f.RenderManager.update();
+            L16_ScrollerCollide.f.RenderManager.update();
             viewport.draw();
         });
     }
@@ -171,25 +176,24 @@ var L16_ScrollerCollide;
             let rotation = floor.cmpTransform.local.rotation.y;
             if (rotation == 90 || rotation == -90) {
                 floor.cmpTransform.local.translateX(-Vector2Array[i].x);
-                //lastPos = hare.cmpTransform.local.translation.x;
+                // lastPos = hare.cmpTransform.local.translation.x;
                 hare.cmpTransform.local.translateX(-hare.cmpTransform.local.translation.x);
-                //hare.cmpTransform.local.translation.x = 0;
+                // hare.cmpTransform.local.translation.x = 0;
                 floor.cmpTransform.local.translateZ(Vector2Array[i].y);
                 if (i == 0)
                     hare.cmpTransform.local.translateZ(Vector2Array[hare.lastHitIndex].y);
-                //f.Debug.log("TRANSFORM" + Vector2Array[hare.lastHitIndex].y);
+                // f.Debug.log("TRANSFORM" + Vector2Array[hare.lastHitIndex].y);
             }
-            if (rotation > -40 && rotation < 40 || rotation == 180 || rotation == -180) {
-                //hare.cmpTransform.local.translation.x = hare.lastHit.x;
+            if (rotation > -40 && rotation < 40 || rotation == 180 || rotation == -180) { // hare.cmpTransform.local.translation.x = hare.lastHit.x;
                 floor.cmpTransform.local.translateZ(-Vector2Array[i].y);
                 hare.cmpTransform.local.translateZ(-hare.cmpTransform.local.translation.z);
-                //hare.cmpTransform.local.translation.z = 0;
-                //hare.cmpTransform.local.translateX(lastPos );
+                // hare.cmpTransform.local.translation.z = 0;
+                // hare.cmpTransform.local.translateX(lastPos );
                 floor.cmpTransform.local.translateX(Vector2Array[i].x);
                 if (i == 0)
                     hare.cmpTransform.local.translateX(Vector2Array[hare.lastHitIndex].x);
             }
-            //f.Debug.log("rot" + floor.cmpTransform.local.rotation.y); 
+            // f.Debug.log("rot" + floor.cmpTransform.local.rotation.y);
             i++;
             // hare.mtxWorld.translateX(-hare.mtxWorld.translation.x);
         }
@@ -198,16 +202,6 @@ var L16_ScrollerCollide;
         let level = new L16_ScrollerCollide.f.Node("Level");
         level.addComponent(new L16_ScrollerCollide.f.ComponentTransform());
         FloorArray = [];
-        /*
-    let floor: Floor = new Floor();
-    floor.cmpTransform.local.scaleY(0.3);
-    floor.cmpTransform.local.scaleX(1);
-    floor.cmpTransform.local.translateY(0);
-    floor.cmpTransform.local.translateZ(6);
-    floor.appendChild(hitbox);
-    level.appendChild(floor);
-    f.Debug.log(hitbox);
-*/
         let floor = new L16_ScrollerCollide.Floor();
         floor.cmpTransform.local.scaleY(0.3);
         floor.cmpTransform.local.scaleX(1);
@@ -217,74 +211,41 @@ var L16_ScrollerCollide;
         FloorArray.push(floor);
         level.appendChild(floor);
         /*
-                floor = new Floor();
-                floor.cmpTransform.local.scaleY(0.3);
-                floor.cmpTransform.local.scaleX(1);
-                floor.cmpTransform.local.translateX(4);
-                floor.cmpTransform.local.translateY(4);
-                floor.cmpTransform.local.translateZ(2);
-                FloorArray.push(floor);
-        
-                level.appendChild(floor);
-        
-        
-                floor = new Floor();
-                floor.cmpTransform.local.scaleY(0.3);
-                floor.cmpTransform.local.scaleX(1);
-                floor.cmpTransform.local.translateX(-2);
-                floor.cmpTransform.local.translateY(4);
-                floor.cmpTransform.local.translateZ(6);
-                FloorArray.push(floor);
-        
-                level.appendChild(floor);
-        
-        
-                floor = new Floor();
-                floor.cmpTransform.local.scaleY(0.3);
-                floor.cmpTransform.local.scaleX(1);
-                floor.cmpTransform.local.translateX(3);
-                floor.cmpTransform.local.translateY(2);
-                floor.cmpTransform.local.translateZ(2);
-                FloorArray.push(floor);
-        
-                level.appendChild(floor);
-        */
+       
+  */
         let lastPlatform = new L16_ScrollerCollide.f.Vector3();
-        for (let i = 1; i <= 20; i++) {
+        for (let i = 2; i <= 40; i++) {
             floor = new L16_ScrollerCollide.Floor();
             floor.cmpTransform.local.scaleY(0.3);
             floor.cmpTransform.local.scaleX(1);
             floor.cmpTransform.local.translateY(i);
             let randomAxis = (Math.random() * 2);
             if (randomAxis >= 1) {
-                floor.cmpTransform.local.translateX(lastPlatform.x + 3.5);
-                floor.cmpTransform.local.translateZ(Math.random() * 10);
+                let PosNeg = (Math.random() * 2);
+                if (PosNeg >= 1) {
+                    floor.cmpTransform.local.translateZ(Math.random() * 10);
+                    floor.cmpTransform.local.translateX(lastPlatform.z + 3.5);
+                }
+                if (PosNeg < 1) {
+                    floor.cmpTransform.local.translateZ(Math.random() * -10);
+                    floor.cmpTransform.local.translateX(lastPlatform.z + 3.5);
+                }
             }
-            if (randomAxis <= 1) {
-                floor.cmpTransform.local.translateX(Math.random() * 10);
-                floor.cmpTransform.local.translateZ(lastPlatform.z + 3.5);
+            if (randomAxis < 1) {
+                let PosNeg = (Math.random() * 2);
+                if (PosNeg >= 1) {
+                    floor.cmpTransform.local.translateX(Math.random() * 10);
+                    floor.cmpTransform.local.translateZ(lastPlatform.z + 3.5);
+                }
+                if (PosNeg < 1) {
+                    floor.cmpTransform.local.translateX(Math.random() * -10);
+                    floor.cmpTransform.local.translateZ(lastPlatform.z + 3.5);
+                }
             }
             FloorArray.push(floor);
             level.appendChild(floor);
             lastPlatform = new L16_ScrollerCollide.f.Vector3(floor.cmpTransform.local.translation.x, floor.cmpTransform.local.translation.y, floor.cmpTransform.local.translation.z);
         }
-        /*
-    floor = new Floor();
-    floor.cmpTransform.local.scaleY(0.3);
-    floor.cmpTransform.local.translateX(-3);
-    floor.cmpTransform.local.translateY(0);
-    floor.cmpTransform.local.translateZ(3);
-    
-    level.appendChild(floor);
-*/
-        /*
-    floor = new Floor();
-    floor.cmpTransform.local.scaleY(0.3);
-    floor.cmpTransform.local.translateX(4);
-    floor.cmpTransform.local.translateY(0);
-    floor.cmpTransform.local.translateZ(6);
-    level.appendChild(floor);
-    */
         Vector2Array = [];
         for (let i = 0; i <= FloorArray.length - 1; i++) {
             Vector2Array[i] = new L16_ScrollerCollide.f.Vector2(FloorArray[i].cmpTransform.local.translation.x, FloorArray[i].cmpTransform.local.translation.z);
@@ -294,77 +255,49 @@ var L16_ScrollerCollide;
             floor.cmpTransform.local.translateZ(-Vector2Array[i].y);
             i++;
         }
-        /*
-    floor = new Floor();
-    floor.cmpTransform.local.scaleY(0.3);
-    floor.cmpTransform.local.scaleX(7);
-    floor.cmpTransform.local.translateY(0.2);
-    floor.cmpTransform.local.translateX(1.5);
-    floor.cmpTransform.local.translateZ(6);
-    level.appendChild(floor);
-
-    floor = new Floor();
-    floor.cmpTransform.local.scaleY(0.3);
-    floor.cmpTransform.local.scaleX(20);
-    floor.cmpTransform.local.translateY(0.2);
-    floor.cmpTransform.local.translateX(6);
-    floor.cmpTransform.local.translateZ(1.2);
-    level.appendChild(floor);
-    
-
-    floor = new Floor();
-    floor.cmpTransform.local.scaleY(1);
-    floor.cmpTransform.local.scaleX(1);
-    floor.cmpTransform.local.translateZ(1);
-    
-    level.appendChild(floor);
-*/
-        // hareGlobal.cmpTransform.local.translateZ(6);
-        // hareGlobal.cmpTransform.local.translateX(-.5);
-        L16_ScrollerCollide.f.Debug.log(level);
-        // f.Debug.log(Floor);
-        /*
-    let tower: f.Node = new f.Node("Tower");
-    tower.addComponent(new f.ComponentTransform());
-    tower.addComponent(new f.ComponentMaterial(new f.Material("Tower", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("red", 0.5)))));
-    tower.addComponent(new f.ComponentMesh(new f.MeshSprite()));
-    tower.cmpTransform.local.scale(new f.Vector3(50,50,50));
-    tower.cmpTransform.local.translation = new f.Vector3(0,0,-30);
-    game.appendChild(tower);
-
-    let tower1: f.Node = new f.Node("Tower1");
-    tower1.addComponent(new f.ComponentTransform());
-    tower1.addComponent(new f.ComponentMaterial(new f.Material("Tower", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("red", 0.5)))));
-    tower1.addComponent(new f.ComponentMesh(new f.MeshSprite()));
-    tower1.cmpTransform.local.rotateY(90);
-    tower1.cmpTransform.local.scale(new f.Vector3(50,50,50));
-    tower1.cmpTransform.local.translation = new f.Vector3(0,30,0);
-    game.appendChild(tower1);
-
-    let tower2: f.Node = new f.Node("Tower2");
-    tower2.addComponent(new f.ComponentTransform());
-    tower2.addComponent(new f.ComponentMaterial(new f.Material("Tower", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("red", 0.5)))));
-    tower2.addComponent(new f.ComponentMesh(new f.MeshSprite()));
-    tower2.cmpTransform.local.rotateY(-90);
-    tower2.cmpTransform.local.scale(new f.Vector3(50,50,50));
-    tower2.cmpTransform.local.translation = new f.Vector3(0,-30,0);
-    game.appendChild(tower2);
-
-    let tower3: f.Node = new f.Node("Tower3");
-    tower3.addComponent(new f.ComponentTransform());
-    tower3.addComponent(new f.ComponentMaterial(new f.Material("Tower", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("red", 0.5)))));
-    tower3.addComponent(new f.ComponentMesh(new f.MeshSprite()));
-    tower3.cmpTransform.local.rotateY(180);
-    tower3.cmpTransform.local.scale(new f.Vector3(50,50,50));
-    tower3.cmpTransform.local.translation = new f.Vector3(0,0,30);
-    game.appendChild(tower3);
-
-
-     x = hareGlobal.cmpTransform.local.translation.x;
-     y = hareGlobal.cmpTransform.local.translation.y;
-     z = hareGlobal.cmpTransform.local.translation.z;
-*/
+        let tower = new L16_ScrollerCollide.f.Node("Tower");
+        tower.addComponent(new L16_ScrollerCollide.f.ComponentTransform());
+        tower.addComponent(new L16_ScrollerCollide.f.ComponentMaterial(new L16_ScrollerCollide.f.Material("Tower", L16_ScrollerCollide.f.ShaderUniColor, new L16_ScrollerCollide.f.CoatColored(L16_ScrollerCollide.f.Color.CSS("#CD5C5C", 0.5)))));
+        tower.addComponent(new L16_ScrollerCollide.f.ComponentMesh(new L16_ScrollerCollide.f.MeshSprite()));
+        tower.cmpTransform.local.scale(new L16_ScrollerCollide.f.Vector3(100, 100, 100));
+        tower.cmpTransform.local.translation = new L16_ScrollerCollide.f.Vector3(0, 0, -30);
+        L16_ScrollerCollide.game.appendChild(tower);
+        let tower1 = new L16_ScrollerCollide.f.Node("Tower1");
+        tower1.addComponent(new L16_ScrollerCollide.f.ComponentTransform());
+        tower1.addComponent(new L16_ScrollerCollide.f.ComponentMaterial(new L16_ScrollerCollide.f.Material("Tower", L16_ScrollerCollide.f.ShaderUniColor, new L16_ScrollerCollide.f.CoatColored(L16_ScrollerCollide.f.Color.CSS("#CD5C5C", 0.5)))));
+        tower1.addComponent(new L16_ScrollerCollide.f.ComponentMesh(new L16_ScrollerCollide.f.MeshSprite()));
+        tower1.cmpTransform.local.rotateY(90);
+        tower1.cmpTransform.local.scale(new L16_ScrollerCollide.f.Vector3(100, 100, 100));
+        tower1.cmpTransform.local.translation = new L16_ScrollerCollide.f.Vector3(30, 0, 0);
+        L16_ScrollerCollide.game.appendChild(tower1);
+        let tower2 = new L16_ScrollerCollide.f.Node("Tower2");
+        tower2.addComponent(new L16_ScrollerCollide.f.ComponentTransform());
+        tower2.addComponent(new L16_ScrollerCollide.f.ComponentMaterial(new L16_ScrollerCollide.f.Material("Tower", L16_ScrollerCollide.f.ShaderUniColor, new L16_ScrollerCollide.f.CoatColored(L16_ScrollerCollide.f.Color.CSS("#CD5C5C", 0.5)))));
+        tower2.addComponent(new L16_ScrollerCollide.f.ComponentMesh(new L16_ScrollerCollide.f.MeshSprite()));
+        tower2.cmpTransform.local.rotateY(-90);
+        tower2.cmpTransform.local.scale(new L16_ScrollerCollide.f.Vector3(100, 100, 100));
+        tower2.cmpTransform.local.translation = new L16_ScrollerCollide.f.Vector3(-30, 0, 0);
+        L16_ScrollerCollide.game.appendChild(tower2);
+        let tower3 = new L16_ScrollerCollide.f.Node("Tower3");
+        tower3.addComponent(new L16_ScrollerCollide.f.ComponentTransform());
+        tower3.addComponent(new L16_ScrollerCollide.f.ComponentMaterial(new L16_ScrollerCollide.f.Material("Tower", L16_ScrollerCollide.f.ShaderUniColor, new L16_ScrollerCollide.f.CoatColored(L16_ScrollerCollide.f.Color.CSS("#CD5C5C", 0.5)))));
+        tower3.addComponent(new L16_ScrollerCollide.f.ComponentMesh(new L16_ScrollerCollide.f.MeshSprite()));
+        tower3.cmpTransform.local.rotateY(180);
+        tower3.cmpTransform.local.scale(new L16_ScrollerCollide.f.Vector3(100, 100, 100));
+        tower3.cmpTransform.local.translation = new L16_ScrollerCollide.f.Vector3(0, 0, 30);
+        L16_ScrollerCollide.game.appendChild(tower3);
         return level;
+    }
+    function createCollectables() {
+        let collectorAble = new L16_ScrollerCollide.f.Node("collectorAble");
+        let coin = new L16_ScrollerCollide.Coin();
+        coin.cmpTransform.local.scaleY(1);
+        coin.cmpTransform.local.scaleX(1);
+        coin.cmpTransform.local.translateX(0);
+        coin.cmpTransform.local.translateY(4);
+        coin.cmpTransform.local.translateZ(0);
+        collectorAble.appendChild(coin);
+        return collectorAble;
     }
 })(L16_ScrollerCollide || (L16_ScrollerCollide = {}));
 //# sourceMappingURL=Main.js.map

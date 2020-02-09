@@ -38,29 +38,9 @@ namespace L16_ScrollerCollide {
         child.activate(child.name == "FloorSprite");
     }
 
-    public getRectWorld0Degreas(): f.Rectangle {
+    public getRectWorld(rotation: number): f.Rectangle {
 
-      let rect: f.Rectangle = f.Rectangle.GET(0, 0, 100, 100);    
-      let topleft: f.Vector3 = new f.Vector3(-0.5, 0.5, 0);
-      let bottomright: f.Vector3 = new f.Vector3(0.5, -0.5, 0);
-      
-      let pivot: f.Matrix4x4 = this.getComponent(f.ComponentMesh).pivot;
-      let mtxResult: f.Matrix4x4 = f.Matrix4x4.MULTIPLICATION(this.mtxWorld, Floor.pivot);
-      topleft.transform(mtxResult, true);
-      bottomright.transform(mtxResult, true);
-
-      let size: f.Vector2 = new f.Vector2(bottomright.x - topleft.x, bottomright.y - topleft.y);
-      rect.position = topleft.toVector2();
-
-      rect.size = size;
-
-    
-      return rect;
-    }
-
-    public getRectWorld90Degreas(): f.Rectangle {
-
-      
+      let size : f.Vector2;
       let rect: f.Rectangle = f.Rectangle.GET(0, 0, 100, 100);
       let topleft: f.Vector3 = new f.Vector3(-0.5 , 0.5, 0);
       let bottomright: f.Vector3 = new f.Vector3(0.5, -0.5, 0);
@@ -70,18 +50,22 @@ namespace L16_ScrollerCollide {
       topleft.transform(mtxResult, true);
       bottomright.transform(mtxResult, true);
 
-      let size: f.Vector2 = new f.Vector2(bottomright.z - topleft.z, bottomright.y - topleft.y);
-      if (this.getFloorRotation() == -90)
-      rect.position = new f.Vector2(this.cmpTransform.local.translation.z -.5, this.cmpTransform.local.translation.y);
-      if (this.getFloorRotation() == 90)
-      rect.position = new f.Vector2(this.cmpTransform.local.translation.z +.5, this.cmpTransform.local.translation.y);
-      //this.cmpTransform.local.translateZ(rect.position.x);
-     // this.cmpTransform.local.translateY(rect.position.y);
-      
+      if(rotation == 90 || rotation == -90)
+      {
+        size = new f.Vector2(bottomright.z - topleft.z, bottomright.y - topleft.y);
+
+        if (rotation == -90)
+        rect.position = new f.Vector2(this.cmpTransform.local.translation.z -.5, this.cmpTransform.local.translation.y);
+        if (rotation == 90)
+        rect.position = new f.Vector2(this.cmpTransform.local.translation.z +.5, this.cmpTransform.local.translation.y);
+      }
+      // if rotation is 0/180
+      else
+      {
+        size = new f.Vector2(bottomright.x - topleft.x, bottomright.y - topleft.y);
+        rect.position = topleft.toVector2();
+      }
       rect.size = size;
-
- 
-
       return rect;
     }
 
@@ -89,20 +73,6 @@ namespace L16_ScrollerCollide {
       let rotation: number =  this.cmpTransform.local.rotation.y; 
       return rotation;    
     }
-    public rotateCollider(): f.Rectangle
-    {
-
-      f.Debug.log("xs: " + this.cmpTransform.local.translation.z);
-      let rect: f.Rectangle = new f.Rectangle(4, 4, 22, 5);
-      
-      
-      rect.height = this.cmpTransform.local.scaling.y;
-      rect.width = this.cmpTransform.local.scaling.x;
-      f.Debug.log(rect.x);
-      
-    
-
-      return rect;
-    }
+   
   }
 }

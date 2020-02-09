@@ -28,12 +28,15 @@ var L16_ScrollerCollide;
                 let distance = f.Vector3.SCALE(this.speed, timeFrame);
                 this.cmpTransform.local.translate(distance);
                 this.checkCollision();
+                this.collectCoins();
             };
             this.addComponent(new f.ComponentTransform());
             for (let sprite of Hare.sprites) {
                 let nodeSprite = new L16_ScrollerCollide.NodeSprite(sprite.name, sprite);
                 nodeSprite.activate(false);
-                nodeSprite.addEventListener("showNext", (_event) => { _event.currentTarget.showFrameNext(); }, true);
+                nodeSprite.addEventListener("showNext", (_event) => {
+                    _event.currentTarget.showFrameNext();
+                }, true);
                 this.appendChild(nodeSprite);
             }
             this.show(ACTION.IDLE);
@@ -46,6 +49,7 @@ var L16_ScrollerCollide;
             Hare.sprites.push(sprite);
             sprite = new L16_ScrollerCollide.Sprite(ACTION.IDLE);
             sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 1352, 15, 19), 15, new f.Vector2(1, 0), 30, f.ORIGIN2D.BOTTOMCENTER);
+            // sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 1464, 19, 21), 48, new f.Vector2(1,0), 30, f.ORIGIN2D.BOTTOMCENTER);
             Hare.sprites.push(sprite);
             sprite = new L16_ScrollerCollide.Sprite(ACTION.JUMP);
             sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 261, 23, 24), 7, new f.Vector2(1, 0), 30, f.ORIGIN2D.BOTTOMCENTER);
@@ -71,8 +75,8 @@ var L16_ScrollerCollide;
                     if (_direction == DIRECTION.LEFT) {
                         this.speed.x = Hare.speedMax.x * -1;
                     }
-                    //this.speed.x = Hare.speedMax.x; // * direction;
-                    //this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * direction);
+                    // this.speed.x = Hare.speedMax.x; // * direction;
+                    // this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * direction);
                     break;
                 case ACTION.JUMP:
                     this.cmpTransform.local.translateY(.1);
@@ -87,20 +91,21 @@ var L16_ScrollerCollide;
                 let rotation = floor.getFloorRotation();
                 let rect = new f.Rectangle();
                 let CharacterCollider;
-                if (rotation > -40 && rotation < 40 || rotation == 180 || rotation == -180) {
-                    rect = floor.getRectWorld0Degreas();
-                    CharacterCollider = this.cmpTransform.local.translation.toVector2();
-                }
-                else if (rotation == 90 || rotation == -90) {
-                    rect = floor.getRectWorld90Degreas();
+                // use ZY Collider on 90/-90 Rotation
+                if (rotation == 90 || rotation == -90) {
+                    rect = floor.getRectWorld(rotation);
                     CharacterCollider = new f.Vector2(this.mtxWorld.translation.z, this.mtxWorld.translation.y);
                 }
-                //console.log(rect.toString());
+                else { // use XY Collider on 0/180 Rotation
+                    rect = floor.getRectWorld(rotation);
+                    CharacterCollider = this.cmpTransform.local.translation.toVector2();
+                }
+                // console.log(rect.toString());
                 let hit = rect.isInside(CharacterCollider);
                 if (hit) {
-                    //f.Debug.log("current posX" + this.cmpTransform.local.translation.x);
-                    //f.Debug.log("current posZ" + this.cmpTransform.local.translation.z);
-                    //this.lastHit =  new f.Vector3((<Floor>floor).mtxWorl  d.translation.x, (<Floor>floor).mtxWorld.translation.y , (<Floor>floor).mtxWorld.translation.z);
+                    // f.Debug.log("current posX" + this.cmpTransform.local.translation.x);
+                    // f.Debug.log("current posZ" + this.cmpTransform.local.translation.z);
+                    // this.lastHit =  new f.Vector3((<Floor>floor).mtxWorl  d.translation.x, (<Floor>floor).mtxWorld.translation.y , (<Floor>floor).mtxWorld.translation.z);
                     this.lastHitIndex = i;
                     let translation = this.cmpTransform.local.translation;
                     translation.y = rect.y;
@@ -108,6 +113,28 @@ var L16_ScrollerCollide;
                     this.speed.y = 0;
                 }
                 i++;
+            }
+        }
+        collectCoins() {
+            for (let coin of L16_ScrollerCollide.collectorAble.getChildren()) {
+                let rotation = coin.getCoinRotation();
+                let rect = new f.Rectangle();
+                let CharacterCollider;
+                // use ZY Collider on 90/-90 Rotation
+                if (rotation == 90 || rotation == -90) {
+                    rect = coin.getRectWorld(rotation);
+                    CharacterCollider = new f.Vector2(this.mtxWorld.translation.z, this.mtxWorld.translation.y);
+                }
+                else { // use XY Collider on 0/180 Rotation
+                    rect = coin.getRectWorld(rotation);
+                    CharacterCollider = this.cmpTransform.local.translation.toVector2();
+                }
+                // console.log(rect.toString());
+                let hit = rect.isInside(CharacterCollider);
+                if (hit) {
+                    f.Debug.log("HIT");
+                    f.RenderManager.removeNode(coin);
+                }
             }
         }
     }

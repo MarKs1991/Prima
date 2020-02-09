@@ -2,31 +2,36 @@
 var L16_ScrollerCollide;
 (function (L16_ScrollerCollide) {
     var f = FudgeCore;
-    class Floor extends f.Node {
-        constructor() {
-            super("Floor");
+    class Coin extends f.Node {
+        constructor(_name = "Coin") {
+            super(_name);
+            this.update = (_event) => {
+                this.broadcastEvent(new CustomEvent("showNext"));
+                let timeFrame = f.Loop.timeFrameGame / 1000;
+            };
             this.addComponent(new f.ComponentTransform());
-            //this.addComponent(new f.ComponentMaterial(Floor.material));
-            let cmpMesh = new f.ComponentMesh(Floor.mesh);
-            let nodeSprite = new L16_ScrollerCollide.NodeSprite("FloorSprite", Floor.sprites[0]);
-            nodeSprite.activate(false);
-            this.appendChild(nodeSprite);
-            //nodesprite
-            //cmpMesh.pivot.translateY(-0.5);
-            cmpMesh.pivot = Floor.pivot;
-            this.addComponent(cmpMesh);
+            let cmpMesh = new f.ComponentMesh(Coin.mesh);
+            for (let sprite of Coin.sprites) {
+                let nodeSprite = new L16_ScrollerCollide.NodeSprite(sprite.name, sprite);
+                nodeSprite.activate(false);
+                nodeSprite.addEventListener("showNext", (_event) => {
+                    _event.currentTarget.showFrameNext();
+                }, true);
+                this.appendChild(nodeSprite);
+            }
             this.show();
+            f.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
         }
         static generateSprites(_txtImage) {
-            Floor.sprites = [];
-            let sprite = new L16_ScrollerCollide.Sprite("FloorSprite");
+            Coin.sprites = [];
+            let sprite = new L16_ScrollerCollide.Sprite("CoinSprite");
             // sprite.generateByGrid(_txtImage, ƒ.Rectangle.GET(1, 20, 20, 150), 1, ƒ.Vector2.ZERO(), 30, ƒ.ORIGIN2D.BOTTOMCENTER);
-            sprite.generateByGrid(_txtImage, f.Rectangle.GET(3, 2843, 100, 43), 1, f.Vector2.ZERO(), 100, f.ORIGIN2D.TOPCENTER);
-            Floor.sprites.push(sprite);
+            sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 2899, 24, 24), 8, new f.Vector2(8, 8), 30, f.ORIGIN2D.TOPCENTER);
+            Coin.sprites.push(sprite);
         }
         show() {
             for (let child of this.getChildren())
-                child.activate(child.name == "FloorSprite");
+                child.activate(child.name == "CoinSprite");
         }
         getRectWorld(rotation) {
             let size;
@@ -34,7 +39,7 @@ var L16_ScrollerCollide;
             let topleft = new f.Vector3(-0.5, 0.5, 0);
             let bottomright = new f.Vector3(0.5, -0.5, 0);
             //let pivot: f.Matrix4x4 = this.getComponent(f.ComponentMesh).pivot;
-            let mtxResult = f.Matrix4x4.MULTIPLICATION(this.mtxWorld, Floor.pivot);
+            let mtxResult = f.Matrix4x4.MULTIPLICATION(this.mtxWorld, Coin.pivot);
             topleft.transform(mtxResult, true);
             bottomright.transform(mtxResult, true);
             if (rotation == 90 || rotation == -90) {
@@ -52,14 +57,13 @@ var L16_ScrollerCollide;
             rect.size = size;
             return rect;
         }
-        getFloorRotation() {
+        getCoinRotation() {
             let rotation = this.cmpTransform.local.rotation.y;
             return rotation;
         }
     }
-    Floor.mesh = new f.MeshSprite();
-    //private static material: f.Material = new f.Material("Floor", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("blue", 0.5)));
-    Floor.pivot = f.Matrix4x4.TRANSLATION(f.Vector3.Y(-0.5));
-    L16_ScrollerCollide.Floor = Floor;
+    Coin.mesh = new f.MeshSprite();
+    Coin.pivot = f.Matrix4x4.TRANSLATION(f.Vector3.Y(-0.5));
+    L16_ScrollerCollide.Coin = Coin;
 })(L16_ScrollerCollide || (L16_ScrollerCollide = {}));
-//# sourceMappingURL=Floor.js.map
+//# sourceMappingURL=Coin.js.map

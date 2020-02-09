@@ -13,11 +13,19 @@ namespace L16_ScrollerCollide {
     let viewport: f.Viewport = new f.Viewport();
     export let game: f.Node;
     export let level: f.Node;
+    export let collectorAble: f.Node;
+
     export let cameraRot: Camera = new Camera();
     export let hitbox: Hitbox = new Hitbox();
 
-
+    let coin: Coin;
     let hare: Hare;
+    let Level: Level;
+
+    let FloorArray: Floor[];
+    let Vector2Array: f.Vector2[] = [];
+    let lastPos: number;
+
 
     let ParentCamNode = new f.Node("ParentCamNode");
     let CamNode = new f.Node("CamNode");
@@ -31,10 +39,6 @@ namespace L16_ScrollerCollide {
 
     let control: Control = new Control();
 
-    let FloorArray: Floor[];
-    let Vector2Array: f.Vector2[];
-    let lastPos: number;
-
 
     function test(): void {
         let canvas: HTMLCanvasElement = document.querySelector("canvas");
@@ -46,7 +50,7 @@ namespace L16_ScrollerCollide {
         txtHare.image = img;
         Hare.generateSprites(txtHare);
         Floor.generateSprites(txtHare);
-
+        Coin.generateSprites(txtHare);
         hareGlobal.addComponent(new f.ComponentTransform());
 
 
@@ -54,10 +58,16 @@ namespace L16_ScrollerCollide {
         RotNode.appendChild(control);
 
         f.RenderManager.initialize(true, false);
+      
+    
         game = new f.Node("Game");
         hare = new Hare("Hare");
         level = createLevel();
         game.appendChild(level);
+
+        collectorAble = createCollectables();
+        game.appendChild(collectorAble);
+
         hareGlobal.appendChild(hare);
 
         game.appendChild(hareGlobal);
@@ -79,7 +89,7 @@ namespace L16_ScrollerCollide {
         let cmpCamera: f.ComponentCamera = new f.ComponentCamera();
 
         cam.pivot.translateZ(30);
-      
+
 
         CamNode.addComponent(cmpCamera);
         CamNode.addComponent(new f.ComponentTransform());
@@ -105,7 +115,7 @@ namespace L16_ScrollerCollide {
 
         function update(_event: f.Eventƒ): void {
             processInput();
-            cam.pivot.translateY(hare.speed.y/10);
+            cam.pivot.translateY(hare.speed.y / 10);
 
             viewport.draw();
 
@@ -120,6 +130,7 @@ namespace L16_ScrollerCollide {
             hare.act(ACTION.JUMP);
         
 
+
         let mtxHare: f.Matrix4x4;
         let camtransformation: CamTransformation = Camera.camtransformations[_event.code];
 
@@ -132,11 +143,10 @@ namespace L16_ScrollerCollide {
             if (keysPressed[f.KEYBOARD_CODE.ARROW_RIGHT]) {
                 normalizeTransforms(90);
 
-
                 // level.cmpTransform.local.rotateY(90);
             }
 
-            
+
             if (keysPressed[f.KEYBOARD_CODE.ARROW_LEFT]) {
 
                 normalizeTransforms(-90);
@@ -187,13 +197,13 @@ namespace L16_ScrollerCollide {
 
     function processInput(): void {
 
-             //f.Debug.log("x" + hare.mtxWorld.translation.x);
-             //f.Debug.log("y" + hare.mtxWorld.translation.y);
-             //f.Debug.log("z" + hare.mtxWorld.translation.z);
+        // f.Debug.log("x" + hare.mtxWorld.translation.x);
+        // f.Debug.log("y" + hare.mtxWorld.translation.y);
+        // f.Debug.log("z" + hare.mtxWorld.translation.z);
 
         if (keysPressed[f.KEYBOARD_CODE.A]) {
             hare.act(ACTION.WALK, DIRECTION.LEFT);
-           
+
             return;
         }
         if (keysPressed[f.KEYBOARD_CODE.D]) {
@@ -204,9 +214,10 @@ namespace L16_ScrollerCollide {
             return;
         }
 
-        
 
         hare.act(ACTION.IDLE);
+
+
     }
 
 
@@ -228,85 +239,75 @@ namespace L16_ScrollerCollide {
         f.Time.game.setTimer(10, animationSteps, function (): void {
             cameraRot.move(move);
 
-            // f.RenderManager.update();
+            
+             f.RenderManager.update();
             viewport.draw();
         });
     }
 
+
     function normalizeTransforms(rotDirection: number) {
-      hare.cmpTransform.local.rotateY(rotDirection);
-
-      let i = 0;
-      for (let floor of level.getChildren()) {
-
-        floor.cmpTransform.local.rotateY(rotDirection);
-
-        
-      
-        let rotation = floor.cmpTransform.local.rotation.y;
-
-        if (rotation == 90  || rotation == -90)
-          {
-            
-            floor.cmpTransform.local.translateX(-Vector2Array[i].x);
-
-            //lastPos = hare.cmpTransform.local.translation.x;
-            
-            hare.cmpTransform.local.translateX(-hare.cmpTransform.local.translation.x);
-            //hare.cmpTransform.local.translation.x = 0;
-            
-            floor.cmpTransform.local.translateZ(Vector2Array[i].y);
-            
-            if(i == 0)
-            hare.cmpTransform.local.translateZ(Vector2Array[hare.lastHitIndex].y);
-            
-            //f.Debug.log("TRANSFORM" + Vector2Array[hare.lastHitIndex].y);
-          }
-
-        if (rotation > -40 && rotation < 40 || rotation == 180 || rotation == -180)
-          {
-              
-            //hare.cmpTransform.local.translation.x = hare.lastHit.x;
-             floor.cmpTransform.local.translateZ(-Vector2Array[i].y);
-
-             hare.cmpTransform.local.translateZ(-hare.cmpTransform.local.translation.z);
-             //hare.cmpTransform.local.translation.z = 0;
-             //hare.cmpTransform.local.translateX(lastPos );
-             floor.cmpTransform.local.translateX(Vector2Array[i].x);
-             
-             if(i == 0)
-             hare.cmpTransform.local.translateX(Vector2Array[hare.lastHitIndex].x);
-          }
-        
-        //f.Debug.log("rot" + floor.cmpTransform.local.rotation.y); 
-        i++;
-
-      // hare.mtxWorld.translateX(-hare.mtxWorld.translation.x);
-      }
 
 
-      
+        hare.cmpTransform.local.rotateY(rotDirection);
+
+        let i = 0;
+        for (let floor of level.getChildren()) {
+
+            floor.cmpTransform.local.rotateY(rotDirection);
+
+
+            let rotation = floor.cmpTransform.local.rotation.y;
+
+            if (rotation == 90 || rotation == -90) {
+
+                floor.cmpTransform.local.translateX(- Vector2Array[i].x);
+
+                // lastPos = hare.cmpTransform.local.translation.x;
+
+                hare.cmpTransform.local.translateX(- hare.cmpTransform.local.translation.x);
+                // hare.cmpTransform.local.translation.x = 0;
+
+                floor.cmpTransform.local.translateZ(Vector2Array[i].y);
+
+                if (i == 0) 
+                    hare.cmpTransform.local.translateZ(Vector2Array[hare.lastHitIndex].y);
+                
+
+                // f.Debug.log("TRANSFORM" + Vector2Array[hare.lastHitIndex].y);
+            }
+
+            if (rotation > -40 && rotation < 40 || rotation == 180 || rotation == -180) { // hare.cmpTransform.local.translation.x = hare.lastHit.x;
+                floor.cmpTransform.local.translateZ(- Vector2Array[i].y);
+
+                hare.cmpTransform.local.translateZ(- hare.cmpTransform.local.translation.z);
+                // hare.cmpTransform.local.translation.z = 0;
+                // hare.cmpTransform.local.translateX(lastPos );
+                floor.cmpTransform.local.translateX(Vector2Array[i].x);
+
+                if (i == 0) 
+                    hare.cmpTransform.local.translateX(Vector2Array[hare.lastHitIndex].x);
+                
+            }
+
+            // f.Debug.log("rot" + floor.cmpTransform.local.rotation.y);
+            i++;
+
+            // hare.mtxWorld.translateX(-hare.mtxWorld.translation.x);
+        }
+
+
     }
 
 
     function createLevel(): f.Node {
         let level: f.Node = new f.Node("Level");
+
+
         level.addComponent(new f.ComponentTransform());
 
 
         FloorArray = [];
-
-
-        /*
-    let floor: Floor = new Floor();
-    floor.cmpTransform.local.scaleY(0.3);
-    floor.cmpTransform.local.scaleX(1);
-    floor.cmpTransform.local.translateY(0);
-    floor.cmpTransform.local.translateZ(6);
-    floor.appendChild(hitbox);
-    level.appendChild(floor);
-    f.Debug.log(hitbox);
-*/
 
         let floor = new Floor();
         floor.cmpTransform.local.scaleY(0.3);
@@ -318,86 +319,51 @@ namespace L16_ScrollerCollide {
 
         level.appendChild(floor);
 
-/*
-        floor = new Floor();
-        floor.cmpTransform.local.scaleY(0.3);
-        floor.cmpTransform.local.scaleX(1);
-        floor.cmpTransform.local.translateX(4);
-        floor.cmpTransform.local.translateY(4);
-        floor.cmpTransform.local.translateZ(2);
-        FloorArray.push(floor);
+        /*
+       
+  */
 
-        level.appendChild(floor);
-
-
-        floor = new Floor();
-        floor.cmpTransform.local.scaleY(0.3);
-        floor.cmpTransform.local.scaleX(1);
-        floor.cmpTransform.local.translateX(-2);
-        floor.cmpTransform.local.translateY(4);
-        floor.cmpTransform.local.translateZ(6);
-        FloorArray.push(floor);
-
-        level.appendChild(floor);
-
-
-        floor = new Floor();
-        floor.cmpTransform.local.scaleY(0.3);
-        floor.cmpTransform.local.scaleX(1);
-        floor.cmpTransform.local.translateX(3);
-        floor.cmpTransform.local.translateY(2);
-        floor.cmpTransform.local.translateZ(2);
-        FloorArray.push(floor);
-
-        level.appendChild(floor);
-*/
         let lastPlatform: f.Vector3 = new f.Vector3();
-        for(let i = 1; i <= 20; i++)
-        {
-          floor = new Floor();
-          floor.cmpTransform.local.scaleY(0.3);
-          floor.cmpTransform.local.scaleX(1);
+        for(let i = 2; i <= 40; i++) {
+            floor = new Floor();
+            floor.cmpTransform.local.scaleY(0.3);
+            floor.cmpTransform.local.scaleX(1);
 
-          floor.cmpTransform.local.translateY(i);
+            floor.cmpTransform.local.translateY(i);
 
-          let randomAxis = (Math.random() * 2);
-          
-          if(randomAxis >= 1){
-          floor.cmpTransform.local.translateX(lastPlatform.x + 3.5);         
-          floor.cmpTransform.local.translateZ(Math.random()*10);
-          }
+            let randomAxis = (Math.random() * 2);
 
-          if(randomAxis <= 1){
-            floor.cmpTransform.local.translateX(Math.random()*10);         
-            floor.cmpTransform.local.translateZ(lastPlatform.z + 3.5);
+            if (randomAxis >= 1) {
+                let PosNeg = (Math.random() * 2);
+                if (PosNeg >= 1) {
+                    floor.cmpTransform.local.translateZ(Math.random() * 10);
+                    floor.cmpTransform.local.translateX(lastPlatform.z + 3.5);
+
+                }
+                if (PosNeg < 1) {
+                    floor.cmpTransform.local.translateZ(Math.random() * -10);
+                    floor.cmpTransform.local.translateX(lastPlatform.z + 3.5);
+                }
             }
 
-          FloorArray.push(floor);
-  
-          level.appendChild(floor);
+            if (randomAxis < 1) {
+                let PosNeg = (Math.random() * 2);
+                if (PosNeg >= 1) {
+                    floor.cmpTransform.local.translateX(Math.random() * 10);
+                    floor.cmpTransform.local.translateZ(lastPlatform.z + 3.5);
+                }
+                if (PosNeg < 1) {
+                    floor.cmpTransform.local.translateX(Math.random() * -10);
+                    floor.cmpTransform.local.translateZ(lastPlatform.z + 3.5);
+                }
+            }
 
-          lastPlatform = new f.Vector3(floor.cmpTransform.local.translation.x, floor.cmpTransform.local.translation.y, floor.cmpTransform.local.translation.z);
+            FloorArray.push(floor);
+
+            level.appendChild(floor);
+
+            lastPlatform = new f.Vector3(floor.cmpTransform.local.translation.x, floor.cmpTransform.local.translation.y, floor.cmpTransform.local.translation.z);
         }
-
-          
-
-        /*
-    floor = new Floor();
-    floor.cmpTransform.local.scaleY(0.3);
-    floor.cmpTransform.local.translateX(-3);
-    floor.cmpTransform.local.translateY(0);
-    floor.cmpTransform.local.translateZ(3);
-    
-    level.appendChild(floor);
-*/
-        /*
-    floor = new Floor();
-    floor.cmpTransform.local.scaleY(0.3);
-    floor.cmpTransform.local.translateX(4);
-    floor.cmpTransform.local.translateY(0);
-    floor.cmpTransform.local.translateZ(6);
-    level.appendChild(floor);
-    */
 
 
         Vector2Array = [];
@@ -409,83 +375,62 @@ namespace L16_ScrollerCollide {
         let i = 0;
 
         for(let floor of level.getChildren()) {
-            floor.cmpTransform.local.translateZ(-Vector2Array[i].y);
+            floor.cmpTransform.local.translateZ(- Vector2Array[i].y);
             i++;
         }
+        let tower: f.Node = new f.Node("Tower");
+        tower.addComponent(new f.ComponentTransform());
+        tower.addComponent(new f.ComponentMaterial(new f.Material("Tower", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("#CD5C5C", 0.5)))));
+        tower.addComponent(new f.ComponentMesh(new f.MeshSprite()));
+        tower.cmpTransform.local.scale(new f.Vector3(100, 100, 100));
+        tower.cmpTransform.local.translation = new f.Vector3(0, 0, -30);
+        game.appendChild(tower);
+
+        let tower1: f.Node = new f.Node("Tower1");
+        tower1.addComponent(new f.ComponentTransform());
+        tower1.addComponent(new f.ComponentMaterial(new f.Material("Tower", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("#CD5C5C", 0.5)))));
+        tower1.addComponent(new f.ComponentMesh(new f.MeshSprite()));
+        tower1.cmpTransform.local.rotateY(90);
+        tower1.cmpTransform.local.scale(new f.Vector3(100, 100, 100));
+        tower1.cmpTransform.local.translation = new f.Vector3(30, 0, 0);
+        game.appendChild(tower1);
+
+        let tower2: f.Node = new f.Node("Tower2");
+        tower2.addComponent(new f.ComponentTransform());
+        tower2.addComponent(new f.ComponentMaterial(new f.Material("Tower", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("#CD5C5C", 0.5)))));
+        tower2.addComponent(new f.ComponentMesh(new f.MeshSprite()));
+        tower2.cmpTransform.local.rotateY(-90);
+        tower2.cmpTransform.local.scale(new f.Vector3(100, 100, 100));
+        tower2.cmpTransform.local.translation = new f.Vector3(-30, 0, 0);
+        game.appendChild(tower2);
+
+        let tower3: f.Node = new f.Node("Tower3");
+        tower3.addComponent(new f.ComponentTransform());
+        tower3.addComponent(new f.ComponentMaterial(new f.Material("Tower", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("#CD5C5C", 0.5)))));
+        tower3.addComponent(new f.ComponentMesh(new f.MeshSprite()));
+        tower3.cmpTransform.local.rotateY(180);
+        tower3.cmpTransform.local.scale(new f.Vector3(100, 100, 100));
+        tower3.cmpTransform.local.translation = new f.Vector3(0, 0, 30);
+        game.appendChild(tower3);
 
 
-        /*
-    floor = new Floor();
-    floor.cmpTransform.local.scaleY(0.3);
-    floor.cmpTransform.local.scaleX(7);
-    floor.cmpTransform.local.translateY(0.2);
-    floor.cmpTransform.local.translateX(1.5);
-    floor.cmpTransform.local.translateZ(6);
-    level.appendChild(floor);
-
-    floor = new Floor();
-    floor.cmpTransform.local.scaleY(0.3);
-    floor.cmpTransform.local.scaleX(20);
-    floor.cmpTransform.local.translateY(0.2);
-    floor.cmpTransform.local.translateX(6);
-    floor.cmpTransform.local.translateZ(1.2);
-    level.appendChild(floor);
-    
-
-    floor = new Floor();
-    floor.cmpTransform.local.scaleY(1);
-    floor.cmpTransform.local.scaleX(1);
-    floor.cmpTransform.local.translateZ(1);
-    
-    level.appendChild(floor);
-*/
-        // hareGlobal.cmpTransform.local.translateZ(6);
-        // hareGlobal.cmpTransform.local.translateX(-.5);
-        f.Debug.log(level);
-
-
-        // f.Debug.log(Floor);
-        /*
-    let tower: f.Node = new f.Node("Tower");
-    tower.addComponent(new f.ComponentTransform());
-    tower.addComponent(new f.ComponentMaterial(new f.Material("Tower", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("red", 0.5)))));
-    tower.addComponent(new f.ComponentMesh(new f.MeshSprite()));
-    tower.cmpTransform.local.scale(new f.Vector3(50,50,50));
-    tower.cmpTransform.local.translation = new f.Vector3(0,0,-30);
-    game.appendChild(tower);
-
-    let tower1: f.Node = new f.Node("Tower1");
-    tower1.addComponent(new f.ComponentTransform());
-    tower1.addComponent(new f.ComponentMaterial(new f.Material("Tower", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("red", 0.5)))));
-    tower1.addComponent(new f.ComponentMesh(new f.MeshSprite()));
-    tower1.cmpTransform.local.rotateY(90);
-    tower1.cmpTransform.local.scale(new f.Vector3(50,50,50));
-    tower1.cmpTransform.local.translation = new f.Vector3(0,30,0);
-    game.appendChild(tower1);
-
-    let tower2: f.Node = new f.Node("Tower2");
-    tower2.addComponent(new f.ComponentTransform());
-    tower2.addComponent(new f.ComponentMaterial(new f.Material("Tower", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("red", 0.5)))));
-    tower2.addComponent(new f.ComponentMesh(new f.MeshSprite()));
-    tower2.cmpTransform.local.rotateY(-90);
-    tower2.cmpTransform.local.scale(new f.Vector3(50,50,50));
-    tower2.cmpTransform.local.translation = new f.Vector3(0,-30,0);
-    game.appendChild(tower2);
-
-    let tower3: f.Node = new f.Node("Tower3");
-    tower3.addComponent(new f.ComponentTransform());
-    tower3.addComponent(new f.ComponentMaterial(new f.Material("Tower", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("red", 0.5)))));
-    tower3.addComponent(new f.ComponentMesh(new f.MeshSprite()));
-    tower3.cmpTransform.local.rotateY(180);
-    tower3.cmpTransform.local.scale(new f.Vector3(50,50,50));
-    tower3.cmpTransform.local.translation = new f.Vector3(0,0,30);
-    game.appendChild(tower3);
-
-
-     x = hareGlobal.cmpTransform.local.translation.x;
-     y = hareGlobal.cmpTransform.local.translation.y;
-     z = hareGlobal.cmpTransform.local.translation.z;
-*/
         return level;
+
     }
+    function createCollectables(): f.Node {
+
+        let collectorAble: f.Node = new f.Node("collectorAble");
+
+        let coin = new Coin();
+        coin.cmpTransform.local.scaleY(1);
+        coin.cmpTransform.local.scaleX(1);
+        coin.cmpTransform.local.translateX(0);
+        coin.cmpTransform.local.translateY(4);
+        coin.cmpTransform.local.translateZ(0);
+        collectorAble.appendChild(coin);
+
+        return collectorAble;
+    }
+
+
 }
