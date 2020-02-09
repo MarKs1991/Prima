@@ -329,6 +329,11 @@ namespace L16_ScrollerCollide {
 
         level.appendChild(floor);
 
+
+      //For Fixed Starting Platform
+        Vector2Array[0] = new f.Vector2(FloorArray[0].cmpTransform.local.translation.x, FloorArray[0].cmpTransform.local.translation.z);
+        floor.cmpTransform.local.translateZ(- Vector2Array[0].y);
+        createCoin((FloorArray[0].cmpTransform.local.translation));
         /*
        
  
@@ -338,6 +343,9 @@ namespace L16_ScrollerCollide {
 
 
         let lastPlatform: f.Vector3 = new f.Vector3();
+
+        lastPlatform = new f.Vector3(floor.cmpTransform.local.translation.x, floor.cmpTransform.local.translation.y, floor.cmpTransform.local.translation.z);
+
         for(let i = 1; i <= PlatformNumber - 1; i++) {
             floor = new Floor();
             floor.cmpTransform.local.scaleY(0.3);
@@ -374,15 +382,25 @@ namespace L16_ScrollerCollide {
 
             FloorArray.push(floor);
 
+
+
             level.appendChild(floor);
+
+
 
             lastPlatform = new f.Vector3(floor.cmpTransform.local.translation.x, floor.cmpTransform.local.translation.y, floor.cmpTransform.local.translation.z);
 
+
+            Vector2Array[i] = new f.Vector2(FloorArray[i].cmpTransform.local.translation.x, FloorArray[i].cmpTransform.local.translation.z);
+
+            floor.cmpTransform.local.translateZ(- Vector2Array[i].y);
+
+            createCoin((FloorArray[i].cmpTransform.local.translation));
         }
 
 
         // Vector2Array = [];
-
+/*
         for(let i = 0; i <= FloorArray.length - 1; i++) {
             Vector2Array[i] = new f.Vector2(FloorArray[i].cmpTransform.local.translation.x, FloorArray[i].cmpTransform.local.translation.z);
         }
@@ -393,10 +411,10 @@ namespace L16_ScrollerCollide {
             floor.cmpTransform.local.translateZ(- Vector2Array[i].y);
             i++;
         }
-
-        for(let m = 0; m <= PlatformNumber - 1; m++) {
-            createCoin((FloorArray[m].cmpTransform.local.translation));
-        }
+*/
+        //for(let m = 0; m <= PlatformNumber - 1; m++) {
+            
+        //}
 
 
         let tower: f.Node = new f.Node("Tower");

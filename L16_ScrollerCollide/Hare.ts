@@ -94,7 +94,7 @@ namespace L16_ScrollerCollide {
                     break;
                 case ACTION.JUMP:
                     this.cmpTransform.local.translateY(.1);
-                    this.speed.y = 4;
+                    this.speed.y = 3.5;
 
                     break;
             }
