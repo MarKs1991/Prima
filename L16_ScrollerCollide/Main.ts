@@ -15,13 +15,17 @@ namespace L16_ScrollerCollide {
     export let game: f.Node;
     export let level: f.Node;
     export let collectorAble: f.Node;
-
+    export let skybox: f.Node;
     export let camera: Camera = new Camera();
     export let hitbox: Hitbox = new Hitbox();
 
     let coin: Coin;
     let floor: Floor;
     let hare: Hare;
+   
+  
+    
+  
 
     let FloorArray: Floor[] = [];
     let CoinArray: Coin[] = [];
@@ -44,6 +48,7 @@ namespace L16_ScrollerCollide {
         Hare.generateSprites(txtHare);
         Floor.generateSprites(txtHare);
         Coin.generateSprites(txtHare);
+        Skybox.generateSprites(txtHare);
         
         game = new f.Node("Game");
         hare = new Hare("Hare");
@@ -323,40 +328,40 @@ namespace L16_ScrollerCollide {
         //}
 
 
-        let tower: f.Node = new f.Node("Tower");
-        tower.addComponent(new f.ComponentTransform());
-        tower.addComponent(new f.ComponentMaterial(new f.Material("Tower", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("#191970", 0.5)))));
-        tower.addComponent(new f.ComponentMesh(new f.MeshSprite()));
-        tower.cmpTransform.local.scale(new f.Vector3(100, 100, 100));
-        tower.cmpTransform.local.translation = new f.Vector3(0, 0, -30);
-        game.appendChild(tower);
+        let skybox = new Skybox();
+        //skybox.addComponent(new f.ComponentTransform());
+        //skybox.addComponent(new f.ComponentMaterial(new f.Material("skybox", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("#191970", 0.5)))));
+        //skybox.addComponent(new f.ComponentMesh(new f.MeshSprite()));
+        skybox.cmpTransform.local.scale(new f.Vector3(100, 100, 100));
+        skybox.cmpTransform.local.translation = new f.Vector3(0, 0, -30);
+        game.appendChild(skybox);
 
-        let tower1: f.Node = new f.Node("Tower1");
-        tower1.addComponent(new f.ComponentTransform());
-        tower1.addComponent(new f.ComponentMaterial(new f.Material("Tower", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("#191970", 0.5)))));
-        tower1.addComponent(new f.ComponentMesh(new f.MeshSprite()));
-        tower1.cmpTransform.local.rotateY(90);
-        tower1.cmpTransform.local.scale(new f.Vector3(100, 100, 100));
-        tower1.cmpTransform.local.translation = new f.Vector3(30, 0, 0);
-        game.appendChild(tower1);
+        skybox = new Skybox();
+        //skybox.addComponent(new f.ComponentTransform());
+        //skybox.addComponent(new f.ComponentMaterial(new f.Material("skybox", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("#191970", 0.5)))));
+        //skybox.addComponent(new f.ComponentMesh(new f.MeshSprite()));
+        skybox.cmpTransform.local.rotateY(90);
+        skybox.cmpTransform.local.scale(new f.Vector3(100, 100, 100));
+        skybox.cmpTransform.local.translation = new f.Vector3(30, 0, 0);
+        game.appendChild(skybox);
 
-        let tower2: f.Node = new f.Node("Tower2");
-        tower2.addComponent(new f.ComponentTransform());
-        tower2.addComponent(new f.ComponentMaterial(new f.Material("Tower", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("#191970", 0.5)))));
-        tower2.addComponent(new f.ComponentMesh(new f.MeshSprite()));
-        tower2.cmpTransform.local.rotateY(-90);
-        tower2.cmpTransform.local.scale(new f.Vector3(100, 100, 100));
-        tower2.cmpTransform.local.translation = new f.Vector3(-30, 0, 0);
-        game.appendChild(tower2);
+        skybox = new Skybox();
+        //skybox.addComponent(new f.ComponentTransform());
+        //skybox.addComponent(new f.ComponentMaterial(new f.Material("skybox", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("#191970", 0.5)))));
+        //skybox.addComponent(new f.ComponentMesh(new f.MeshSprite()));
+        skybox.cmpTransform.local.rotateY(-90);
+        skybox.cmpTransform.local.scale(new f.Vector3(100, 100, 100));
+        skybox.cmpTransform.local.translation = new f.Vector3(-30, 0, 0);
+        game.appendChild(skybox);
 
-        let tower3: f.Node = new f.Node("Tower3");
-        tower3.addComponent(new f.ComponentTransform());
-        tower3.addComponent(new f.ComponentMaterial(new f.Material("Tower", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("#191970", 0.5)))));
-        tower3.addComponent(new f.ComponentMesh(new f.MeshSprite()));
-        tower3.cmpTransform.local.rotateY(180);
-        tower3.cmpTransform.local.scale(new f.Vector3(100, 100, 100));
-        tower3.cmpTransform.local.translation = new f.Vector3(0, 0, 30);
-        game.appendChild(tower3);
+        skybox = new Skybox();
+        //skybox.addComponent(new f.ComponentTransform());
+        //skybox.addComponent(new f.ComponentMaterial(new f.Material("skybox", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("#191970", 0.5)))));
+        //skybox.addComponent(new f.ComponentMesh(new f.MeshSprite()));
+        skybox.cmpTransform.local.rotateY(180);
+        skybox.cmpTransform.local.scale(new f.Vector3(100, 100, 100));
+        skybox.cmpTransform.local.translation = new f.Vector3(0, 0, 30);
+        game.appendChild(skybox);
 
 
         return level;

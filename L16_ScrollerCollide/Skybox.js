@@ -29,8 +29,8 @@ var L16_ScrollerCollide;
                 child.activate(child.name == "SkyboxSprite");
         }
     }
-    Skybox.mesh = new f.MeshCube();
-    Skybox.material = new f.Material("Skybox", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("blue", 0.5)));
+    Skybox.mesh = new f.MeshSprite();
+    //private static material: f.Material = new f.Material("Skybox", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("red", 0.5)));
     Skybox.pivot = f.Matrix4x4.TRANSLATION(f.Vector3.Y(-0.5));
     L16_ScrollerCollide.Skybox = Skybox;
 })(L16_ScrollerCollide || (L16_ScrollerCollide = {}));
