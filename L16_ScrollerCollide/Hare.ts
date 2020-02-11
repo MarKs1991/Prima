@@ -21,6 +21,7 @@ namespace L16_ScrollerCollide {
         // private time: f.Time = new f.Time();
         public speed : f.Vector3 = f.Vector3.ZERO();
         public lastHitIndex : number;
+        public collectedCoins: number = 0;
 
 
         constructor(_name : string = "Hare") {
@@ -45,8 +46,10 @@ namespace L16_ScrollerCollide {
         public static generateSprites(_txtImage : f.TextureImage): void {
             Hare.sprites = [];
             let sprite: Sprite = new Sprite(ACTION.WALK);
+            if (DIRECTION.RIGHT){
             sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 2308, 13, 20), 6, new f.Vector2(1, 0), 30, f.ORIGIN2D.BOTTOMCENTER);
             Hare.sprites.push(sprite);
+            }
 
             sprite = new Sprite(ACTION.IDLE);
             sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 1352, 15, 19), 15, new f.Vector2(1, 0), 30, f.ORIGIN2D.BOTTOMCENTER);
@@ -180,6 +183,8 @@ namespace L16_ScrollerCollide {
               let hit: boolean = rect.isInside(CharacterCollider);
               if (hit) {
                 collectorAble.removeChild((< Coin > coin));
+                this.collectedCoins++;
+                document.getElementById("CollectedCoins").innerHTML = this.collectedCoins.toString();
                 Sound.play("coin");
                
               }

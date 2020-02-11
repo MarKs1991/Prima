@@ -94,9 +94,6 @@ namespace L16_ScrollerCollide {
             hare.act(ACTION.JUMP);
             Sound.play("jump");
         }
-
-
-        let mtxHare: f.Matrix4x4;
         let camtransformation: CamTransformation = Camera.camtransformations[_event.code];
 
 

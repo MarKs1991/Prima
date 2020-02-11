@@ -21,6 +21,7 @@ var L16_ScrollerCollide;
             // private action: ACTION;
             // private time: f.Time = new f.Time();
             this.speed = f.Vector3.ZERO();
+            this.collectedCoins = 0;
             this.update = (_event) => {
                 this.broadcastEvent(new CustomEvent("showNext"));
                 let timeFrame = f.Loop.timeFrameGame / 1000;
@@ -45,8 +46,10 @@ var L16_ScrollerCollide;
         static generateSprites(_txtImage) {
             Hare.sprites = [];
             let sprite = new L16_ScrollerCollide.Sprite(ACTION.WALK);
-            sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 2308, 13, 20), 6, new f.Vector2(1, 0), 30, f.ORIGIN2D.BOTTOMCENTER);
-            Hare.sprites.push(sprite);
+            if (DIRECTION.RIGHT) {
+                sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 2308, 13, 20), 6, new f.Vector2(1, 0), 30, f.ORIGIN2D.BOTTOMCENTER);
+                Hare.sprites.push(sprite);
+            }
             sprite = new L16_ScrollerCollide.Sprite(ACTION.IDLE);
             sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 1352, 15, 19), 15, new f.Vector2(1, 0), 30, f.ORIGIN2D.BOTTOMCENTER);
             // sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 1464, 19, 21), 48, new f.Vector2(1,0), 30, f.ORIGIN2D.BOTTOMCENTER);
@@ -133,6 +136,8 @@ var L16_ScrollerCollide;
                 let hit = rect.isInside(CharacterCollider);
                 if (hit) {
                     L16_ScrollerCollide.collectorAble.removeChild(coin);
+                    this.collectedCoins++;
+                    document.getElementById("CollectedCoins").innerHTML = this.collectedCoins.toString();
                     L16_ScrollerCollide.Sound.play("coin");
                 }
             }

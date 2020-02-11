@@ -65,7 +65,6 @@ var L16_ScrollerCollide;
             hare.act(L16_ScrollerCollide.ACTION.JUMP);
             L16_ScrollerCollide.Sound.play("jump");
         }
-        let mtxHare;
         let camtransformation = L16_ScrollerCollide.Camera.camtransformations[_event.code];
         if (camtransformation) {
             cammove(camtransformation);
