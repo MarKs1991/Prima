@@ -132,13 +132,14 @@ var L16_ScrollerCollide;
                 // console.log(rect.toString());
                 let hit = rect.isInside(CharacterCollider);
                 if (hit) {
-                    //f.Debug.log("HIT");
+                    L16_ScrollerCollide.collectorAble.removeChild(coin);
+                    L16_ScrollerCollide.Sound.play("coin");
                 }
             }
         }
     }
     Hare.speedMax = new f.Vector2(1.5, 5); // units per second
-    Hare.gravity = f.Vector2.Y(-2);
+    Hare.gravity = f.Vector2.Y(-3);
     L16_ScrollerCollide.Hare = Hare;
 })(L16_ScrollerCollide || (L16_ScrollerCollide = {}));
 //# sourceMappingURL=Hare.js.map

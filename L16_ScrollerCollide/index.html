@@ -10,23 +10,30 @@
   <script src="Hare.js"></script>
   <script src="Coin.js"></script>
   <script src="Floor.js"></script>
-  <script src="Level.js"></script>
+  
   <script src="Hitbox.js  "></script>
   <script src="Control.js"></script>
   <script src="Camera.js"></script>
+  <script src="Sound.js"></script>
   <script src="Main.js"></script>
   <style>
     body{
-      background-color: beige;
+      background-color: rgb(54, 54, 54);
     }
   </style>
 </head>
 <body>
-  <h1>
-    Scroller Collide
-  </h1>
-  <canvas width="1920" height="1000" style="background-color: aliceblue;"></canvas>
-  <img src="fez1.png"/>
+  <h1 style="color:rgb(255, 255, 255); font: 2em sans-serif;"> 
+The 3rd Dimension
+</h1>
+
+  <canvas width="1024" height="720" style="background-color: rgba(14, 14, 14, 0.418);"></canvas>
+  <img style="display: none" src="fez1.png"/>
+  
+  <audio id="jump" src="Sounds/jump.mp3" type="audio/mpeg"></audio>
+  <audio id="coin" src="Sounds/coin.mp3 " type="audio/mpeg"></audio>
+  <audio id="rotation" src="Sounds/rotation.wav " type="audio/mpeg"></audio>
+  <audio id="Reflection" src="Sounds/Reflection.mp3 " type="audio/mpeg"></audio>
  
 </body>
 </html>

@@ -5,62 +5,46 @@ namespace L16_ScrollerCollide {
     export import NodeSprite = L14_ScrollerFoundation.NodeSprite;
 
     window.addEventListener("load", test);
-
     interface KeyPressed {
         [code : string]: boolean;
     }
+
     let keysPressed: KeyPressed = {};
     let viewport: f.Viewport = new f.Viewport();
+
     export let game: f.Node;
     export let level: f.Node;
     export let collectorAble: f.Node;
 
-    export let cameraRot: Camera = new Camera();
+    export let camera: Camera = new Camera();
     export let hitbox: Hitbox = new Hitbox();
 
     let coin: Coin;
     let floor: Floor;
     let hare: Hare;
 
-
     let FloorArray: Floor[] = [];
+    let CoinArray: Coin[] = [];
     let Vector2Array: f.Vector2[] = [];
-    let lastPos: number;
-
-
-    let ParentCamNode = new f.Node("ParentCamNode");
-    let CamNode = new f.Node("CamNode");
-    let RotNode: f.Node = new f.Node("RotNode");
-    let hareGlobal: f.Node = new f.Node("HareGlobal");
 
 
     let CamZoom: f.Node = new f.Node("CamZoom");
-    let cam: f.ComponentCamera = new f.ComponentCamera;
-
-
-    let control: Control = new Control();
-
+    let compCam: f.ComponentCamera = new f.ComponentCamera;
+   
 
     function test(): void {
         let canvas: HTMLCanvasElement = document.querySelector("canvas");
         let crc2: CanvasRenderingContext2D = canvas.getContext("2d");
         let img: HTMLImageElement = document.querySelector("img");
         let txtHare: f.TextureImage = new f.TextureImage();
+        Sound.init();
 
-
+        
         txtHare.image = img;
         Hare.generateSprites(txtHare);
         Floor.generateSprites(txtHare);
         Coin.generateSprites(txtHare);
-        hareGlobal.addComponent(new f.ComponentTransform());
-
-
-        control.cmpTransform.local.translateY(5);
-        RotNode.appendChild(control);
-
-        f.RenderManager.initialize(true, false);
-
-
+        
         game = new f.Node("Game");
         hare = new Hare("Hare");
 
@@ -70,45 +54,19 @@ namespace L16_ScrollerCollide {
 
         level = createLevel();
         game.appendChild(level);
-
-
-        hareGlobal.appendChild(hare);
-
-        game.appendChild(hareGlobal);
-
+        game.appendChild(hare);
         hare.appendChild(hitbox);
 
 
-        CamZoom.addComponent(cam);
+        CamZoom.addComponent(compCam);
         CamZoom.addComponent(new f.ComponentTransform);
-        cameraRot.appendChild(CamZoom);
-        // cameraRot.appendChild(hareGlobal);
+        camera.appendChild(CamZoom);
+        game.appendChild(camera);
+        compCam.pivot.translateZ(30);
+        
 
-
-        control.cmpTransform.local.translateY(5);
-
-        game.appendChild(cameraRot);
-
-
-        let cmpCamera: f.ComponentCamera = new f.ComponentCamera();
-
-        cam.pivot.translateZ(30);
-
-
-        CamNode.addComponent(cmpCamera);
-        CamNode.addComponent(new f.ComponentTransform());
-
-        cmpCamera.pivot.lookAt(f.Vector3.ZERO());
-        cmpCamera.backgroundColor = f.Color.CSS("aliceblue");
-
-        CamNode.addComponent(cmpCamera);
-        ParentCamNode.addComponent(new f.ComponentTransform());
-        CamNode.cmpTransform.local.rotateX(90);
-
-        ParentCamNode.appendChild(CamNode);
-
-
-        viewport.initialize("Viewport", game, cam, canvas);
+        f.RenderManager.initialize(true, false);
+        viewport.initialize("Viewport", game, compCam, canvas);
         viewport.draw();
 
         document.addEventListener("keydown", handleKeyboard);
@@ -116,12 +74,14 @@ namespace L16_ScrollerCollide {
 
         f.Loop.addEventListener(f.EVENT.LOOP_FRAME, update);
         f.Loop.start(f.LOOP_MODE.TIME_GAME, 10);
+        //Sound.playAtmo(2);
 
         function update(_event: f.Eventƒ): void {
             processInput();
-            cam.pivot.translateY(hare.speed.y / 10);
-
+            //compCam.pivot.translateY(hare.speed.y / 10);
+            camera.cmpTransform.local.translation = new f.Vector3(hare.cmpTransform.local.translation.x, hare.cmpTransform.local.translation.y, hare.cmpTransform.local.translation.z);
             viewport.draw();
+            
 
             crc2.strokeRect(-1, -1, canvas.width / 2, canvas.height + 2);
             crc2.strokeRect(-1, canvas.height / 2, canvas.width + 2, canvas.height);
@@ -130,9 +90,10 @@ namespace L16_ScrollerCollide {
 
     function handleKeyboard(_event: KeyboardEvent): void {
         keysPressed[_event.code] = (_event.type == "keydown");
-        if (_event.code == f.KEYBOARD_CODE.W && _event.type == "keydown") 
+        if (_event.code == f.KEYBOARD_CODE.W && _event.type == "keydown"){
             hare.act(ACTION.JUMP);
-        
+            Sound.play("jump");
+        }
 
 
         let mtxHare: f.Matrix4x4;
@@ -145,69 +106,22 @@ namespace L16_ScrollerCollide {
             let mtxContainer: f.Matrix4x4 = hare.cmpTransform.local;
 
             if (keysPressed[f.KEYBOARD_CODE.ARROW_RIGHT]) {
-                normalizeTransforms(90);
-
-                // level.cmpTransform.local.rotateY(90);
+              Sound.play("rotation");
+                normalizeTransforms(90);    
             }
-
-
             if (keysPressed[f.KEYBOARD_CODE.ARROW_LEFT]) {
-
+              Sound.play("rotation");
                 normalizeTransforms(-90);
-                /*
-            hare.cmpTransform.local.rotateY(-90);
-
-              for (let floor of level.getChildren()) {
-
-                floor.cmpTransform.local.rotateY(-90);
-
-                
-              
-                let rotation = floor.cmpTransform.local.rotation.y;
-
-                if (rotation == 90  || rotation == -90)
-                  {
-                    floor.cmpTransform.local.translateX(-Vector2Array[i].x);
-
-                    lastPos.x = hare.cmpTransform.local.translation.x;
-                    hare.cmpTransform.local.translateX(-hare.cmpTransform.local.translation.x);
-                    floor.cmpTransform.local.translateZ(Vector2Array[i].y);
-                  }
-
-                if (rotation > -40 && rotation < 40 || rotation == 180 || rotation == -180)
-                  {
-                     floor.cmpTransform.local.translateZ(-Vector2Array[i].y);
-                     hare.cmpTransform.local.translateZ(-hare.cmpTransform.local.translation.z);
-                     hare.cmpTransform.local.translateX(lastPos.x);
-                     floor.cmpTransform.local.translateX(Vector2Array[i].x);
-                  }
-                
-                f.Debug.log("rot" + floor.cmpTransform.local.rotation.y); 
-                i++;
-
-              // hare.mtxWorld.translateX(-hare.mtxWorld.translation.x);
-              }
-              
-              
-              //f.Debug.log(cameraRot.cmpTransform.local.translation);
-              */
+               
             }
-
-
-        }
-
+          }
         viewport.draw();
     }
 
     function processInput(): void {
 
-        // f.Debug.log("x" + hare.mtxWorld.translation.x);
-        // f.Debug.log("y" + hare.mtxWorld.translation.y);
-        // f.Debug.log("z" + hare.mtxWorld.translation.z);
-
         if (keysPressed[f.KEYBOARD_CODE.A]) {
-            hare.act(ACTION.WALK, DIRECTION.LEFT);
-
+          hare.act(ACTION.WALK, DIRECTION.LEFT);
             return;
         }
         if (keysPressed[f.KEYBOARD_CODE.D]) {
@@ -215,33 +129,30 @@ namespace L16_ScrollerCollide {
             // f.Debug.log("x" + hare.mtxWorld.translation.x);
             // f.Debug.log("y" + hare.mtxWorld.translation.y);
             // f.Debug.log("z" + hare.mtxWorld.translation.z);
+            //camera.cmpTransform.local.translation = new f.Vector3(hare.cmpTransform.local.translation.x, camera.cmpTransform.local.translation.y, hare.cmpTransform.local.translation.z);
             return;
         }
-
-
         hare.act(ACTION.IDLE);
-
-
     }
 
 
     function cammove(_transformation: Transformation): void {
 
-        let animationSteps: number = 5;
+        let animationSteps: number = 10;
         let fullRotation: number = 90;
-        // let fullTranslation: number = 1;
+       
         let move: Transformation = {
             rotation: _transformation.rotation ? f.Vector3.SCALE(_transformation.rotation, fullRotation) : new f.Vector3()
-            // translation: _transformation.translation ? f.Vector3.SCALE(_transformation.translation, fullTranslation) : new f.Vector3()
+            //translation: _transformation.translation ? f.Vector3.SCALE(_transformation.translation, fullTranslation) : new f.Vector3()
         };
-        control.cmpTransform.local.rotateX(move.rotation.x);
-        control.cmpTransform.local.rotateY(move.rotation.y);
-        control.cmpTransform.local.rotateZ(move.rotation.z);
-        // control.cmpTransform.local.translation = move.translation;
+        //control.cmpTransform.local.rotateX(move.rotation.x);
+        //control.cmpTransform.local.rotateY(move.rotation.y);
+        //control.cmpTransform.local.rotateZ(move.rotation.z);
+        //control.cmpTransform.local.translation = move.translation;
         move.rotation.scale(1 / animationSteps);
 
         f.Time.game.setTimer(10, animationSteps, function (): void {
-            cameraRot.move(move);
+            camera.move(move);
 
 
             f.RenderManager.update();
@@ -251,18 +162,18 @@ namespace L16_ScrollerCollide {
 
 
     function normalizeTransforms(rotDirection: number) {
-
-
         hare.cmpTransform.local.rotateY(rotDirection);
-
-
         let NodeArray: f.Node[] = [floor, coin];
-        let ParentArray: f.Node[] = [level, collectorAble];
+        let ParentArray = [FloorArray, CoinArray];
 
         for (let j = 0; j <= NodeArray.length - 1; j++) {
 
             let i = 0;
-            for (NodeArray[j] of ParentArray[j].getChildren()) {
+
+            
+            for (NodeArray[j] of ParentArray[j]) 
+              //for (let m = 0; m <= Vector2Array.length - 1; m++)
+              {
 
                 NodeArray[j].cmpTransform.local.rotateY(rotDirection);
 
@@ -320,7 +231,7 @@ namespace L16_ScrollerCollide {
         // FloorArray = [];
 
         let floor = new Floor();
-        floor.cmpTransform.local.scaleY(0.3);
+        floor.cmpTransform.local.scaleY(0.5);
         floor.cmpTransform.local.scaleX(1);
         floor.cmpTransform.local.translateX(0);
         floor.cmpTransform.local.translateY(0);
@@ -334,11 +245,7 @@ namespace L16_ScrollerCollide {
         Vector2Array[0] = new f.Vector2(FloorArray[0].cmpTransform.local.translation.x, FloorArray[0].cmpTransform.local.translation.z);
         floor.cmpTransform.local.translateZ(- Vector2Array[0].y);
         createCoin((FloorArray[0].cmpTransform.local.translation));
-        /*
-       
- 
-        */
-
+     
         let PlatformNumber = 21;
 
 
@@ -348,7 +255,7 @@ namespace L16_ScrollerCollide {
 
         for(let i = 1; i <= PlatformNumber - 1; i++) {
             floor = new Floor();
-            floor.cmpTransform.local.scaleY(0.3);
+            floor.cmpTransform.local.scaleY(0.5);
             floor.cmpTransform.local.scaleX(1);
 
             floor.cmpTransform.local.translateY(i);
@@ -396,6 +303,8 @@ namespace L16_ScrollerCollide {
             floor.cmpTransform.local.translateZ(- Vector2Array[i].y);
 
             createCoin((FloorArray[i].cmpTransform.local.translation));
+            
+            
         }
 
 
@@ -474,7 +383,7 @@ namespace L16_ScrollerCollide {
         coin.cmpTransform.local.translateY(1);
         collectorAble.appendChild(coin);
 
-
+        CoinArray.push(coin);
     }
 
 

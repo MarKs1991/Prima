@@ -57,8 +57,8 @@ var L16_ScrollerCollide;
             return rotation;
         }
     }
-    Floor.mesh = new f.MeshSprite();
-    //private static material: f.Material = new f.Material("Floor", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("blue", 0.5)));
+    Floor.mesh = new f.MeshCube();
+    Floor.material = new f.Material("Floor", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("blue", 0.5)));
     Floor.pivot = f.Matrix4x4.TRANSLATION(f.Vector3.Y(-0.5));
     L16_ScrollerCollide.Floor = Floor;
 })(L16_ScrollerCollide || (L16_ScrollerCollide = {}));

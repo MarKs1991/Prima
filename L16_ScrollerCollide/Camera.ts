@@ -12,10 +12,13 @@ namespace L16_ScrollerCollide {
   export class Camera extends f.Node {
       public static camtransformations: CamTransformations = Camera.defineControls();
 
+ 
    
       constructor() {
           super("Camera");
           this.addComponent(new f.ComponentTransform());
+         
+
           
    
       }
@@ -39,5 +42,8 @@ namespace L16_ScrollerCollide {
           //mtxFragment.translate(_transformation.translation);
           
       }
+
+
+      
     }
 }

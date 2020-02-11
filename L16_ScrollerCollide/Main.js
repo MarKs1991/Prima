@@ -9,68 +9,51 @@ var L16_ScrollerCollide;
     window.addEventListener("load", test);
     let keysPressed = {};
     let viewport = new L16_ScrollerCollide.f.Viewport();
-    L16_ScrollerCollide.cameraRot = new L16_ScrollerCollide.Camera();
+    L16_ScrollerCollide.camera = new L16_ScrollerCollide.Camera();
     L16_ScrollerCollide.hitbox = new L16_ScrollerCollide.Hitbox();
     let coin;
     let floor;
     let hare;
     let FloorArray = [];
+    let CoinArray = [];
     let Vector2Array = [];
-    let lastPos;
-    let ParentCamNode = new L16_ScrollerCollide.f.Node("ParentCamNode");
-    let CamNode = new L16_ScrollerCollide.f.Node("CamNode");
-    let RotNode = new L16_ScrollerCollide.f.Node("RotNode");
-    let hareGlobal = new L16_ScrollerCollide.f.Node("HareGlobal");
     let CamZoom = new L16_ScrollerCollide.f.Node("CamZoom");
-    let cam = new L16_ScrollerCollide.f.ComponentCamera;
-    let control = new L16_ScrollerCollide.Control();
+    let compCam = new L16_ScrollerCollide.f.ComponentCamera;
     function test() {
         let canvas = document.querySelector("canvas");
         let crc2 = canvas.getContext("2d");
         let img = document.querySelector("img");
         let txtHare = new L16_ScrollerCollide.f.TextureImage();
+        L16_ScrollerCollide.Sound.init();
         txtHare.image = img;
         L16_ScrollerCollide.Hare.generateSprites(txtHare);
         L16_ScrollerCollide.Floor.generateSprites(txtHare);
         L16_ScrollerCollide.Coin.generateSprites(txtHare);
-        hareGlobal.addComponent(new L16_ScrollerCollide.f.ComponentTransform());
-        control.cmpTransform.local.translateY(5);
-        RotNode.appendChild(control);
-        L16_ScrollerCollide.f.RenderManager.initialize(true, false);
         L16_ScrollerCollide.game = new L16_ScrollerCollide.f.Node("Game");
         hare = new L16_ScrollerCollide.Hare("Hare");
         L16_ScrollerCollide.collectorAble = createCollectables();
         L16_ScrollerCollide.game.appendChild(L16_ScrollerCollide.collectorAble);
         L16_ScrollerCollide.level = createLevel();
         L16_ScrollerCollide.game.appendChild(L16_ScrollerCollide.level);
-        hareGlobal.appendChild(hare);
-        L16_ScrollerCollide.game.appendChild(hareGlobal);
+        L16_ScrollerCollide.game.appendChild(hare);
         hare.appendChild(L16_ScrollerCollide.hitbox);
-        CamZoom.addComponent(cam);
+        CamZoom.addComponent(compCam);
         CamZoom.addComponent(new L16_ScrollerCollide.f.ComponentTransform);
-        L16_ScrollerCollide.cameraRot.appendChild(CamZoom);
-        // cameraRot.appendChild(hareGlobal);
-        control.cmpTransform.local.translateY(5);
-        L16_ScrollerCollide.game.appendChild(L16_ScrollerCollide.cameraRot);
-        let cmpCamera = new L16_ScrollerCollide.f.ComponentCamera();
-        cam.pivot.translateZ(30);
-        CamNode.addComponent(cmpCamera);
-        CamNode.addComponent(new L16_ScrollerCollide.f.ComponentTransform());
-        cmpCamera.pivot.lookAt(L16_ScrollerCollide.f.Vector3.ZERO());
-        cmpCamera.backgroundColor = L16_ScrollerCollide.f.Color.CSS("aliceblue");
-        CamNode.addComponent(cmpCamera);
-        ParentCamNode.addComponent(new L16_ScrollerCollide.f.ComponentTransform());
-        CamNode.cmpTransform.local.rotateX(90);
-        ParentCamNode.appendChild(CamNode);
-        viewport.initialize("Viewport", L16_ScrollerCollide.game, cam, canvas);
+        L16_ScrollerCollide.camera.appendChild(CamZoom);
+        L16_ScrollerCollide.game.appendChild(L16_ScrollerCollide.camera);
+        compCam.pivot.translateZ(30);
+        L16_ScrollerCollide.f.RenderManager.initialize(true, false);
+        viewport.initialize("Viewport", L16_ScrollerCollide.game, compCam, canvas);
         viewport.draw();
         document.addEventListener("keydown", handleKeyboard);
         document.addEventListener("keyup", handleKeyboard);
         L16_ScrollerCollide.f.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
         L16_ScrollerCollide.f.Loop.start(L16_ScrollerCollide.f.LOOP_MODE.TIME_GAME, 10);
+        //Sound.playAtmo(2);
         function update(_event) {
             processInput();
-            cam.pivot.translateY(hare.speed.y / 10);
+            //compCam.pivot.translateY(hare.speed.y / 10);
+            L16_ScrollerCollide.camera.cmpTransform.local.translation = new L16_ScrollerCollide.f.Vector3(hare.cmpTransform.local.translation.x, hare.cmpTransform.local.translation.y, hare.cmpTransform.local.translation.z);
             viewport.draw();
             crc2.strokeRect(-1, -1, canvas.width / 2, canvas.height + 2);
             crc2.strokeRect(-1, canvas.height / 2, canvas.width + 2, canvas.height);
@@ -78,64 +61,27 @@ var L16_ScrollerCollide;
     }
     function handleKeyboard(_event) {
         keysPressed[_event.code] = (_event.type == "keydown");
-        if (_event.code == L16_ScrollerCollide.f.KEYBOARD_CODE.W && _event.type == "keydown")
+        if (_event.code == L16_ScrollerCollide.f.KEYBOARD_CODE.W && _event.type == "keydown") {
             hare.act(L16_ScrollerCollide.ACTION.JUMP);
+            L16_ScrollerCollide.Sound.play("jump");
+        }
         let mtxHare;
         let camtransformation = L16_ScrollerCollide.Camera.camtransformations[_event.code];
         if (camtransformation) {
             cammove(camtransformation);
             let mtxContainer = hare.cmpTransform.local;
             if (keysPressed[L16_ScrollerCollide.f.KEYBOARD_CODE.ARROW_RIGHT]) {
+                L16_ScrollerCollide.Sound.play("rotation");
                 normalizeTransforms(90);
-                // level.cmpTransform.local.rotateY(90);
             }
             if (keysPressed[L16_ScrollerCollide.f.KEYBOARD_CODE.ARROW_LEFT]) {
+                L16_ScrollerCollide.Sound.play("rotation");
                 normalizeTransforms(-90);
-                /*
-            hare.cmpTransform.local.rotateY(-90);
-
-              for (let floor of level.getChildren()) {
-
-                floor.cmpTransform.local.rotateY(-90);
-
-                
-              
-                let rotation = floor.cmpTransform.local.rotation.y;
-
-                if (rotation == 90  || rotation == -90)
-                  {
-                    floor.cmpTransform.local.translateX(-Vector2Array[i].x);
-
-                    lastPos.x = hare.cmpTransform.local.translation.x;
-                    hare.cmpTransform.local.translateX(-hare.cmpTransform.local.translation.x);
-                    floor.cmpTransform.local.translateZ(Vector2Array[i].y);
-                  }
-
-                if (rotation > -40 && rotation < 40 || rotation == 180 || rotation == -180)
-                  {
-                     floor.cmpTransform.local.translateZ(-Vector2Array[i].y);
-                     hare.cmpTransform.local.translateZ(-hare.cmpTransform.local.translation.z);
-                     hare.cmpTransform.local.translateX(lastPos.x);
-                     floor.cmpTransform.local.translateX(Vector2Array[i].x);
-                  }
-                
-                f.Debug.log("rot" + floor.cmpTransform.local.rotation.y);
-                i++;
-
-              // hare.mtxWorld.translateX(-hare.mtxWorld.translation.x);
-              }
-              
-              
-              //f.Debug.log(cameraRot.cmpTransform.local.translation);
-              */
             }
         }
         viewport.draw();
     }
     function processInput() {
-        // f.Debug.log("x" + hare.mtxWorld.translation.x);
-        // f.Debug.log("y" + hare.mtxWorld.translation.y);
-        // f.Debug.log("z" + hare.mtxWorld.translation.z);
         if (keysPressed[L16_ScrollerCollide.f.KEYBOARD_CODE.A]) {
             hare.act(L16_ScrollerCollide.ACTION.WALK, L16_ScrollerCollide.DIRECTION.LEFT);
             return;
@@ -145,25 +91,25 @@ var L16_ScrollerCollide;
             // f.Debug.log("x" + hare.mtxWorld.translation.x);
             // f.Debug.log("y" + hare.mtxWorld.translation.y);
             // f.Debug.log("z" + hare.mtxWorld.translation.z);
+            //camera.cmpTransform.local.translation = new f.Vector3(hare.cmpTransform.local.translation.x, camera.cmpTransform.local.translation.y, hare.cmpTransform.local.translation.z);
             return;
         }
         hare.act(L16_ScrollerCollide.ACTION.IDLE);
     }
     function cammove(_transformation) {
-        let animationSteps = 5;
+        let animationSteps = 10;
         let fullRotation = 90;
-        // let fullTranslation: number = 1;
         let move = {
             rotation: _transformation.rotation ? L16_ScrollerCollide.f.Vector3.SCALE(_transformation.rotation, fullRotation) : new L16_ScrollerCollide.f.Vector3()
-            // translation: _transformation.translation ? f.Vector3.SCALE(_transformation.translation, fullTranslation) : new f.Vector3()
+            //translation: _transformation.translation ? f.Vector3.SCALE(_transformation.translation, fullTranslation) : new f.Vector3()
         };
-        control.cmpTransform.local.rotateX(move.rotation.x);
-        control.cmpTransform.local.rotateY(move.rotation.y);
-        control.cmpTransform.local.rotateZ(move.rotation.z);
-        // control.cmpTransform.local.translation = move.translation;
+        //control.cmpTransform.local.rotateX(move.rotation.x);
+        //control.cmpTransform.local.rotateY(move.rotation.y);
+        //control.cmpTransform.local.rotateZ(move.rotation.z);
+        //control.cmpTransform.local.translation = move.translation;
         move.rotation.scale(1 / animationSteps);
         L16_ScrollerCollide.f.Time.game.setTimer(10, animationSteps, function () {
-            L16_ScrollerCollide.cameraRot.move(move);
+            L16_ScrollerCollide.camera.move(move);
             L16_ScrollerCollide.f.RenderManager.update();
             viewport.draw();
         });
@@ -171,10 +117,12 @@ var L16_ScrollerCollide;
     function normalizeTransforms(rotDirection) {
         hare.cmpTransform.local.rotateY(rotDirection);
         let NodeArray = [floor, coin];
-        let ParentArray = [L16_ScrollerCollide.level, L16_ScrollerCollide.collectorAble];
+        let ParentArray = [FloorArray, CoinArray];
         for (let j = 0; j <= NodeArray.length - 1; j++) {
             let i = 0;
-            for (NodeArray[j] of ParentArray[j].getChildren()) {
+            for (NodeArray[j] of ParentArray[j]) 
+            //for (let m = 0; m <= Vector2Array.length - 1; m++)
+            {
                 NodeArray[j].cmpTransform.local.rotateY(rotDirection);
                 let rotation = NodeArray[j].cmpTransform.local.rotation.y;
                 if (rotation == 90 || rotation == -90) {
@@ -208,7 +156,7 @@ var L16_ScrollerCollide;
         level.addComponent(new L16_ScrollerCollide.f.ComponentTransform());
         // FloorArray = [];
         let floor = new L16_ScrollerCollide.Floor();
-        floor.cmpTransform.local.scaleY(0.3);
+        floor.cmpTransform.local.scaleY(0.5);
         floor.cmpTransform.local.scaleX(1);
         floor.cmpTransform.local.translateX(0);
         floor.cmpTransform.local.translateY(0);
@@ -219,16 +167,12 @@ var L16_ScrollerCollide;
         Vector2Array[0] = new L16_ScrollerCollide.f.Vector2(FloorArray[0].cmpTransform.local.translation.x, FloorArray[0].cmpTransform.local.translation.z);
         floor.cmpTransform.local.translateZ(-Vector2Array[0].y);
         createCoin((FloorArray[0].cmpTransform.local.translation));
-        /*
-       
- 
-        */
         let PlatformNumber = 21;
         let lastPlatform = new L16_ScrollerCollide.f.Vector3();
         lastPlatform = new L16_ScrollerCollide.f.Vector3(floor.cmpTransform.local.translation.x, floor.cmpTransform.local.translation.y, floor.cmpTransform.local.translation.z);
         for (let i = 1; i <= PlatformNumber - 1; i++) {
             floor = new L16_ScrollerCollide.Floor();
-            floor.cmpTransform.local.scaleY(0.3);
+            floor.cmpTransform.local.scaleY(0.5);
             floor.cmpTransform.local.scaleX(1);
             floor.cmpTransform.local.translateY(i);
             let randomAxis = (Math.random() * 2);
@@ -320,6 +264,7 @@ var L16_ScrollerCollide;
         coin.cmpTransform.local.translate(Position);
         coin.cmpTransform.local.translateY(1);
         L16_ScrollerCollide.collectorAble.appendChild(coin);
+        CoinArray.push(coin);
     }
 })(L16_ScrollerCollide || (L16_ScrollerCollide = {}));
 //# sourceMappingURL=Main.js.map

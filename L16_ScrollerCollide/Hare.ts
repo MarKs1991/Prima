@@ -16,7 +16,7 @@ namespace L16_ScrollerCollide {
     export class Hare extends f.Node {
         private static sprites : Sprite[];
         private static speedMax : f.Vector2 = new f.Vector2(1.5, 5); // units per second
-        private static gravity : f.Vector2 = f.Vector2.Y(-2);
+        private static gravity : f.Vector2 = f.Vector2.Y(-3);
         // private action: ACTION;
         // private time: f.Time = new f.Time();
         public speed : f.Vector3 = f.Vector3.ZERO();
@@ -179,7 +179,8 @@ namespace L16_ScrollerCollide {
 
               let hit: boolean = rect.isInside(CharacterCollider);
               if (hit) {
-                //f.Debug.log("HIT");
+                collectorAble.removeChild((< Coin > coin));
+                Sound.play("coin");
                
               }
             }
