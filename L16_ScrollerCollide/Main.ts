@@ -246,19 +246,24 @@ namespace L16_ScrollerCollide {
 
         if (rotation == 90  || rotation == -90)
           {
+            //hare.cmpTransform.local.translateZ(Vector2Array[hare.lastHitIndex].y);
             floor.cmpTransform.local.translateX(-Vector2Array[i].x);
 
-            lastPos = hare.cmpTransform.local.translation.x;
-            hare.cmpTransform.local.translateX(-hare.cmpTransform.local.translation.x);
+            //lastPos = hare.cmpTransform.local.translation.x;
+           // hare.cmpTransform.local.translateX(-hare.cmpTransform.local.translation.x);
             floor.cmpTransform.local.translateZ(Vector2Array[i].y);
+            
           }
 
         if (rotation > -40 && rotation < 40 || rotation == 180 || rotation == -180)
           {
+            //hare.cmpTransform.local.translateZ(Vector2Array[hare.lastHitIndex].x);
+            //hare.cmpTransform.local.translation.x = hare.lastHit.x;
              floor.cmpTransform.local.translateZ(-Vector2Array[i].y);
-             hare.cmpTransform.local.translateZ(-hare.cmpTransform.local.translation.z);
+             //hare.cmpTransform.local.translateZ(-hare.cmpTransform.local.translation.z);
              //hare.cmpTransform.local.translateX(lastPos );
              floor.cmpTransform.local.translateX(Vector2Array[i].x);
+             
           }
         
         f.Debug.log("rot" + floor.cmpTransform.local.rotation.y); 
@@ -359,7 +364,7 @@ namespace L16_ScrollerCollide {
         let i = 0;
 
         for(let floor of level.getChildren()) {
-            floor.cmpTransform.local.translateZ(- Vector2Array[i].y);
+            floor.cmpTransform.local.translateZ(-Vector2Array[i].y);
             i++;
         }
 

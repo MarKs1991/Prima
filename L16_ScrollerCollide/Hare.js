@@ -42,10 +42,10 @@ var L16_ScrollerCollide;
         static generateSprites(_txtImage) {
             Hare.sprites = [];
             let sprite = new L16_ScrollerCollide.Sprite(ACTION.WALK);
-            sprite.generateByGrid(_txtImage, f.Rectangle.GET(2, 104, 68, 64), 6, f.Vector2.ZERO(), 64, f.ORIGIN2D.BOTTOMCENTER);
+            sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 2308, 13, 20), 6, new f.Vector2(1, 0), 30, f.ORIGIN2D.BOTTOMCENTER);
             Hare.sprites.push(sprite);
             sprite = new L16_ScrollerCollide.Sprite(ACTION.IDLE);
-            sprite.generateByGrid(_txtImage, f.Rectangle.GET(8, 20, 45, 72), 4, f.Vector2.ZERO(), 64, f.ORIGIN2D.BOTTOMCENTER);
+            sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 1352, 15, 19), 15, new f.Vector2(1, 0), 30, f.ORIGIN2D.BOTTOMCENTER);
             Hare.sprites.push(sprite);
         }
         show(_action) {
@@ -72,12 +72,13 @@ var L16_ScrollerCollide;
                     //this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * direction);
                     break;
                 case ACTION.JUMP:
-                    this.speed.y = 2;
+                    this.speed.y = 4;
                     break;
             }
             this.show(_action);
         }
         checkCollision() {
+            let i = 0;
             for (let floor of L16_ScrollerCollide.level.getChildren()) {
                 let rotation = floor.getFloorRotation();
                 let rect = new f.Rectangle();
@@ -94,11 +95,14 @@ var L16_ScrollerCollide;
                 let hit = rect.isInside(CharacterCollider);
                 if (hit) {
                     f.Debug.log(CharacterCollider.x);
+                    //this.lastHit =  new f.Vector3((<Floor>floor).mtxWorld.translation.x, (<Floor>floor).mtxWorld.translation.y , (<Floor>floor).mtxWorld.translation.z);
+                    this.lastHitIndex = i;
                     let translation = this.cmpTransform.local.translation;
                     translation.y = rect.y;
                     this.cmpTransform.local.translation = translation;
                     this.speed.y = 0;
                 }
+                i++;
             }
         }
     }

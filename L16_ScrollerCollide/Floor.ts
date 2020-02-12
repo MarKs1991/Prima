@@ -3,7 +3,7 @@ namespace L16_ScrollerCollide {
 
   export class Floor extends f.Node {
     private static mesh: f.MeshSprite = new f.MeshSprite();
-    private static material: f.Material = new f.Material("Floor", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("blue", 0.5)));
+    //private static material: f.Material = new f.Material("Floor", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("blue", 0.5)));
     private static readonly pivot: f.Matrix4x4 = f.Matrix4x4.TRANSLATION(f.Vector3.Y(-0.5));
     private static sprites: Sprite[];
     
@@ -11,7 +11,7 @@ namespace L16_ScrollerCollide {
     public constructor() {
       super("Floor");
       this.addComponent(new f.ComponentTransform());
-      this.addComponent(new f.ComponentMaterial(Floor.material));
+      //this.addComponent(new f.ComponentMaterial(Floor.material));
       let cmpMesh: f.ComponentMesh = new f.ComponentMesh(Floor.mesh);
 
       let nodeSprite: NodeSprite = new NodeSprite("FloorSprite", Floor.sprites[0]);
@@ -29,7 +29,7 @@ namespace L16_ScrollerCollide {
       Floor.sprites = [];
       let sprite: Sprite = new Sprite("FloorSprite");
       // sprite.generateByGrid(_txtImage, ƒ.Rectangle.GET(1, 20, 20, 150), 1, ƒ.Vector2.ZERO(), 30, ƒ.ORIGIN2D.BOTTOMCENTER);
-      sprite.generateByGrid(_txtImage, f.Rectangle.GET(19, 420, 129, 34), 1, f.Vector2.ZERO(), 30, f.ORIGIN2D.TOPCENTER);
+      sprite.generateByGrid(_txtImage, f.Rectangle.GET(3, 2843, 100, 43), 1, f.Vector2.ZERO(), 100, f.ORIGIN2D.TOPCENTER);
       Floor.sprites.push(sprite);
     }
 

@@ -19,6 +19,7 @@ namespace L16_ScrollerCollide {
     // private action: ACTION;
     // private time: f.Time = new f.Time();
     public speed: f.Vector3 = f.Vector3.ZERO();
+    public lastHitIndex: number; 
 
 
     constructor(_name: string = "Hare") {
@@ -45,11 +46,11 @@ namespace L16_ScrollerCollide {
     public static generateSprites(_txtImage: f.TextureImage): void {
       Hare.sprites = [];
       let sprite: Sprite = new Sprite(ACTION.WALK);
-      sprite.generateByGrid(_txtImage, f.Rectangle.GET(2, 104, 68, 64), 6, f.Vector2.ZERO(), 64, f.ORIGIN2D.BOTTOMCENTER);
+      sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 2308, 13, 20), 6,   new f.Vector2(1,0), 30, f.ORIGIN2D.BOTTOMCENTER);
       Hare.sprites.push(sprite);
 
       sprite = new Sprite(ACTION.IDLE);
-      sprite.generateByGrid(_txtImage, f.Rectangle.GET(8, 20, 45, 72), 4, f.Vector2.ZERO(), 64, f.ORIGIN2D.BOTTOMCENTER);
+      sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 1352, 15, 19), 15, new f.Vector2(1,0), 30, f.ORIGIN2D.BOTTOMCENTER);
       Hare.sprites.push(sprite);
     }
 
@@ -87,7 +88,7 @@ namespace L16_ScrollerCollide {
          
           break;
         case ACTION.JUMP:
-          this.speed.y = 2;
+          this.speed.y =4;
           break;
       }
       this.show(_action);
@@ -107,8 +108,9 @@ namespace L16_ScrollerCollide {
   
     private checkCollision(): void {
       
-     
+      let i = 0;
       for (let floor of level.getChildren()) {
+        
 
         let rotation: number = (<Floor>floor).getFloorRotation();
         let rect: f.Rectangle = new f.Rectangle();
@@ -128,18 +130,25 @@ namespace L16_ScrollerCollide {
        
         
         //console.log(rect.toString());
-
+        
         let hit: boolean = rect.isInside(CharacterCollider);
         if (hit) {
           f.Debug.log(CharacterCollider.x);
-        
+          
+          //this.lastHit =  new f.Vector3((<Floor>floor).mtxWorld.translation.x, (<Floor>floor).mtxWorld.translation.y , (<Floor>floor).mtxWorld.translation.z);
+          this.lastHitIndex = i;
+
+     
         let translation: f.Vector3 = this.cmpTransform.local.translation;
         translation.y = rect.y;
         this.cmpTransform.local.translation = translation;
         this.speed.y = 0;
         
       }
+      i++;
     }
   }
 }
+
+
 }

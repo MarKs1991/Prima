@@ -43,7 +43,8 @@ namespace L15_ScrollerControl {
     public static generateSprites(_txtImage: ƒ.TextureImage): void {
       Hare.sprites = [];
       let sprite: Sprite = new Sprite(ACTION.WALK);
-      sprite.generateByGrid(_txtImage, ƒ.Rectangle.GET(2, 104, 68, 64), 6, ƒ.Vector2.ZERO(), 64, ƒ.ORIGIN2D.BOTTOMCENTER);
+      sprite.generateByGrid(_txtImage, ƒ.Rectangle.GET(0, 2899, 24, 24),7, new ƒ.Vector2(0,6), 30, ƒ.ORIGIN2D.TOPCENTER);
+      //sprite.generateByGrid(_txtImage, ƒ.Rectangle.GET(2, 104, 68, 64), 6, ƒ.Vector2.ZERO(), 64, ƒ.ORIGIN2D.BOTTOMCENTER);
       Hare.sprites.push(sprite);
 
     
