@@ -1,58 +1,78 @@
-// / <reference path="../L14_ScrollerFoundation/SpriteGenerator.ts"/>
 namespace L16_ScrollerCollide {
     export import f = FudgeCore;
     export import Sprite = L14_ScrollerFoundation.Sprite;
     export import NodeSprite = L14_ScrollerFoundation.NodeSprite;
 
-    window.addEventListener("load", test);
+    window.addEventListener("load", init);
     interface KeyPressed {
         [code : string]: boolean;
     }
 
     let keysPressed: KeyPressed = {};
-    let viewport: f.Viewport = new f.Viewport();
+    export let viewport: f.Viewport = new f.Viewport();
 
     export let game: f.Node;
     export let level: f.Node;
     export let collectorAble: f.Node;
     export let skybox: f.Node;
     export let camera: Camera = new Camera();
-    export let hitbox: Hitbox = new Hitbox();
-
-    let coin: Coin;
-    let floor: Floor;
-    let hare: Hare;
-   
-  
+    export let floor: Floor;
+    export let hare: Hare;
+    export let planes : Planes;
+    export let coin: Coin;
     
-  
 
+    
+
+    export let levelData: Object[];
+    
+    
+    
+    //let planes: Planes;
+ 
     let FloorArray: Floor[] = [];
     let CoinArray: Coin[] = [];
-    let Vector2Array: f.Vector2[] = [];
+    export let Vector3Array: f.Vector3[] = [];
 
 
     let CamZoom: f.Node = new f.Node("CamZoom");
     let compCam: f.ComponentCamera = new f.ComponentCamera;
    
 
-    function test(): void {
+    function init(): void {
+      getJsonLevelData();
+    }
+
+    function build(): void {
+
+  
         let canvas: HTMLCanvasElement = document.querySelector("canvas");
         let crc2: CanvasRenderingContext2D = canvas.getContext("2d");
         let img: HTMLImageElement = document.querySelector("img");
         let txtHare: f.TextureImage = new f.TextureImage();
         Sound.init();
 
-        
+        //planes = new Planes();
+        planes = new Planes();
+        //planes = new Planes("Planes");
         txtHare.image = img;
-        Hare.generateSprites(txtHare);
+        
+
+        
         Floor.generateSprites(txtHare);
         Coin.generateSprites(txtHare);
         Skybox.generateSprites(txtHare);
-        
+        //Planes.generateSprites(txtHare);
+        Hare.generateSprites(txtHare);
         game = new f.Node("Game");
         hare = new Hare("Hare");
 
+
+        //planes.cmpTransform.local.translation = new f.Vector3(0 -1, 0);
+         
+        
+
+        hare.mtxWorld.translation = new f.Vector3(0,2,0);
 
         collectorAble = createCollectables();
         game.appendChild(collectorAble);
@@ -60,9 +80,9 @@ namespace L16_ScrollerCollide {
         level = createLevel();
         game.appendChild(level);
         game.appendChild(hare);
-        hare.appendChild(hitbox);
-
-
+        //game.appendChild(planes);
+        
+        
         CamZoom.addComponent(compCam);
         CamZoom.addComponent(new f.ComponentTransform);
         camera.appendChild(CamZoom);
@@ -74,33 +94,49 @@ namespace L16_ScrollerCollide {
         viewport.initialize("Viewport", game, compCam, canvas);
         viewport.draw();
 
+       
         document.addEventListener("keydown", handleKeyboard);
         document.addEventListener("keyup", handleKeyboard);
 
         f.Loop.addEventListener(f.EVENT.LOOP_FRAME, update);
         f.Loop.start(f.LOOP_MODE.TIME_GAME, 10);
-        //Sound.playAtmo(2);
+
+        start();
+      
+
 
         function update(_event: f.Eventƒ): void {
+            
+            hare.loseLive()
             processInput();
             //compCam.pivot.translateY(hare.speed.y / 10);
             camera.cmpTransform.local.translation = new f.Vector3(hare.cmpTransform.local.translation.x, hare.cmpTransform.local.translation.y, hare.cmpTransform.local.translation.z);
             viewport.draw();
             
-
+            //muteSounds();
             crc2.strokeRect(-1, -1, canvas.width / 2, canvas.height + 2);
             crc2.strokeRect(-1, canvas.height / 2, canvas.width + 2, canvas.height);
-        }
-    }
 
+            if (Sound.muted)
+            document.getElementById("Sound").innerHTML = "Music: OFF";
+          else
+            document.getElementById("Sound").innerHTML = "Music: ON";
+  
+            if (soundMuteCounter > 0) 
+              soundMuteCounter++;
+            if (soundMuteCounter > 2)
+              soundMuteCounter = 0;
+        }
+    
+    }
     function handleKeyboard(_event: KeyboardEvent): void {
         keysPressed[_event.code] = (_event.type == "keydown");
-        if (_event.code == f.KEYBOARD_CODE.W && _event.type == "keydown"){
-            hare.act(ACTION.JUMP);
-            Sound.play("jump");
+       
+        if (_event.code == f.KEYBOARD_CODE.SPACE && _event.type == "keydown"){
+            hare.act(ACTION.JUMP);       
         }
-        let camtransformation: CamTransformation = Camera.camtransformations[_event.code];
 
+        let camtransformation: CamTransformation = Camera.camtransformations[_event.code];
 
         if (camtransformation) {
             cammove(camtransformation);
@@ -116,11 +152,12 @@ namespace L16_ScrollerCollide {
                 normalizeTransforms(-90);
                
             }
+            
           }
         viewport.draw();
     }
-
-    function processInput(): void {
+/*
+     function processInput(): void {
 
         if (keysPressed[f.KEYBOARD_CODE.A]) {
           hare.act(ACTION.WALK, DIRECTION.LEFT);
@@ -136,7 +173,7 @@ namespace L16_ScrollerCollide {
         }
         hare.act(ACTION.IDLE);
     }
-
+*/
 
     function cammove(_transformation: Transformation): void {
 
@@ -163,7 +200,7 @@ namespace L16_ScrollerCollide {
     }
 
 
-    function normalizeTransforms(rotDirection: number) {
+    export function normalizeTransforms(rotDirection: number) {
         hare.cmpTransform.local.rotateY(rotDirection);
         let NodeArray: f.Node[] = [floor, coin];
         let ParentArray = [FloorArray, CoinArray];
@@ -174,7 +211,7 @@ namespace L16_ScrollerCollide {
 
             
             for (NodeArray[j] of ParentArray[j]) 
-              //for (let m = 0; m <= Vector2Array.length - 1; m++)
+              //for (let m = 0; m <= Vector3Array.length - 1; m++)
               {
 
                 NodeArray[j].cmpTransform.local.rotateY(rotDirection);
@@ -184,33 +221,39 @@ namespace L16_ScrollerCollide {
 
                 if (rotation == 90 || rotation == -90) {
 
-                    NodeArray[j].cmpTransform.local.translateX(- Vector2Array[i].x);
+                 
+                    NodeArray[j].cmpTransform.local.translateX(- Vector3Array[i].x);
 
                     // lastPos = hare.cmpTransform.local.translation.x;
 
                     hare.cmpTransform.local.translateX(- hare.cmpTransform.local.translation.x);
+                   
                     // hare.cmpTransform.local.translation.x = 0;
 
-                    NodeArray[j].cmpTransform.local.translateZ(Vector2Array[i].y);
+                    NodeArray[j].cmpTransform.local.translateZ(Vector3Array[i].z);
 
                     if (i == 0 && j == 0) 
-                        hare.cmpTransform.local.translateZ(Vector2Array[hare.lastHitIndex].y);
+                        hare.cmpTransform.local.translateZ(Vector3Array[hare.lastHitIndex].z);
                     
 
 
-                    // f.Debug.log("TRANSFORM" + Vector2Array[hare.lastHitIndex].y);
+                    // f.Debug.log("TRANSFORM" + Vector3Array[hare.lastHitIndex].y);
                 }
 
                 if (rotation > -40 && rotation < 40 || rotation == 180 || rotation == -180) { // hare.cmpTransform.local.translation.x = hare.lastHit.x;
-                    NodeArray[j].cmpTransform.local.translateZ(- Vector2Array[i].y);
+                    NodeArray[j].cmpTransform.local.translateZ(- Vector3Array[i].z);
 
                     hare.cmpTransform.local.translateZ(- hare.cmpTransform.local.translation.z);
+                    if (rotation == 180)
+                    {
+                     //hare.cmpTransform.local.rotateY(90);
+                    }
                     // hare.cmpTransform.local.translation.z = 0;
                     // hare.cmpTransform.local.translateX(lastPos );
-                    NodeArray[j].cmpTransform.local.translateX(Vector2Array[i].x);
+                    NodeArray[j].cmpTransform.local.translateX(Vector3Array[i].x);
 
                     if (i == 0 && j == 0){ 
-                        hare.cmpTransform.local.translateX(Vector2Array[hare.lastHitIndex].x);
+                        hare.cmpTransform.local.translateX(Vector3Array[hare.lastHitIndex].x);
                     }
                 }
 
@@ -221,18 +264,11 @@ namespace L16_ScrollerCollide {
             }
         }
     }
-
-
     function createLevel(): f.Node {
         let level: f.Node = new f.Node("Level");
-
-
         level.addComponent(new f.ComponentTransform());
-
-
-        // FloorArray = [];
-
-        let floor = new Floor();
+        floor = new Floor();
+        
         floor.cmpTransform.local.scaleY(0.5);
         floor.cmpTransform.local.scaleX(1);
         floor.cmpTransform.local.translateX(0);
@@ -244,18 +280,19 @@ namespace L16_ScrollerCollide {
 
 
       //For Fixed Starting Platform
-        Vector2Array[0] = new f.Vector2(FloorArray[0].cmpTransform.local.translation.x, FloorArray[0].cmpTransform.local.translation.z);
-        floor.cmpTransform.local.translateZ(- Vector2Array[0].y);
+        Vector3Array[0] = new f.Vector3(FloorArray[0].cmpTransform.local.translation.x,FloorArray[0].cmpTransform.local.translation.y , FloorArray[0].cmpTransform.local.translation.z);
+        floor.cmpTransform.local.translateZ(- Vector3Array[0].y);
         createCoin((FloorArray[0].cmpTransform.local.translation));
-     
-        let PlatformNumber = 21;
+       
+        let platformNumber: number = levelData[0].PlatformNumber;
 
+        let fixedDistance: number = levelData[0].FixedDistance;
 
         let lastPlatform: f.Vector3 = new f.Vector3();
 
         lastPlatform = new f.Vector3(floor.cmpTransform.local.translation.x, floor.cmpTransform.local.translation.y, floor.cmpTransform.local.translation.z);
 
-        for(let i = 1; i <= PlatformNumber - 1; i++) {
+        for(let i = 1; i <= platformNumber - 1; i++) {
             floor = new Floor();
             floor.cmpTransform.local.scaleY(0.5);
             floor.cmpTransform.local.scaleX(1);
@@ -265,15 +302,16 @@ namespace L16_ScrollerCollide {
             let randomAxis = (Math.random() * 2);
 
             if (randomAxis >= 1) {
+
                 let PosNeg = (Math.random() * 2);
                 if (PosNeg >= 1) {
                     floor.cmpTransform.local.translateZ(Math.random() * 10);
-                    floor.cmpTransform.local.translateX(lastPlatform.z + 3.5);
+                    floor.cmpTransform.local.translateX(lastPlatform.x + fixedDistance);
 
                 }
                 if (PosNeg < 1) {
                     floor.cmpTransform.local.translateZ(Math.random() * -10);
-                    floor.cmpTransform.local.translateX(lastPlatform.z + 3.5);
+                    floor.cmpTransform.local.translateX(lastPlatform.x + fixedDistance);
                 }
             }
 
@@ -281,86 +319,49 @@ namespace L16_ScrollerCollide {
                 let PosNeg = (Math.random() * 2);
                 if (PosNeg >= 1) {
                     floor.cmpTransform.local.translateX(Math.random() * 10);
-                    floor.cmpTransform.local.translateZ(lastPlatform.z + 3.5);
+                    floor.cmpTransform.local.translateZ(lastPlatform.z + fixedDistance);
                 }
                 if (PosNeg < 1) {
                     floor.cmpTransform.local.translateX(Math.random() * -10);
-                    floor.cmpTransform.local.translateZ(lastPlatform.z + 3.5);
+                    floor.cmpTransform.local.translateZ(lastPlatform.z + fixedDistance);
                 }
             }
 
             FloorArray.push(floor);
-
-
-
             level.appendChild(floor);
-
 
 
             lastPlatform = new f.Vector3(floor.cmpTransform.local.translation.x, floor.cmpTransform.local.translation.y, floor.cmpTransform.local.translation.z);
 
 
-            Vector2Array[i] = new f.Vector2(FloorArray[i].cmpTransform.local.translation.x, FloorArray[i].cmpTransform.local.translation.z);
+            Vector3Array[i] = new f.Vector3(FloorArray[i].cmpTransform.local.translation.x, FloorArray[i].cmpTransform.local.translation.y, FloorArray[i].cmpTransform.local.translation.z);
 
-            floor.cmpTransform.local.translateZ(- Vector2Array[i].y);
+            floor.cmpTransform.local.translateZ(- Vector3Array[i].z);
 
-            createCoin((FloorArray[i].cmpTransform.local.translation));
-            
-            
+            createCoin((FloorArray[i].cmpTransform.local.translation));           
         }
-
-
-        // Vector2Array = [];
-/*
-        for(let i = 0; i <= FloorArray.length - 1; i++) {
-            Vector2Array[i] = new f.Vector2(FloorArray[i].cmpTransform.local.translation.x, FloorArray[i].cmpTransform.local.translation.z);
-        }
-
-        let i = 0;
-
-        for(let floor of level.getChildren()) {
-            floor.cmpTransform.local.translateZ(- Vector2Array[i].y);
-            i++;
-        }
-*/
-        //for(let m = 0; m <= PlatformNumber - 1; m++) {
-            
-        //}
-
 
         let skybox = new Skybox();
-        //skybox.addComponent(new f.ComponentTransform());
-        //skybox.addComponent(new f.ComponentMaterial(new f.Material("skybox", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("#191970", 0.5)))));
-        //skybox.addComponent(new f.ComponentMesh(new f.MeshSprite()));
         skybox.cmpTransform.local.scale(new f.Vector3(100, 100, 100));
-        skybox.cmpTransform.local.translation = new f.Vector3(0, 0, -30);
+        skybox.cmpTransform.local.translation = new f.Vector3(0, 50, -30);
         game.appendChild(skybox);
 
         skybox = new Skybox();
-        //skybox.addComponent(new f.ComponentTransform());
-        //skybox.addComponent(new f.ComponentMaterial(new f.Material("skybox", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("#191970", 0.5)))));
-        //skybox.addComponent(new f.ComponentMesh(new f.MeshSprite()));
         skybox.cmpTransform.local.rotateY(90);
         skybox.cmpTransform.local.scale(new f.Vector3(100, 100, 100));
-        skybox.cmpTransform.local.translation = new f.Vector3(30, 0, 0);
+        skybox.cmpTransform.local.translation = new f.Vector3(30, 50, 0);
         game.appendChild(skybox);
 
         skybox = new Skybox();
-        //skybox.addComponent(new f.ComponentTransform());
-        //skybox.addComponent(new f.ComponentMaterial(new f.Material("skybox", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("#191970", 0.5)))));
-        //skybox.addComponent(new f.ComponentMesh(new f.MeshSprite()));
         skybox.cmpTransform.local.rotateY(-90);
         skybox.cmpTransform.local.scale(new f.Vector3(100, 100, 100));
-        skybox.cmpTransform.local.translation = new f.Vector3(-30, 0, 0);
+        skybox.cmpTransform.local.translation = new f.Vector3(-30, 50, 0);
         game.appendChild(skybox);
 
         skybox = new Skybox();
-        //skybox.addComponent(new f.ComponentTransform());
-        //skybox.addComponent(new f.ComponentMaterial(new f.Material("skybox", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("#191970", 0.5)))));
-        //skybox.addComponent(new f.ComponentMesh(new f.MeshSprite()));
         skybox.cmpTransform.local.rotateY(180);
         skybox.cmpTransform.local.scale(new f.Vector3(100, 100, 100));
-        skybox.cmpTransform.local.translation = new f.Vector3(0, 0, 30);
+        skybox.cmpTransform.local.translation = new f.Vector3(0, 50, 30);
         game.appendChild(skybox);
 
 
@@ -386,6 +387,22 @@ namespace L16_ScrollerCollide {
         collectorAble.appendChild(coin);
 
         CoinArray.push(coin);
+    }
+
+
+    interface Object {
+      PlatformNumber: number;
+      FixedDistance: number;
+      LiveCount: number;
+    }
+
+    async function getJsonLevelData(): Promise<void> {
+      let response: Response = await fetch("Assets/LevelData.json");
+      let offer: string = await response.text();
+      //await Promise.all(offer);
+      levelData = JSON.parse(offer);
+     
+      build();
     }
 
 

@@ -4,7 +4,7 @@ var L16_ScrollerCollide;
     L16_ScrollerCollide.f = FudgeCore;
     window.addEventListener("load", test);
     function normalizeTransforms(rotDirection) {
-        hare.cmpTransform.local.rotateY(rotDirection);
+        L16_ScrollerCollide.hare.cmpTransform.local.rotateY(rotDirection);
         let i = 0;
         for (let floor of L16_ScrollerCollide.level.getChildren()) {
             floor.cmpTransform.local.rotateY(rotDirection);
@@ -12,22 +12,22 @@ var L16_ScrollerCollide;
             if (rotation == 90 || rotation == -90) {
                 floor.cmpTransform.local.translateX(-Vector2Array[i].x);
                 //lastPos = hare.cmpTransform.local.translation.x;
-                hare.cmpTransform.local.translateX(-hare.cmpTransform.local.translation.x);
+                L16_ScrollerCollide.hare.cmpTransform.local.translateX(-L16_ScrollerCollide.hare.cmpTransform.local.translation.x);
                 //hare.cmpTransform.local.translation.x = 0;
                 floor.cmpTransform.local.translateZ(Vector2Array[i].y);
                 if (i == 0)
-                    hare.cmpTransform.local.translateZ(Vector2Array[hare.lastHitIndex].y);
+                    L16_ScrollerCollide.hare.cmpTransform.local.translateZ(Vector2Array[L16_ScrollerCollide.hare.lastHitIndex].y);
                 //f.Debug.log("TRANSFORM" + Vector2Array[hare.lastHitIndex].y);
             }
             if (rotation > -40 && rotation < 40 || rotation == 180 || rotation == -180) {
                 //hare.cmpTransform.local.translation.x = hare.lastHit.x;
                 floor.cmpTransform.local.translateZ(-Vector2Array[i].y);
-                hare.cmpTransform.local.translateZ(-hare.cmpTransform.local.translation.z);
+                L16_ScrollerCollide.hare.cmpTransform.local.translateZ(-L16_ScrollerCollide.hare.cmpTransform.local.translation.z);
                 //hare.cmpTransform.local.translation.z = 0;
                 //hare.cmpTransform.local.translateX(lastPos );
                 floor.cmpTransform.local.translateX(Vector2Array[i].x);
                 if (i == 0)
-                    hare.cmpTransform.local.translateX(Vector2Array[hare.lastHitIndex].x);
+                    L16_ScrollerCollide.hare.cmpTransform.local.translateX(Vector2Array[L16_ScrollerCollide.hare.lastHitIndex].x);
             }
             //f.Debug.log("rot" + floor.cmpTransform.local.rotation.y); 
             i++;

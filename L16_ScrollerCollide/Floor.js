@@ -3,7 +3,7 @@ var L16_ScrollerCollide;
 (function (L16_ScrollerCollide) {
     var f = FudgeCore;
     class Floor extends f.Node {
-        constructor() {
+        constructor(_name = "Floor") {
             super("Floor");
             this.addComponent(new f.ComponentTransform());
             //this.addComponent(new f.ComponentMaterial(Floor.material));
@@ -11,16 +11,15 @@ var L16_ScrollerCollide;
             let nodeSprite = new L16_ScrollerCollide.NodeSprite("FloorSprite", Floor.sprites[0]);
             nodeSprite.activate(false);
             this.appendChild(nodeSprite);
-            //nodesprite
-            //cmpMesh.pivot.translateY(-0.5);
+            cmpMesh.pivot.translateY(-0.5);
             cmpMesh.pivot = Floor.pivot;
             this.addComponent(cmpMesh);
             this.show();
         }
         static generateSprites(_txtImage) {
             Floor.sprites = [];
-            let sprite = new L16_ScrollerCollide.Sprite("FloorSprite");
-            // sprite.generateByGrid(_txtImage, ƒ.Rectangle.GET(1, 20, 20, 150), 1, ƒ.Vector2.ZERO(), 30, ƒ.ORIGIN2D.BOTTOMCENTER);
+            let sprite = new L16_ScrollerCollide.Sprite("Floor");
+            // sprite.generateByGrid(_txtImage, f.Rectangle.GET(1, 20, 20, 150), 1, f.Vector2.ZERO(), 30, f.ORIGIN2D.BOTTOMCENTER);
             sprite.generateByGrid(_txtImage, f.Rectangle.GET(3, 2843, 100, 43), 1, f.Vector2.ZERO(), 100, f.ORIGIN2D.TOPCENTER);
             Floor.sprites.push(sprite);
         }
@@ -58,7 +57,7 @@ var L16_ScrollerCollide;
         }
     }
     Floor.mesh = new f.MeshSprite();
-    Floor.material = new f.Material("Floor", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("blue", 0.5)));
+    //private static material: f.Material = new f.Material("Floor", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("blue", 0.5)));
     Floor.pivot = f.Matrix4x4.TRANSLATION(f.Vector3.Y(-0.5));
     L16_ScrollerCollide.Floor = Floor;
 })(L16_ScrollerCollide || (L16_ScrollerCollide = {}));

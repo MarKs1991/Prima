@@ -1,5 +1,5 @@
-namespace L16_ScrollerCollide {
-  export import f = FudgeCore;
+/*namespace L16_ScrollerCollide {
+  //export import f = FudgeCore;
   
 
     
@@ -89,7 +89,7 @@ namespace L16_ScrollerCollide {
 /*
      
 */
-
+/*
       let lastPlatform: f.Vector3 = new f.Vector3();
       for(let i = 2; i <= 40; i++)
       {
@@ -202,7 +202,7 @@ namespace L16_ScrollerCollide {
 
  
 */
-      
+    /*  
   }
   function createCollectables(): f.Node {
 
@@ -220,3 +220,4 @@ namespace L16_ScrollerCollide {
   }
 
 }
+*/

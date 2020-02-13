@@ -21,7 +21,7 @@ var L16_ScrollerCollide;
             Skybox.sprites = [];
             let sprite = new L16_ScrollerCollide.Sprite("SkyboxSprite");
             // sprite.generateByGrid(_txtImage, ƒ.Rectangle.GET(1, 20, 20, 150), 1, ƒ.Vector2.ZERO(), 30, ƒ.ORIGIN2D.BOTTOMCENTER);
-            sprite.generateByGrid(_txtImage, f.Rectangle.GET(3, 2843, 100, 43), 1, f.Vector2.ZERO(), 100, f.ORIGIN2D.TOPCENTER);
+            sprite.generateByGrid(_txtImage, f.Rectangle.GET(258, 0, 1024, 1023), 1, f.Vector2.ZERO(), 1024, f.ORIGIN2D.TOPCENTER);
             Skybox.sprites.push(sprite);
         }
         show() {

@@ -1,7 +1,7 @@
 "use strict";
 var L14_ScrollerFoundation;
 (function (L14_ScrollerFoundation) {
-    var ƒ = FudgeCore;
+    var f = FudgeCore;
     class SpriteFrame {
     }
     L14_ScrollerFoundation.SpriteFrame = SpriteFrame;
@@ -22,16 +22,16 @@ var L14_ScrollerFoundation;
          */
         generate(_texture, _rects, _resolutionQuad, _origin) {
             this.frames = [];
-            let framing = new ƒ.FramingScaled();
+            let framing = new f.FramingScaled();
             framing.setScale(1 / _texture.image.width, 1 / _texture.image.height);
             let count = 0;
             for (let rect of _rects) {
                 let frame = this.createFrame(this.name + `${count}`, _texture, framing, rect, _resolutionQuad, _origin);
                 frame.timeScale = 1;
                 this.frames.push(frame);
-                // ƒ.Debug.log(frame.rectTexture.toString());
-                // ƒ.Debug.log(frame.pivot.toString());
-                // ƒ.Debug.log(frame.material);
+                // f.Debug.log(frame.rectTexture.toString());
+                // f.Debug.log(frame.pivot.toString());
+                // f.Debug.log(frame.material);
                 count++;
             }
         }
@@ -48,50 +48,50 @@ var L14_ScrollerFoundation;
                 if (rect.bottom > _texture.image.height)
                     break;
             }
-            rects.forEach((_rect) => ƒ.Debug.log(_rect.toString()));
+            rects.forEach((_rect) => f.Debug.log(_rect.toString()));
             this.generate(_texture, rects, _resolutionQuad, _origin);
         }
         createFrame(_name, _texture, _framing, _rect, _resolutionQuad, _origin) {
-            let rectTexture = new ƒ.Rectangle(0, 0, _texture.image.width, _texture.image.height);
+            let rectTexture = new f.Rectangle(0, 0, _texture.image.width, _texture.image.height);
             let frame = new SpriteFrame();
             frame.rectTexture = _framing.getRect(_rect);
             frame.rectTexture.position = _framing.getPoint(_rect.position, rectTexture);
-            let rectQuad = new ƒ.Rectangle(0, 0, _rect.width / _resolutionQuad, _rect.height / _resolutionQuad, _origin);
-            frame.pivot = ƒ.Matrix4x4.IDENTITY;
-            frame.pivot.translate(new ƒ.Vector3(rectQuad.position.x + rectQuad.size.x / 2, -rectQuad.position.y - rectQuad.size.y / 2, 0));
+            let rectQuad = new f.Rectangle(0, 0, _rect.width / _resolutionQuad, _rect.height / _resolutionQuad, _origin);
+            frame.pivot = f.Matrix4x4.IDENTITY;
+            frame.pivot.translate(new f.Vector3(rectQuad.position.x + rectQuad.size.x / 2, -rectQuad.position.y - rectQuad.size.y / 2, 0));
             frame.pivot.scaleX(rectQuad.size.x);
             frame.pivot.scaleY(rectQuad.size.y);
-            // ƒ.Debug.log(rectQuad.toString());
-            let coat = new ƒ.CoatTextured();
+            // f.Debug.log(rectQuad.toString());
+            let coat = new f.CoatTextured();
             coat.pivot.translate(frame.rectTexture.position);
             coat.pivot.scale(frame.rectTexture.size);
             coat.name = _name;
             coat.texture = _texture;
-            frame.material = new ƒ.Material(_name, ƒ.ShaderTexture, coat);
-            // ƒ.Debug.log(coat.pivot.toString());  
+            frame.material = new f.Material(_name, f.ShaderTexture, coat);
+            // f.Debug.log(coat.pivot.toString());  
             return frame;
         }
     }
-    Sprite.mesh = new ƒ.MeshSprite();
+    Sprite.mesh = new f.MeshSprite();
     L14_ScrollerFoundation.Sprite = Sprite;
-    class NodeSprite extends ƒ.Node {
+    class NodeSprite extends f.Node {
         constructor(_name, _sprite) {
             super(_name);
             this.frameCurrent = 0;
             this.direction = 1;
             this.sprite = _sprite;
-            this.cmpMesh = new ƒ.ComponentMesh(Sprite.getMesh());
-            this.cmpMaterial = new ƒ.ComponentMaterial();
+            this.cmpMesh = new f.ComponentMesh(Sprite.getMesh());
+            this.cmpMaterial = new f.ComponentMaterial();
             this.addComponent(this.cmpMesh);
             this.addComponent(this.cmpMaterial);
             this.showFrame(this.frameCurrent);
-            ƒ.Debug.info("NodeSprite constructor", this);
+            f.Debug.info("NodeSprite constructor", this);
         }
         showFrame(_index) {
             let spriteFrame = this.sprite.frames[_index];
             this.cmpMesh.pivot = spriteFrame.pivot;
             this.cmpMaterial.material = spriteFrame.material;
-            ƒ.RenderManager.updateNode(this);
+            f.RenderManager.updateNode(this);
             this.frameCurrent = _index;
         }
         showFrameNext() {

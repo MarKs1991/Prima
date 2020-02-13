@@ -1,7 +1,5 @@
 "use strict";
-// / <reference path="../L14_ScrollerFoundation/SpriteGenerator.ts"/>
 var L16_ScrollerCollide;
-// / <reference path="../L14_ScrollerFoundation/SpriteGenerator.ts"/>
 (function (L16_ScrollerCollide) {
     var f = FudgeCore;
     let ACTION;
@@ -20,8 +18,10 @@ var L16_ScrollerCollide;
             super(_name);
             // private action: ACTION;
             // private time: f.Time = new f.Time();
+            this.isOnFloor = true;
             this.speed = f.Vector3.ZERO();
             this.collectedCoins = 0;
+            this.jumps = 0;
             this.update = (_event) => {
                 this.broadcastEvent(new CustomEvent("showNext"));
                 let timeFrame = f.Loop.timeFrameGame / 1000;
@@ -40,6 +40,8 @@ var L16_ScrollerCollide;
                 }, true);
                 this.appendChild(nodeSprite);
             }
+            this.lives = L16_ScrollerCollide.levelData[0].LiveCount;
+            document.getElementById("Lives").innerHTML = this.lives.toString();
             this.show(ACTION.IDLE);
             f.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
         }
@@ -79,14 +81,54 @@ var L16_ScrollerCollide;
                         this.speed.x = Hare.speedMax.x * -1;
                     }
                     // this.speed.x = Hare.speedMax.x; // * direction;
-                    // this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * direction);
+                    // let floorInst : f.Node[] = level.getChildren();
+                    /*
+                   if (floorInst[0].cmpTransform.local.rotation.y == 90) {
+                    this.cmpTransform.local.rotation = f.Vector3.Y(90 * direction);
+                   }
+                  
+                   if (floorInst[0].cmpTransform.local.rotation.y == -90) {
+                    this.mtxWorld.rotation = f.Vector3.Y(90 * direction);
+                   }
+                   
+                   if (floorInst[0].cmpTransform.local.rotation.y == 180) {
+                    this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * -direction);
+                   }
+                   else {
+                    this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * direction);
+                   }
+                  */
                     break;
                 case ACTION.JUMP:
-                    this.cmpTransform.local.translateY(.1);
-                    this.speed.y = 3.5;
+                    this.jumping();
                     break;
             }
             this.show(_action);
+        }
+        jumping() {
+            if (this.speed.y == 0) {
+                this.jumps = 1;
+                this.cmpTransform.local.translateY(.1);
+                this.speed.y = 3;
+                L16_ScrollerCollide.Sound.play("jump");
+            }
+            if (this.speed.y != 0 && this.speed.y < 1.5 && this.jumps < 3) {
+                this.speed.y = 3;
+                L16_ScrollerCollide.Sound.play("jump");
+                this.collectedCoins--;
+                document.getElementById("CollectedCoins").innerHTML = this.collectedCoins.toString();
+                let timer2 = performance.now();
+                this.jumps++;
+            }
+        }
+        loseLive() {
+            if (this.cmpTransform.local.translation.y < -10) {
+                this.lives--;
+                document.getElementById("Lives").innerHTML = this.lives.toString();
+                this.cmpTransform.local.translation = new f.Vector3(0, 1, 0);
+                this.speed.y = 0;
+                //this.cmpTransform.local.translation = Vector3Array[this.lastHitIndex];
+            }
         }
         checkCollision() {
             let i = 0;
@@ -144,7 +186,7 @@ var L16_ScrollerCollide;
         }
     }
     Hare.speedMax = new f.Vector2(1.5, 5); // units per second
-    Hare.gravity = f.Vector2.Y(-3);
+    Hare.gravity = f.Vector2.Y(-4);
     L16_ScrollerCollide.Hare = Hare;
 })(L16_ScrollerCollide || (L16_ScrollerCollide = {}));
 //# sourceMappingURL=Hare.js.map

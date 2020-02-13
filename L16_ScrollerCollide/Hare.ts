@@ -1,4 +1,3 @@
-// / <reference path="../L14_ScrollerFoundation/SpriteGenerator.ts"/>
 namespace L16_ScrollerCollide {
     import f = FudgeCore;
 
@@ -16,13 +15,17 @@ namespace L16_ScrollerCollide {
     export class Hare extends f.Node {
         private static sprites : Sprite[];
         private static speedMax : f.Vector2 = new f.Vector2(1.5, 5); // units per second
-        private static gravity : f.Vector2 = f.Vector2.Y(-3);
+        private static gravity : f.Vector2 = f.Vector2.Y(-4);
         // private action: ACTION;
         // private time: f.Time = new f.Time();
+        public isOnFloor : boolean = true;
         public speed : f.Vector3 = f.Vector3.ZERO();
         public lastHitIndex : number;
-        public collectedCoins: number = 0;
 
+        public collectedCoins : number = 0;
+        private lives: number;
+
+        private jumps: number = 0;
 
         constructor(_name : string = "Hare") {
             super(_name);
@@ -38,6 +41,8 @@ namespace L16_ScrollerCollide {
 
                 this.appendChild(nodeSprite);
             }
+            this.lives = levelData[0].LiveCount;
+            document.getElementById("Lives").innerHTML = this.lives.toString();
 
             this.show(ACTION.IDLE);
             f.Loop.addEventListener(f.EVENT.LOOP_FRAME, this.update);
@@ -45,10 +50,11 @@ namespace L16_ScrollerCollide {
 
         public static generateSprites(_txtImage : f.TextureImage): void {
             Hare.sprites = [];
+
             let sprite: Sprite = new Sprite(ACTION.WALK);
-            if (DIRECTION.RIGHT){
-            sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 2308, 13, 20), 6, new f.Vector2(1, 0), 30, f.ORIGIN2D.BOTTOMCENTER);
-            Hare.sprites.push(sprite);
+            if (DIRECTION.RIGHT) {
+                sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 2308, 13, 20), 6, new f.Vector2(1, 0), 30, f.ORIGIN2D.BOTTOMCENTER);
+                Hare.sprites.push(sprite);
             }
 
             sprite = new Sprite(ACTION.IDLE);
@@ -65,11 +71,14 @@ namespace L16_ScrollerCollide {
             if (_action == ACTION.JUMP) 
                 return;
             
+
             for (let child of this.getChildren()) 
                 child.activate(child.name == _action);
             
+
             // this.action = _action;
         }
+
 
         public act(_action : ACTION, _direction? : DIRECTION): void {
 
@@ -77,6 +86,7 @@ namespace L16_ScrollerCollide {
             switch (_action) {
                 case ACTION.IDLE:
                     this.speed.x = 0;
+
                     break;
                 case ACTION.WALK:
 
@@ -88,16 +98,35 @@ namespace L16_ScrollerCollide {
 
                     if (_direction == DIRECTION.LEFT) {
                         this.speed.x = Hare.speedMax.x * -1;
+
                     }
 
                     // this.speed.x = Hare.speedMax.x; // * direction;
-                    // this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * direction);
+
+                    // let floorInst : f.Node[] = level.getChildren();
 
 
+                    /*
+                   if (floorInst[0].cmpTransform.local.rotation.y == 90) {
+                    this.cmpTransform.local.rotation = f.Vector3.Y(90 * direction);
+                   }
+                  
+                   if (floorInst[0].cmpTransform.local.rotation.y == -90) {
+                    this.mtxWorld.rotation = f.Vector3.Y(90 * direction);
+                   }
+                   
+                   if (floorInst[0].cmpTransform.local.rotation.y == 180) {
+                    this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * -direction);
+                   }
+                   else {
+                    this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * direction);
+                   }
+                  */
                     break;
                 case ACTION.JUMP:
-                    this.cmpTransform.local.translateY(.1);
-                    this.speed.y = 3.5;
+
+                    this.jumping();
+
 
                     break;
             }
@@ -116,6 +145,38 @@ namespace L16_ScrollerCollide {
             this.checkCollision();
             this.collectCoins();
 
+        }
+
+        private jumping() {
+           if(this.speed.y == 0) 
+          {
+             this.jumps = 1;
+            this.cmpTransform.local.translateY(.1);
+                this.speed.y = 3;
+                Sound.play("jump");
+          }
+          if(this.speed.y != 0 && this.speed.y < 1.5 && this.jumps < 3)
+          {
+                this.speed.y = 3;
+                Sound.play("jump");
+                this.collectedCoins --;
+                document.getElementById("CollectedCoins").innerHTML = this.collectedCoins.toString();
+                let timer2: number = performance.now();
+                this.jumps++; 
+          }
+              }
+        
+
+
+        private loseLive() {
+
+            if (this.cmpTransform.local.translation.y < -10) {             
+                this.lives --;
+                document.getElementById("Lives").innerHTML = this.lives.toString();
+                this.cmpTransform.local.translation = new f.Vector3(0,1,0);
+                this.speed.y = 0;
+                //this.cmpTransform.local.translation = Vector3Array[this.lastHitIndex];
+            }
         }
 
         private checkCollision(): void {
@@ -159,36 +220,36 @@ namespace L16_ScrollerCollide {
 
         private collectCoins(): void {
 
-          
-          for (let coin of collectorAble.getChildren()) {
+
+            for (let coin of collectorAble.getChildren()) {
 
 
-              let rotation: number = (< Coin > coin).getCoinRotation();
-              let rect: f.Rectangle = new f.Rectangle();
-              let CharacterCollider: f.Vector2;
+                let rotation: number = (< Coin > coin).getCoinRotation();
+                let rect: f.Rectangle = new f.Rectangle();
+                let CharacterCollider: f.Vector2;
 
 
-              // use ZY Collider on 90/-90 Rotation
-              if (rotation == 90 || rotation == -90) {
-                  rect = (< Coin > coin).getRectWorld(rotation);
-                  CharacterCollider = new f.Vector2(this.mtxWorld.translation.z, this.mtxWorld.translation.y);
-              } else { // use XY Collider on 0/180 Rotation
-                  rect = (< Coin > coin).getRectWorld(rotation);
-                  CharacterCollider = this.cmpTransform.local.translation.toVector2();
-              }
+                // use ZY Collider on 90/-90 Rotation
+                if (rotation == 90 || rotation == -90) {
+                    rect = (< Coin > coin).getRectWorld(rotation);
+                    CharacterCollider = new f.Vector2(this.mtxWorld.translation.z, this.mtxWorld.translation.y);
+                } else { // use XY Collider on 0/180 Rotation
+                    rect = (< Coin > coin).getRectWorld(rotation);
+                    CharacterCollider = this.cmpTransform.local.translation.toVector2();
+                }
 
 
-              // console.log(rect.toString());
+                // console.log(rect.toString());
 
-              let hit: boolean = rect.isInside(CharacterCollider);
-              if (hit) {
-                collectorAble.removeChild((< Coin > coin));
-                this.collectedCoins++;
-                document.getElementById("CollectedCoins").innerHTML = this.collectedCoins.toString();
-                Sound.play("coin");
-               
-              }
+                let hit: boolean = rect.isInside(CharacterCollider);
+                if (hit) {
+                    collectorAble.removeChild((< Coin > coin));
+                    this.collectedCoins ++;
+                    document.getElementById("CollectedCoins").innerHTML = this.collectedCoins.toString();
+                    Sound.play("coin");
+
+                }
             }
-          }
         }
-      }
+    }
+}
