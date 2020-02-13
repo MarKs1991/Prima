@@ -28,7 +28,8 @@ Repository for the module "Prototyping interactive media-applications and games"
 |  8 | Verhaltensklassen     | Das Verhalten von Objekten ist in den Methoden von Klassen definiert, die in externen Dateien abgelegt sind. Welche Klassen sind dies und welches Verhalten wird dort beschrieben?|
 |  9 | Subklassen            | Es existiert eine Klassenhierarchie, einige Objekte sind Instanzen von einer oder mehreren abgeleiteten Subklassen mit gegenüber den anderen Objekten speziellem Verhalten und besonderen Eigenschaften. Welche Klassen sind dies und welches Verhalten wird dort beschrieben?|
 | 10 | Maße & Positionen     | Die Kamera ist weit vom Spielcharakter entfernt um dem Nutzer die nötige weitsicht zu geben. Bei jedem Perspektivenwechsel ändern sich auch die Collider und die Achse die momentan in Richtung der Kamera zeigt wird bei allen objekten inder Szene mit Ausnahme der Kamera auf Null gesetzt. Dies hat den Sinn dass der Spieler die Position der Platformen und Münzen korrekt erkennen kann da sich sonst durch eine optische Täuschung die Sprites an einer Anderen Position erscheinen würden als der Collider es vorgibt.|
-| 11 | Event-System          | Das Event-System wird verwendet. Wer sendet wem Informationen oder Methodenaufrufe und wofür?|
+| 11 | Event-System          | Das Event-System wird verwendet. Wer sendet wem Informationen oder Methodenaufrufe und wofür?
+||
 
 ## Abgabeformat
 * Fasse die Konzeption als ein wohlformatiertes Designdokument in PDF zusammen!
