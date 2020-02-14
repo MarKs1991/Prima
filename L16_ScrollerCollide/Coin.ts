@@ -38,7 +38,7 @@ namespace L16_ScrollerCollide {
             Coin.sprites = [];
             let sprite: Sprite = new Sprite("CoinSprite");
             // sprite.generateByGrid(_txtImage, ƒ.Rectangle.GET(1, 20, 20, 150), 1, ƒ.Vector2.ZERO(), 30, ƒ.ORIGIN2D.BOTTOMCENTER);
-            sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 2899, 24, 24), 8, new f.Vector2(8, 8), 30, f.ORIGIN2D.TOPCENTER);
+            sprite.generateByGrid(_txtImage, f.Rectangle.GET(1, 2899, 24, 24), 8, new f.Vector2(8, 8), 30, f.ORIGIN2D.TOPCENTER);
             Coin.sprites.push(sprite);
         }
 

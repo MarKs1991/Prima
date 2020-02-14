@@ -24,23 +24,24 @@ var L16_ScrollerCollide;
         let txtHare = new L16_ScrollerCollide.f.TextureImage();
         L16_ScrollerCollide.Sound.init();
         //planes = new Planes();
-        L16_ScrollerCollide.planes = new L16_ScrollerCollide.Planes();
         //planes = new Planes("Planes");
         txtHare.image = img;
         L16_ScrollerCollide.Floor.generateSprites(txtHare);
         L16_ScrollerCollide.Coin.generateSprites(txtHare);
         L16_ScrollerCollide.Skybox.generateSprites(txtHare);
-        //Planes.generateSprites(txtHare);
+        L16_ScrollerCollide.Planes.generateSprites(txtHare);
         L16_ScrollerCollide.Hare.generateSprites(txtHare);
         L16_ScrollerCollide.game = new L16_ScrollerCollide.f.Node("Game");
         L16_ScrollerCollide.hare = new L16_ScrollerCollide.Hare("Hare");
+        L16_ScrollerCollide.enemys = new L16_ScrollerCollide.f.Node("Enemys");
         //planes.cmpTransform.local.translation = new f.Vector3(0 -1, 0);
-        L16_ScrollerCollide.hare.mtxWorld.translation = new L16_ScrollerCollide.f.Vector3(0, 2, 0);
+        //hare.mtxWorld.translation = new f.Vector3(0,2,0);
         L16_ScrollerCollide.collectorAble = createCollectables();
         L16_ScrollerCollide.game.appendChild(L16_ScrollerCollide.collectorAble);
         L16_ScrollerCollide.level = createLevel();
         L16_ScrollerCollide.game.appendChild(L16_ScrollerCollide.level);
         L16_ScrollerCollide.game.appendChild(L16_ScrollerCollide.hare);
+        L16_ScrollerCollide.game.appendChild(L16_ScrollerCollide.enemys);
         //game.appendChild(planes);
         CamZoom.addComponent(compCam);
         CamZoom.addComponent(new L16_ScrollerCollide.f.ComponentTransform);
@@ -56,7 +57,6 @@ var L16_ScrollerCollide;
         L16_ScrollerCollide.f.Loop.start(L16_ScrollerCollide.f.LOOP_MODE.TIME_GAME, 10);
         L16_ScrollerCollide.start();
         function update(_event) {
-            L16_ScrollerCollide.hare.loseLive();
             L16_ScrollerCollide.processInput();
             //compCam.pivot.translateY(hare.speed.y / 10);
             L16_ScrollerCollide.camera.cmpTransform.local.translation = new L16_ScrollerCollide.f.Vector3(L16_ScrollerCollide.hare.cmpTransform.local.translation.x, L16_ScrollerCollide.hare.cmpTransform.local.translation.y, L16_ScrollerCollide.hare.cmpTransform.local.translation.z);
@@ -149,7 +149,6 @@ var L16_ScrollerCollide;
                     NodeArray[j].cmpTransform.local.translateZ(L16_ScrollerCollide.Vector3Array[i].z);
                     if (i == 0 && j == 0)
                         L16_ScrollerCollide.hare.cmpTransform.local.translateZ(L16_ScrollerCollide.Vector3Array[L16_ScrollerCollide.hare.lastHitIndex].z);
-                    // f.Debug.log("TRANSFORM" + Vector3Array[hare.lastHitIndex].y);
                 }
                 if (rotation > -40 && rotation < 40 || rotation == 180 || rotation == -180) { // hare.cmpTransform.local.translation.x = hare.lastHit.x;
                     NodeArray[j].cmpTransform.local.translateZ(-L16_ScrollerCollide.Vector3Array[i].z);
@@ -182,6 +181,14 @@ var L16_ScrollerCollide;
         L16_ScrollerCollide.floor.cmpTransform.local.translateZ(0);
         FloorArray.push(L16_ScrollerCollide.floor);
         level.appendChild(L16_ScrollerCollide.floor);
+        L16_ScrollerCollide.planes = new L16_ScrollerCollide.Planes();
+        L16_ScrollerCollide.planes.cmpTransform.local.scaleY(1);
+        L16_ScrollerCollide.planes.cmpTransform.local.scaleX(1);
+        L16_ScrollerCollide.planes.cmpTransform.local.translateX(0);
+        L16_ScrollerCollide.planes.cmpTransform.local.translateY(1);
+        L16_ScrollerCollide.planes.cmpTransform.local.translateZ(0);
+        L16_ScrollerCollide.enemys.addComponent(new L16_ScrollerCollide.f.ComponentTransform());
+        L16_ScrollerCollide.enemys.appendChild(L16_ScrollerCollide.planes);
         //For Fixed Starting Platform
         L16_ScrollerCollide.Vector3Array[0] = new L16_ScrollerCollide.f.Vector3(FloorArray[0].cmpTransform.local.translation.x, FloorArray[0].cmpTransform.local.translation.y, FloorArray[0].cmpTransform.local.translation.z);
         L16_ScrollerCollide.floor.cmpTransform.local.translateZ(-L16_ScrollerCollide.Vector3Array[0].y);
@@ -224,25 +231,27 @@ var L16_ScrollerCollide;
             L16_ScrollerCollide.Vector3Array[i] = new L16_ScrollerCollide.f.Vector3(FloorArray[i].cmpTransform.local.translation.x, FloorArray[i].cmpTransform.local.translation.y, FloorArray[i].cmpTransform.local.translation.z);
             L16_ScrollerCollide.floor.cmpTransform.local.translateZ(-L16_ScrollerCollide.Vector3Array[i].z);
             createCoin((FloorArray[i].cmpTransform.local.translation));
+            if (i > platformNumber / 2)
+                createPlane(FloorArray[i].cmpTransform.local.translation);
         }
         let skybox = new L16_ScrollerCollide.Skybox();
-        skybox.cmpTransform.local.scale(new L16_ScrollerCollide.f.Vector3(100, 100, 100));
-        skybox.cmpTransform.local.translation = new L16_ScrollerCollide.f.Vector3(0, 50, -30);
+        skybox.cmpTransform.local.scale(new L16_ScrollerCollide.f.Vector3(210, 210, 210));
+        skybox.cmpTransform.local.translation = new L16_ScrollerCollide.f.Vector3(0, 100, -100);
         L16_ScrollerCollide.game.appendChild(skybox);
         skybox = new L16_ScrollerCollide.Skybox();
         skybox.cmpTransform.local.rotateY(90);
-        skybox.cmpTransform.local.scale(new L16_ScrollerCollide.f.Vector3(100, 100, 100));
-        skybox.cmpTransform.local.translation = new L16_ScrollerCollide.f.Vector3(30, 50, 0);
+        skybox.cmpTransform.local.scale(new L16_ScrollerCollide.f.Vector3(210, 210, 210));
+        skybox.cmpTransform.local.translation = new L16_ScrollerCollide.f.Vector3(100, 100, 0);
         L16_ScrollerCollide.game.appendChild(skybox);
         skybox = new L16_ScrollerCollide.Skybox();
         skybox.cmpTransform.local.rotateY(-90);
-        skybox.cmpTransform.local.scale(new L16_ScrollerCollide.f.Vector3(100, 100, 100));
-        skybox.cmpTransform.local.translation = new L16_ScrollerCollide.f.Vector3(-30, 50, 0);
+        skybox.cmpTransform.local.scale(new L16_ScrollerCollide.f.Vector3(210, 210, 210));
+        skybox.cmpTransform.local.translation = new L16_ScrollerCollide.f.Vector3(-100, 100, 0);
         L16_ScrollerCollide.game.appendChild(skybox);
         skybox = new L16_ScrollerCollide.Skybox();
         skybox.cmpTransform.local.rotateY(180);
-        skybox.cmpTransform.local.scale(new L16_ScrollerCollide.f.Vector3(100, 100, 100));
-        skybox.cmpTransform.local.translation = new L16_ScrollerCollide.f.Vector3(0, 50, 30);
+        skybox.cmpTransform.local.scale(new L16_ScrollerCollide.f.Vector3(210, 210, 210));
+        skybox.cmpTransform.local.translation = new L16_ScrollerCollide.f.Vector3(0, 100, 100);
         L16_ScrollerCollide.game.appendChild(skybox);
         return level;
     }
@@ -258,6 +267,14 @@ var L16_ScrollerCollide;
         coin.cmpTransform.local.translateY(1);
         L16_ScrollerCollide.collectorAble.appendChild(coin);
         CoinArray.push(coin);
+    }
+    function createPlane(Position) {
+        let planes = new L16_ScrollerCollide.Planes();
+        planes.cmpTransform.local.scaleY(1);
+        planes.cmpTransform.local.scaleX(1);
+        planes.cmpTransform.local.translate(Position);
+        planes.cmpTransform.local.translateY(1);
+        L16_ScrollerCollide.enemys.appendChild(planes);
     }
     async function getJsonLevelData() {
         let response = await fetch("Assets/LevelData.json");

@@ -30,6 +30,8 @@ var L16_ScrollerCollide;
                 this.cmpTransform.local.translate(distance);
                 this.checkCollision();
                 this.collectCoins();
+                this.hitPlayer();
+                this.loseLive();
             };
             this.addComponent(new f.ComponentTransform());
             for (let sprite of Hare.sprites) {
@@ -80,24 +82,9 @@ var L16_ScrollerCollide;
                     if (_direction == DIRECTION.LEFT) {
                         this.speed.x = Hare.speedMax.x * -1;
                     }
-                    // this.speed.x = Hare.speedMax.x; // * direction;
-                    // let floorInst : f.Node[] = level.getChildren();
-                    /*
-                   if (floorInst[0].cmpTransform.local.rotation.y == 90) {
-                    this.cmpTransform.local.rotation = f.Vector3.Y(90 * direction);
-                   }
-                  
-                   if (floorInst[0].cmpTransform.local.rotation.y == -90) {
-                    this.mtxWorld.rotation = f.Vector3.Y(90 * direction);
-                   }
-                   
-                   if (floorInst[0].cmpTransform.local.rotation.y == 180) {
-                    this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * -direction);
-                   }
-                   else {
-                    this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * direction);
-                   }
-                  */
+                    this.speed.x = Hare.speedMax.x; // * direction;
+                    this.rotateSprite(direction);
+                    //this.cmpTransform.local.rotation.y = this.cmpTransform.local.rotation.y * direction;
                     break;
                 case ACTION.JUMP:
                     this.jumping();
@@ -117,7 +104,6 @@ var L16_ScrollerCollide;
                 L16_ScrollerCollide.Sound.play("jump");
                 this.collectedCoins--;
                 document.getElementById("CollectedCoins").innerHTML = this.collectedCoins.toString();
-                let timer2 = performance.now();
                 this.jumps++;
             }
         }
@@ -127,7 +113,22 @@ var L16_ScrollerCollide;
                 document.getElementById("Lives").innerHTML = this.lives.toString();
                 this.cmpTransform.local.translation = new f.Vector3(0, 1, 0);
                 this.speed.y = 0;
-                //this.cmpTransform.local.translation = Vector3Array[this.lastHitIndex];
+                // this.cmpTransform.local.translation = Vector3Array[this.lastHitIndex];
+            }
+        }
+        rotateSprite(direction) {
+            let rotY = L16_ScrollerCollide.floor.cmpTransform.local.rotation.y;
+            if (rotY == 90) {
+                this.cmpTransform.local.rotation = f.Vector3.Y(90 * direction);
+            }
+            if (rotY == -90) {
+                this.cmpTransform.local.rotation = f.Vector3.Y(-90 * direction);
+            }
+            if (rotY > -45 && rotY < 45) {
+                this.cmpTransform.local.rotation = f.Vector3.Y(90 - (90 * direction));
+            }
+            if (rotY == 180 || rotY == -180) {
+                this.cmpTransform.local.rotation = f.Vector3.Y(90 + (90 * direction));
             }
         }
         checkCollision() {
@@ -181,6 +182,27 @@ var L16_ScrollerCollide;
                     this.collectedCoins++;
                     document.getElementById("CollectedCoins").innerHTML = this.collectedCoins.toString();
                     L16_ScrollerCollide.Sound.play("coin");
+                }
+            }
+        }
+        hitPlayer() {
+            for (let planes of L16_ScrollerCollide.enemys.getChildren()) {
+                let rotation = planes.getPlanesRotation();
+                let rect = new f.Rectangle();
+                let CharacterCollider;
+                // use ZY Collider on 90/-90 Rotation
+                if (rotation == 90 || rotation == -90) {
+                    rect = planes.getRectWorld(rotation);
+                    CharacterCollider = new f.Vector2(this.mtxWorld.translation.z, this.mtxWorld.translation.y);
+                }
+                else { // use XY Collider on 0/180 Rotation
+                    rect = planes.getRectWorld(rotation);
+                    CharacterCollider = this.cmpTransform.local.translation.toVector2();
+                }
+                // console.log(rect.toString());
+                let hit = rect.isInside(CharacterCollider);
+                if (hit) {
+                    L16_ScrollerCollide.hare.cmpTransform.local.translateX(1);
                 }
             }
         }

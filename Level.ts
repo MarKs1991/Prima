@@ -26,34 +26,34 @@
       if (rotation == 90  || rotation == -90)
         {
           
-          floor.cmpTransform.local.translateX(-Vector2Array[i].x);
+          floor.cmpTransform.local.translateX(-Vector3Array[i].x);
 
           //lastPos = hare.cmpTransform.local.translation.x;
           
           hare.cmpTransform.local.translateX(-hare.cmpTransform.local.translation.x);
           //hare.cmpTransform.local.translation.x = 0;
           
-          floor.cmpTransform.local.translateZ(Vector2Array[i].y);
+          floor.cmpTransform.local.translateZ(Vector3Array[i].y);
           
           if(i == 0)
-          hare.cmpTransform.local.translateZ(Vector2Array[hare.lastHitIndex].y);
+          hare.cmpTransform.local.translateZ(Vector3Array[hare.lastHitIndex].y);
           
-          //f.Debug.log("TRANSFORM" + Vector2Array[hare.lastHitIndex].y);
+          //f.Debug.log("TRANSFORM" + Vector3Array[hare.lastHitIndex].y);
         }
 
       if (rotation > -40 && rotation < 40 || rotation == 180 || rotation == -180)
         {
             
           //hare.cmpTransform.local.translation.x = hare.lastHit.x;
-           floor.cmpTransform.local.translateZ(-Vector2Array[i].y);
+           floor.cmpTransform.local.translateZ(-Vector3Array[i].y);
 
            hare.cmpTransform.local.translateZ(-hare.cmpTransform.local.translation.z);
            //hare.cmpTransform.local.translation.z = 0;
            //hare.cmpTransform.local.translateX(lastPos );
-           floor.cmpTransform.local.translateX(Vector2Array[i].x);
+           floor.cmpTransform.local.translateX(Vector3Array[i].x);
            
            if(i == 0)
-           hare.cmpTransform.local.translateX(Vector2Array[hare.lastHitIndex].x);
+           hare.cmpTransform.local.translateX(Vector3Array[hare.lastHitIndex].x);
         }
       
       //f.Debug.log("rot" + floor.cmpTransform.local.rotation.y); 
@@ -138,16 +138,16 @@
       }
 
         
-      Vector2Array = [];
+      Vector3Array = [];
 
       for(let i = 0; i <= FloorArray.length - 1; i++) {
-          Vector2Array[i] = new f.Vector2(FloorArray[i].cmpTransform.local.translation.x, FloorArray[i].cmpTransform.local.translation.z);
+          Vector3Array[i] = new f.Vector2(FloorArray[i].cmpTransform.local.translation.x, FloorArray[i].cmpTransform.local.translation.z);
       }
 
       let i = 0;
 
       for(let floor of level.getChildren()) {
-          floor.cmpTransform.local.translateZ(-Vector2Array[i].y);
+          floor.cmpTransform.local.translateZ(-Vector3Array[i].y);
           i++;
       }
 

@@ -23,9 +23,9 @@ namespace L16_ScrollerCollide {
         public lastHitIndex : number;
 
         public collectedCoins : number = 0;
-        private lives: number;
+        private lives : number;
 
-        private jumps: number = 0;
+        private jumps : number = 0;
 
         constructor(_name : string = "Hare") {
             super(_name);
@@ -72,9 +72,11 @@ namespace L16_ScrollerCollide {
                 return;
             
 
+
             for (let child of this.getChildren()) 
                 child.activate(child.name == _action);
             
+
 
             // this.action = _action;
         }
@@ -101,27 +103,12 @@ namespace L16_ScrollerCollide {
 
                     }
 
-                    // this.speed.x = Hare.speedMax.x; // * direction;
 
-                    // let floorInst : f.Node[] = level.getChildren();
+                    this.speed.x = Hare.speedMax.x; // * direction;
 
+                    this.rotateSprite(direction);
+                    //this.cmpTransform.local.rotation.y = this.cmpTransform.local.rotation.y * direction;
 
-                    /*
-                   if (floorInst[0].cmpTransform.local.rotation.y == 90) {
-                    this.cmpTransform.local.rotation = f.Vector3.Y(90 * direction);
-                   }
-                  
-                   if (floorInst[0].cmpTransform.local.rotation.y == -90) {
-                    this.mtxWorld.rotation = f.Vector3.Y(90 * direction);
-                   }
-                   
-                   if (floorInst[0].cmpTransform.local.rotation.y == 180) {
-                    this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * -direction);
-                   }
-                   else {
-                    this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * direction);
-                   }
-                  */
                     break;
                 case ACTION.JUMP:
 
@@ -144,38 +131,52 @@ namespace L16_ScrollerCollide {
 
             this.checkCollision();
             this.collectCoins();
+            this.hitPlayer();
+            this.loseLive();
 
         }
 
         private jumping() {
-           if(this.speed.y == 0) 
-          {
-             this.jumps = 1;
-            this.cmpTransform.local.translateY(.1);
+            if (this.speed.y == 0) {
+                this.jumps = 1;
+                this.cmpTransform.local.translateY(.1);
                 this.speed.y = 3;
                 Sound.play("jump");
-          }
-          if(this.speed.y != 0 && this.speed.y < 1.5 && this.jumps < 3)
-          {
+            }
+            if (this.speed.y != 0 && this.speed.y < 1.5 && this.jumps < 3) {
                 this.speed.y = 3;
                 Sound.play("jump");
                 this.collectedCoins --;
                 document.getElementById("CollectedCoins").innerHTML = this.collectedCoins.toString();
-                let timer2: number = performance.now();
-                this.jumps++; 
-          }
-              }
-        
+                this.jumps ++;
+            }
+        }
 
 
         private loseLive() {
 
-            if (this.cmpTransform.local.translation.y < -10) {             
+            if (this.cmpTransform.local.translation.y<-10) {
                 this.lives --;
                 document.getElementById("Lives").innerHTML = this.lives.toString();
-                this.cmpTransform.local.translation = new f.Vector3(0,1,0);
+                this.cmpTransform.local.translation = new f.Vector3(0, 1, 0);
                 this.speed.y = 0;
-                //this.cmpTransform.local.translation = Vector3Array[this.lastHitIndex];
+                // this.cmpTransform.local.translation = Vector3Array[this.lastHitIndex];
+            }
+        }
+
+        private rotateSprite(direction: number){
+          let rotY: number = floor.cmpTransform.local.rotation.y;
+          if (rotY == 90){
+              this.cmpTransform.local.rotation = f.Vector3.Y(90 * direction);
+            }
+          if (rotY == -90) {
+              this.cmpTransform.local.rotation = f.Vector3.Y(-90 * direction);  
+            }             
+          if (rotY> -45 && rotY < 45) {
+              this.cmpTransform.local.rotation = f.Vector3.Y(90 - (90 * direction));
+            }
+          if (rotY == 180 || rotY == -180) {
+              this.cmpTransform.local.rotation = f.Vector3.Y(90 + (90 * direction));
             }
         }
 
@@ -217,7 +218,6 @@ namespace L16_ScrollerCollide {
                 i++;
             }
         }
-
         private collectCoins(): void {
 
 
@@ -251,5 +251,35 @@ namespace L16_ScrollerCollide {
                 }
             }
         }
+
+        private hitPlayer(): void {
+
+
+          for (let planes of enemys.getChildren()) {
+
+
+              let rotation: number = (< Planes > planes).getPlanesRotation();
+              let rect: f.Rectangle = new f.Rectangle();
+              let CharacterCollider: f.Vector2;
+
+
+              // use ZY Collider on 90/-90 Rotation
+              if (rotation == 90 || rotation == -90) {
+                  rect = (< Planes > planes).getRectWorld(rotation);
+                  CharacterCollider = new f.Vector2(this.mtxWorld.translation.z, this.mtxWorld.translation.y);
+              } else { // use XY Collider on 0/180 Rotation
+                  rect = (< Planes > planes).getRectWorld(rotation);
+                  CharacterCollider = this.cmpTransform.local.translation.toVector2();
+              }
+
+
+              // console.log(rect.toString());
+
+              let hit: boolean = rect.isInside(CharacterCollider);
+              if (hit) {
+                  hare.cmpTransform.local.translateX(1);
+              }
+          }
+      }
     }
 }
